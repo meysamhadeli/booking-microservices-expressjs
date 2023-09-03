@@ -5,9 +5,10 @@ import cors from 'cors';
 import passport from 'passport';
 import config from './config/config';
 import { jwtStrategy } from './config/passport';
-import routes from './routes/v1';
 import { errorHandler } from './middlewares/error';
 import { morganMiddleware } from './config/morgan';
+import { RegisterRoutes } from './routes/routes';
+import * as swaggerUi from 'swagger-ui-express';
 
 const app = express();
 
@@ -36,8 +37,17 @@ app.options('*', cors());
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
 
-// v1 api routes
-app.use('/v1', routes);
+// // v1 api routes
+// app.use('/v1', routes);
+
+RegisterRoutes(app);
+
+try {
+  const swaggerDocument = require('./docs/swagger.json');
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+} catch (err) {
+  console.error('Unable to read swagger.json', err);
+}
 
 // handle error
 app.use(errorHandler);

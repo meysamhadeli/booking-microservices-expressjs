@@ -19,3 +19,6 @@ db
 
 # TypeScript
 build
+
+# Ignore idea
+.idea/**

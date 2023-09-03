@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "outDir": "./build",
+    "target": "es6",
     "module": "commonjs",
-    "types": ["node"],
-    "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "outDir": "./build",
+    "moduleResolution": "node",
     "strict": true,
-    "skipLibCheck": true,
-    "strictNullChecks": true
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   }
 }
