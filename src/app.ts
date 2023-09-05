@@ -4,7 +4,6 @@ import compression from 'compression';
 import cors from 'cors';
 import passport from 'passport';
 import config from './config/config';
-import { jwtStrategy } from './config/passport';
 import { errorHandler } from './middlewares/error';
 import { morganMiddleware } from './config/morgan';
 import { RegisterRoutes } from './routes/routes';
@@ -35,16 +34,14 @@ app.options('*', cors());
 
 // jwt authentication
 app.use(passport.initialize());
-passport.use('jwt', jwtStrategy);
 
-// // v1 api routes
-// app.use('/v1', routes);
-
+// register routes with tsoa
 RegisterRoutes(app);
 
+// register swagger
 try {
   const swaggerDocument = require('./docs/swagger.json');
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 } catch (err) {
   console.error('Unable to read swagger.json', err);
 }

@@ -1,10 +1,31 @@
 import { ErrorRequestHandler } from 'express';
-import ApiError from '../utils/ApiError';
+import httpStatus from "http-status";
+import NotFoundError from "../types/notFoundError";
+import UnauthorizedError from "../types/unauthorizedError";
+import ApplicationError from "../types/applicationError";
+import ForbiddenError from "../types/forbiddenError";
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
-  if (err instanceof ApiError) {
-    // Handle known ApiError types
+  if (err instanceof ApplicationError) {
     res.status(err.statusCode).json({ error: err.message });
+
+    return next(err);
+  }
+
+  if (err instanceof UnauthorizedError) {
+    res.status(httpStatus.UNAUTHORIZED).json({ error: err.message });
+
+    return next(err);
+  }
+
+  if (err instanceof ForbiddenError) {
+    res.status(httpStatus.FORBIDDEN).json({ error: err.message });
+
+    return next(err);
+  }
+
+  if (err instanceof NotFoundError) {
+    res.status(httpStatus.NOT_FOUND).json({ error: err.message });
 
     return next(err);
   }

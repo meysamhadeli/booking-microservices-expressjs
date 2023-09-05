@@ -1,8 +1,10 @@
-class ApiError extends Error {
+import httpStatus from "http-status";
+
+class ApplicationError extends Error {
   statusCode: number;
   isOperational: boolean;
 
-  constructor(statusCode: number, message: string | undefined, isOperational = true, stack = '') {
+  constructor(message: string | undefined, statusCode: number = httpStatus.BAD_REQUEST, isOperational = true, stack = '') {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = isOperational;
@@ -14,4 +16,4 @@ class ApiError extends Error {
   }
 }
 
-export default ApiError;
+export default ApplicationError;

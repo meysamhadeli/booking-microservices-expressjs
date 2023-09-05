@@ -1,8 +1,8 @@
 import httpStatus from 'http-status';
-import ApiError from '../utils/ApiError';
 import { NextFunction, Request, Response } from 'express';
 import pick from '../utils/pick';
 import Joi from 'joi';
+import ApplicationError from "../types/applicationError";
 
 const validate = (schema: object) => (req: Request, res: Response, next: NextFunction) => {
   const validSchema = pick(schema, ['params', 'query', 'body']);
@@ -12,7 +12,7 @@ const validate = (schema: object) => (req: Request, res: Response, next: NextFun
     .validate(obj);
   if (error) {
     const errorMessage = error.details.map((details) => details.message).join(', ');
-    return next(new ApiError(httpStatus.BAD_REQUEST, errorMessage));
+    return next(new ApplicationError(errorMessage));
   }
   Object.assign(req, value);
   return next();

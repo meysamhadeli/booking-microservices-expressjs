@@ -6,6 +6,87 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"RegisterRequestDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TokenResponse": {
+				"properties": {
+					"token": {
+						"type": "string"
+					},
+					"expires": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"token",
+					"expires"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AuthTokensResponse": {
+				"properties": {
+					"access": {
+						"$ref": "#/components/schemas/TokenResponse"
+					},
+					"refresh": {
+						"$ref": "#/components/schemas/TokenResponse"
+					}
+				},
+				"required": [
+					"access"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginRequestDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SendVerificationEmailRequestDto": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"email": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"email"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Role": {
 				"enum": [
 					"USER",
@@ -1679,7 +1760,245 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/user/create": {
+		"/auth/v1/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "number",
+									"format": "double"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RegisterRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/v1/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthTokensResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/v1/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"204": {
+						"description": "NO_CONTENT"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/v1/refreshToken": {
+			"post": {
+				"operationId": "RefreshToken",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthTokensResponse"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/v1/forgotPassword": {
+			"post": {
+				"operationId": "ForgotPassword",
+				"responses": {
+					"204": {
+						"description": "NO_CONTENT"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"email"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/v1/resetPassword": {
+			"post": {
+				"operationId": "ResetPassword",
+				"responses": {
+					"204": {
+						"description": "NO_CONTENT"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"email"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/v1/sendVerificationEmail": {
+			"post": {
+				"operationId": "SendVerificationEmail",
+				"responses": {
+					"204": {
+						"description": "NO_CONTENT"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SendVerificationEmailRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/v1/verifyEmail": {
+			"post": {
+				"operationId": "VerifyEmail",
+				"responses": {
+					"204": {
+						"description": "NO_CONTENT"
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/user/v1/create": {
 			"post": {
 				"operationId": "CreateUser",
 				"responses": {
@@ -1709,7 +2028,7 @@
 				}
 			}
 		},
-		"/user/get": {
+		"/user/v1/get": {
 			"get": {
 				"operationId": "GetUsers",
 				"responses": {
@@ -1717,7 +2036,13 @@
 						"description": "OK"
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -1764,7 +2089,7 @@
 				]
 			}
 		},
-		"/user/get-by-id": {
+		"/user/v1/get-by-id": {
 			"get": {
 				"operationId": "GetUserById",
 				"responses": {
@@ -1780,7 +2105,11 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -1794,7 +2123,7 @@
 				]
 			}
 		},
-		"/user/update": {
+		"/user/v1/update": {
 			"put": {
 				"operationId": "UpdateUser",
 				"responses": {
@@ -1834,7 +2163,7 @@
 				}
 			}
 		},
-		"/user/delete": {
+		"/user/v1/delete": {
 			"delete": {
 				"operationId": "DeleteUserById",
 				"responses": {

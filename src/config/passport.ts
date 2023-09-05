@@ -2,6 +2,7 @@ import prisma from '../client';
 import { Strategy as JwtStrategy, ExtractJwt, VerifyCallback } from 'passport-jwt';
 import config from './config';
 import { TokenType } from '@prisma/client';
+import {RegisterRequestDto} from "../dtos/registerRequestDto";
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,

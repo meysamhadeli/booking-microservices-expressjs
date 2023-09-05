@@ -8,7 +8,7 @@ import app from '../../src/app';
 import config from '../../src/config/config';
 import auth from '../../src/middlewares/auth';
 import { emailService, tokenService } from '../../src/services';
-import ApiError from '../../src/utils/ApiError';
+import ApplicationError from '../../src/types/applicationError';
 import setupTestDB from '../utils/setupTestDb';
 import { describe, beforeEach, test, expect, jest } from '@jest/globals';
 import { userOne, admin, insertUsers } from '../fixtures/user.fixture';
@@ -669,7 +669,7 @@ describe('Auth middleware', () => {
 
     await auth()(req, httpMocks.createResponse(), next);
 
-    expect(next).toHaveBeenCalledWith(expect.any(ApiError));
+    expect(next).toHaveBeenCalledWith(expect.any(ApplicationError));
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
@@ -685,7 +685,7 @@ describe('Auth middleware', () => {
 
     await auth()(req, httpMocks.createResponse(), next);
 
-    expect(next).toHaveBeenCalledWith(expect.any(ApiError));
+    expect(next).toHaveBeenCalledWith(expect.any(ApplicationError));
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
@@ -704,7 +704,7 @@ describe('Auth middleware', () => {
 
     await auth()(req, httpMocks.createResponse(), next);
 
-    expect(next).toHaveBeenCalledWith(expect.any(ApiError));
+    expect(next).toHaveBeenCalledWith(expect.any(ApplicationError));
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
@@ -728,7 +728,7 @@ describe('Auth middleware', () => {
 
     await auth()(req, httpMocks.createResponse(), next);
 
-    expect(next).toHaveBeenCalledWith(expect.any(ApiError));
+    expect(next).toHaveBeenCalledWith(expect.any(ApplicationError));
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
@@ -747,7 +747,7 @@ describe('Auth middleware', () => {
 
     await auth()(req, httpMocks.createResponse(), next);
 
-    expect(next).toHaveBeenCalledWith(expect.any(ApiError));
+    expect(next).toHaveBeenCalledWith(expect.any(ApplicationError));
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
@@ -769,7 +769,7 @@ describe('Auth middleware', () => {
 
     await auth()(req, httpMocks.createResponse(), next);
 
-    expect(next).toHaveBeenCalledWith(expect.any(ApiError));
+    expect(next).toHaveBeenCalledWith(expect.any(ApplicationError));
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({
         statusCode: httpStatus.UNAUTHORIZED,
@@ -793,7 +793,7 @@ describe('Auth middleware', () => {
 
     await auth('anyRight')(req, httpMocks.createResponse(), next);
 
-    expect(next).toHaveBeenCalledWith(expect.any(ApiError));
+    expect(next).toHaveBeenCalledWith(expect.any(ApplicationError));
     expect(next).toHaveBeenCalledWith(
       expect.objectContaining({ statusCode: httpStatus.FORBIDDEN, message: 'Forbidden' })
     );
