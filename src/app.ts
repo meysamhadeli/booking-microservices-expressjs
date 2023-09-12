@@ -4,10 +4,13 @@ import compression from 'compression';
 import cors from 'cors';
 import passport from 'passport';
 import config from './config/config';
-import { errorHandler } from './middlewares/error';
-import { morganMiddleware } from './config/morgan';
-import { RegisterRoutes } from './routes/routes';
+import {errorHandler} from './middlewares/error';
+import {morganMiddleware} from './config/morgan';
+import {RegisterRoutes} from './routes/routes';
 import * as swaggerUi from 'swagger-ui-express';
+import {dataSource} from "./data/dataSource";
+import Logger from "./config/logger";
+import logger from "./config/logger";
 
 const app = express();
 
@@ -16,6 +19,28 @@ if (config.env !== 'test') {
   app.use(morganMiddleware);
 }
 
+// establish database connection
+dataSource
+  .initialize()
+  .then(() => {
+    Logger.info("Data Source has been initialized!")
+
+    dataSource.runMigrations().then(() => {
+      Logger.info("Migrations run successfully!")
+    }).catch((err) => {
+      Logger.error("Error during running the Migrations!")
+    });
+
+    // run the server
+    app.listen(config.port, () => {
+      logger.info(`Listening to port ${config.port}`);
+    });
+
+  })
+  .catch((err) => {
+    Logger.error("Error during Data Source initialization:", err)
+  })
+
 // set security HTTP headers
 app.use(helmet());
 
@@ -23,7 +48,7 @@ app.use(helmet());
 app.use(express.json());
 
 // parse urlencoded request body
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 
 // gzip compression
 app.use(compression());
@@ -43,7 +68,7 @@ try {
   const swaggerDocument = require('./docs/swagger.json');
   app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 } catch (err) {
-  console.error('Unable to read swagger.json', err);
+  Logger.error('Unable to read swagger.json', err);
 }
 
 // handle error
