@@ -1,124 +1,167 @@
-// import tokenService from './token.service';
-// import userService from './user.service';
-// import { TokenType, User } from '@prisma/client';
-// import prisma from '../client';
-// import { encryptPassword, isPasswordMatch } from '../utils/encryption';
-// import { AuthTokensResponse } from '../types/response';
-// import exclude from '../utils/exclude';
-// import NotFoundError from "../types/notFoundError";
-// import UnauthorizedError from "../types/unauthorizedError";
-//
-// /**
-//  * Login with username and password
-//  * @param {string} email
-//  * @param {string} password
-//  * @returns {Promise<Omit<User, 'password'>>}
-//  */
-// const loginUserWithEmailAndPassword = async (
-//   email: string,
-//   password: string
-// ): Promise<Omit<User, 'password'>> => {
-//   const user = await userService.getUserByEmail(email, [
-//     'id',
-//     'email',
-//     'name',
-//     'password',
-//     'role',
-//     'isEmailVerified',
-//     'createdAt',
-//     'updatedAt'
-//   ]);
-//   if (!user || !(await isPasswordMatch(password, user.password as string))) {
-//     throw new UnauthorizedError( 'Incorrect email or password');
-//   }
-//   return exclude(user, ['password']);
-// };
-//
-// /**
-//  * Logout
-//  * @param {string} refreshToken
-//  * @returns {Promise<void>}
-//  */
-// const logout = async (refreshToken: string): Promise<void> => {
-//   const refreshTokenData = await prisma.token.findFirst({
-//     where: {
-//       token: refreshToken,
-//       type: TokenType.REFRESH,
-//       blacklisted: false
-//     }
-//   });
-//   if (!refreshTokenData) {
-//     throw new NotFoundError('Refresh Token Not found');
-//   }
-//   await prisma.token.delete({ where: { id: refreshTokenData.id } });
-// };
-//
-// /**
-//  * Refresh auth tokens
-//  * @param {string} refreshToken
-//  * @returns {Promise<AuthTokensResponse>}
-//  */
-// const refreshAuth = async (refreshToken: string): Promise<AuthTokensResponse> => {
-//   try {
-//     const refreshTokenData = await tokenService.verifyToken(refreshToken, TokenType.REFRESH);
-//     const { userId } = refreshTokenData;
-//     await prisma.token.delete({ where: { id: refreshTokenData.id } });
-//     return tokenService.generateAuthTokens({ id: userId });
-//   } catch (error) {
-//     throw new UnauthorizedError('Please authenticate');
-//   }
-// };
-//
-// /**
-//  * Reset password
-//  * @param {string} resetPasswordToken
-//  * @param {string} newPassword
-//  * @returns {Promise<void>}
-//  */
-// const resetPassword = async (resetPasswordToken: string, newPassword: string): Promise<void> => {
-//   try {
-//     const resetPasswordTokenData = await tokenService.verifyToken(
-//       resetPasswordToken,
-//       TokenType.RESET_PASSWORD
-//     );
-//     const user = await userService.getUserById(resetPasswordTokenData.userId);
-//     if (!user) {
-//       throw new Error();
-//     }
-//     const encryptedPassword = await encryptPassword(newPassword);
-//     await userService.updateUserById(user.id, { password: encryptedPassword });
-//     await prisma.token.deleteMany({ where: { userId: user.id, type: TokenType.RESET_PASSWORD } });
-//   } catch (error) {
-//     throw new UnauthorizedError('Password reset failed');
-//   }
-// };
-//
-// /**
-//  * Verify email
-//  * @param {string} verifyEmailToken
-//  * @returns {Promise<void>}
-//  */
-// const verifyEmail = async (verifyEmailToken: string): Promise<void> => {
-//   try {
-//     const verifyEmailTokenData = await tokenService.verifyToken(
-//       verifyEmailToken,
-//       TokenType.VERIFY_EMAIL
-//     );
-//     await prisma.token.deleteMany({
-//       where: { userId: verifyEmailTokenData.userId, type: TokenType.VERIFY_EMAIL }
-//     });
-//     await userService.updateUserById(verifyEmailTokenData.userId, { isEmailVerified: true });
-//   } catch (error) {
-//     throw new UnauthorizedError('Email verification failed');
-//   }
-// };
-//
-// export default {
-//   loginUserWithEmailAndPassword,
-//   isPasswordMatch,
-//   encryptPassword,
-//   logout,
-//   refreshAuth,
-//   resetPassword,
-//   verifyEmail
-// };
+import userService from './user.service';
+import {isPasswordMatch} from '../utils/encryption';
+import {AuthTokensResponse} from '../types/response';
+import NotFoundError from "../types/notFoundError";
+import UnauthorizedError from "../types/unauthorizedError";
+import {dataSource} from "../data/dataSource";
+import {Token} from "../entities/token";
+import {TokenType} from "../enums/tokenType";
+import {User} from "../entities/user";
+import moment from "moment/moment";
+import config from "../config/config";
+import jwt from "jsonwebtoken";
+import notFoundError from "../types/notFoundError";
+
+/**
+ * Login with username and password
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<Omit<User, 'password'>>}
+ */
+const login = async (
+  email: string,
+  password: string
+): Promise<AuthTokensResponse> => {
+  const user = await userService.getUserByEmail(email);
+  if (!user || !(await isPasswordMatch(password, user.password as string))) {
+    throw new UnauthorizedError('Incorrect email or password');
+  }
+  const token = await generateTokens(user.id);
+  return token;
+};
+
+/**
+ * Logout
+ * @param {string} refreshToken
+ * @returns {Promise<void>}
+ */
+const logout = async (refreshToken: string): Promise<void> => {
+
+  const tokenRepository = await dataSource.getRepository(Token);
+
+  const token = await tokenRepository.findOneBy({
+    token: refreshToken,
+    type: TokenType.REFRESH
+  });
+
+  if (!token) {
+    throw new NotFoundError('Refresh Token Not found');
+  }
+
+  await tokenRepository.remove(token);
+};
+
+/**
+ * Refresh auth tokens
+ * @param {string} refreshToken
+ * @returns {Promise<AuthTokensResponse>}
+ */
+const refreshToken = async (refreshToken: string): Promise<AuthTokensResponse> => {
+  try {
+    const refreshTokenData = await verifyToken(refreshToken, TokenType.REFRESH);
+    const {userId} = refreshTokenData;
+
+    const tokenRepository = dataSource.getRepository(Token);
+    await tokenRepository.remove(refreshTokenData);
+
+    return generateTokens(userId);
+  } catch (error) {
+    throw new UnauthorizedError('Please authenticate');
+  }
+};
+
+
+/**
+ * Generate auth tokens
+ * @param {number} userId
+ * @returns {Promise<AuthTokensResponse>}
+ */
+const generateTokens = async (userId: number): Promise<AuthTokensResponse> => {
+  const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
+  const accessToken = generateJwtToken(userId, accessTokenExpires.unix(), TokenType.ACCESS);
+
+  const refreshTokenExpires = moment().add(config.jwt.refreshExpirationDays, 'days');
+  const refreshToken = generateJwtToken(userId, refreshTokenExpires.unix(), TokenType.REFRESH);
+
+
+  const tokenRepository = dataSource.getRepository(Token);
+
+  const token = {
+    createdAt: new Date(),
+    type: TokenType.REFRESH,
+    token: refreshToken,
+    expires: refreshTokenExpires.toDate(),
+    userId: userId,
+    blacklisted: false
+  };
+
+  await tokenRepository.save(token);
+
+
+  return {
+    access: {
+      token: accessToken,
+      expires: accessTokenExpires.toDate()
+    },
+    refresh: {
+      token: refreshToken,
+      expires: refreshTokenExpires.toDate()
+    }
+  };
+};
+
+
+/**
+ * Verify token and return token doc (or throw an error if it is not valid)
+ * @param {string} token
+ * @param {string} type
+ * @returns {Promise<Token>}
+ */
+const verifyToken = async (token: string, type: TokenType): Promise<Token> => {
+  const payload = jwt.verify(token, config.jwt.secret);
+  const userId = Number(payload.sub);
+
+  const tokenRepository = dataSource.getRepository(Token);
+  const tokenData = await tokenRepository.findOneBy({
+    token: token,
+    type: type,
+    userId: userId,
+    blacklisted: false
+  });
+
+
+  if (!tokenData) {
+    throw new notFoundError("Token not found");
+  }
+  return tokenData;
+};
+
+/**
+ * Generate token
+ * @param {number} userId
+ * @param {number} expires
+ * @param {string} type
+ * @param {string} [secret]
+ * @returns {string}
+ */
+const generateJwtToken = (
+  userId: number,
+  expires: number,
+  type: TokenType,
+  secret = config.jwt.secret
+): string => {
+  const payload = {
+    sub: userId,
+    iat: moment().unix(),
+    exp: expires,
+    type
+  };
+  return jwt.sign(payload, secret);
+};
+
+
+export default {
+  login,
+  logout,
+  refreshToken
+};

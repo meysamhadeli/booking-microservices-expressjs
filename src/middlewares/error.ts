@@ -4,6 +4,7 @@ import NotFoundError from "../types/notFoundError";
 import UnauthorizedError from "../types/unauthorizedError";
 import ApplicationError from "../types/applicationError";
 import ForbiddenError from "../types/forbiddenError";
+import ConflictError from "../types/conflictError";
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof ApplicationError) {
@@ -26,6 +27,12 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
 
   if (err instanceof NotFoundError) {
     res.status(httpStatus.NOT_FOUND).json({ error: err.message });
+
+    return next(err);
+  }
+
+  if (err instanceof ConflictError) {
+    res.status(httpStatus.CONFLICT).json({ error: err.message });
 
     return next(err);
   }

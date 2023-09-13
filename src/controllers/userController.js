@@ -32,28 +32,16 @@ const notFoundError_1 = __importDefault(require("../types/notFoundError"));
 let UserController = class UserController extends tsoa_1.Controller {
     createUser(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield services_1.userService.createUser(request.email, request.password, request.name, request.role);
+            const user = yield services_1.userService.createUser(request);
             this.setStatus(http_status_1.default.CREATED);
-            return user.id;
+            return user;
         });
     }
-    // @Get('v1/get')
-    // @Security("jwt", ["admin"])
-    // @SuccessResponse('200', 'OK')
-    // public async getUsers(
-    //   @Query() name?: string,
-    //   @Query() role?: Role,
-    //   @Query() limit?: number,
-    //   @Query() page?: number,
-    //   @Query() sortBy?: string
-    // ): Promise<void> {
-    //   console.log('we call get endpoint!')
-    //   // const filter = pick(queryParams, ['name', 'role']);
-    //   // const options = pick(queryParams, ['sortBy', 'limit', 'page']);
-    //   // const result = await userService.queryUsers();
-    //   // return result.map(x=>x.id);
-    // }
-    //
+    getUsers(name, pageSize, page) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield services_1.userService.queryUsers({ page: page, pageSize: pageSize, searchTerm: name });
+        });
+    }
     getUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const user = yield services_1.userService.getUserById(id);
@@ -63,10 +51,28 @@ let UserController = class UserController extends tsoa_1.Controller {
             return user;
         });
     }
+    updateUser(id, request) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield services_1.userService.updateUserById(id, request);
+            this.setStatus(http_status_1.default.NO_CONTENT);
+            return user;
+        });
+    }
+    deleteUserById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const user = yield services_1.userService.deleteUserById(id);
+            if (!user) {
+                throw new notFoundError_1.default('User not found');
+            }
+            this.setStatus(http_status_1.default.NO_CONTENT);
+            return user;
+        });
+    }
 };
 exports.UserController = UserController;
 __decorate([
     (0, tsoa_1.Post)('v1/create'),
+    (0, tsoa_1.Security)("jwt"),
     (0, tsoa_1.SuccessResponse)('201', 'CREATED'),
     __param(0, (0, tsoa_1.Body)()),
     __metadata("design:type", Function),
@@ -74,15 +80,44 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "createUser", null);
 __decorate([
-    (0, tsoa_1.Get)('v1/get-by-id')
-    // @Security("jwt")
-    ,
+    (0, tsoa_1.Get)('v1/get'),
+    (0, tsoa_1.Security)("jwt"),
+    (0, tsoa_1.SuccessResponse)('200', 'OK'),
+    __param(0, (0, tsoa_1.Query)()),
+    __param(1, (0, tsoa_1.Query)()),
+    __param(2, (0, tsoa_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Number, Number]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "getUsers", null);
+__decorate([
+    (0, tsoa_1.Get)('v1/get-by-id'),
+    (0, tsoa_1.Security)("jwt"),
     (0, tsoa_1.SuccessResponse)('200', 'OK'),
     __param(0, (0, tsoa_1.Query)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], UserController.prototype, "getUserById", null);
+__decorate([
+    (0, tsoa_1.Put)('v1/update'),
+    (0, tsoa_1.Security)("jwt"),
+    (0, tsoa_1.SuccessResponse)('204', 'NO_CONTENT'),
+    __param(0, (0, tsoa_1.Query)()),
+    __param(1, (0, tsoa_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "updateUser", null);
+__decorate([
+    (0, tsoa_1.Delete)('v1/delete'),
+    (0, tsoa_1.Security)("jwt"),
+    (0, tsoa_1.SuccessResponse)('204', 'NO_CONTENT'),
+    __param(0, (0, tsoa_1.Query)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], UserController.prototype, "deleteUserById", null);
 exports.UserController = UserController = __decorate([
     (0, tsoa_1.Route)('/user')
 ], UserController);

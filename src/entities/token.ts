@@ -26,5 +26,5 @@ export class Token  {
   user: User;
 
   @Column()
-  userId: number;
+  userId?: number;
 }

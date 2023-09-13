@@ -1,32 +1,32 @@
 import {encryptPassword} from '../utils/encryption';
-import ApplicationError from "../types/applicationError";
 import NotFoundError from "../types/notFoundError";
 import {dataSource} from "../data/dataSource";
 import {User} from "../entities/user";
-import {Role} from "../enums/role";
+import ConflictError from "../types/conflictError";
+import {CreateUserDto} from "../dtos/createUserDto";
+import {UpdateUserDto} from "../dtos/updateUserDto";
+import {SearchDto} from "../dtos/searchDto";
+import {FindOptionsOrderValue, Like} from "typeorm";
+import {PagedResultResponse} from "../types/response";
 
 /**
  * Create a user
- * @param {Object} userBody
+ * @param {CreateUserDto} createUserDto
  * @returns {Promise<User>}
  */
-const createUser = async (
-  email: string,
-  password: string,
-  name?: string,
-  role: Role = Role.USER
+const createUser = async (createUserDto: CreateUserDto
 ): Promise<User> => {
-  // if (await getUserByEmail(email)) {
-  //   throw new ApplicationError('Email already taken');
-  // }
+  if (await getUserByEmail(createUserDto.email)) {
+    throw new ConflictError('Email already taken');
+  }
   const userRepository = dataSource.getRepository(User);
 
   const user = {
     createdAt: new Date(),
-    email: email,
-    name: name,
-    role: role,
-    password: await encryptPassword(password),
+    email: createUserDto.email,
+    name: createUserDto.name,
+    role: createUserDto.role,
+    password: await encryptPassword(createUserDto.password),
     isEmailVerified: false
   };
 
@@ -35,49 +35,29 @@ const createUser = async (
 
 /**
  * Query for users
- * @param {Object} filter - Mongo filter
- * @param {Object} options - Query options
- * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
- * @param {number} [options.limit] - Maximum number of results per page (default = 10)
- * @param {number} [options.page] - Current page (default = 1)
- * @returns {Promise<QueryResult>}
+ * @param {SearchDto} searchDto
+ * @returns {Promise<PagedResult<User[]>>}
  */
-// const queryUsers = async <Key extends keyof User>(
-//   filter: object,
-//   options: {
-//     limit?: number;
-//     page?: number;
-//     sortBy?: string;
-//     sortType?: 'asc' | 'desc';
-//   },
-//   keys: Key[] = [
-//     'id',
-//     'email',
-//     'name',
-//     'password',
-//     'role',
-//     'isEmailVerified',
-//     'createdAt',
-//     'updatedAt'
-//   ] as Key[]
-// ): Promise<Pick<User, Key>[]> => {
-//   const page = options.page ?? 1;
-//   const limit = options.limit ?? 10;
-//   const sortBy = options.sortBy;
-//   const sortType = options.sortType ?? 'desc';
-//   const users = await prisma.user.findMany({
-//     where: filter,
-//     select: keys.reduce((obj, k) => ({...obj, [k]: true}), {}),
-//     skip: page * limit,
-//     take: limit,
-//     orderBy: sortBy ? {[sortBy]: sortType} : undefined
-//   });
-//   return users as Pick<User, Key>[];
-// };
-//
+const queryUsers = async (searchDto: SearchDto
+): Promise<PagedResultResponse<User[]>> => {
+  const userRepository = dataSource.getRepository(User);
+
+
+  const [result, total] =  await userRepository.findAndCount(
+    {
+      where: { name: Like('%' + searchDto?.searchTerm + '%') },
+      order: { id: searchDto?.order ?? "ASC" },
+      take: searchDto.pageSize,
+      skip: searchDto.page
+    }
+  );
+
+  return new PagedResultResponse<User[]>(result, total);
+};
+
 /**
  * Get user by id
- * @param {ObjectId} id
+ * @param {number} id
  * @returns {Promise<User | null>}
  */
 const getUserById = async (
@@ -86,83 +66,77 @@ const getUserById = async (
 
   const userRepository = dataSource.getRepository(User);
 
-  const user = await userRepository.findOneBy({
+  return await userRepository.findOneBy({
     id: id
   });
-
-  return user
 };
 
-// /**
-//  * Get user by email
-//  * @param {string} email
-//  * @param {Array<Key>} keys
-//  * @returns {Promise<Pick<User, Key> | null>}
-//  */
-// const getUserByEmail = async <Key extends keyof User>(
-//   email: string,
-//   keys: Key[] = [
-//     'id',
-//     'email',
-//     'name',
-//     'password',
-//     'role',
-//     'isEmailVerified',
-//     'createdAt',
-//     'updatedAt'
-//   ] as Key[]
-// ): Promise<Pick<User, Key> | null> => {
-//   return prisma.user.findUnique({
-//     where: {email},
-//     select: keys.reduce((obj, k) => ({...obj, [k]: true}), {})
-//   }) as Promise<Pick<User, Key> | null>;
-// };
-//
-// /**
-//  * Update user by id
-//  * @param {ObjectId} userId
-//  * @param {Object} updateBody
-//  * @returns {Promise<User>}
-//  */
-// const updateUserById = async <Key extends keyof User>(
-//   userId: number,
-//   updateBody: Prisma.UserUpdateInput,
-//   keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
-// ): Promise<Pick<User, Key> | null> => {
-//   const user = await getUserById(userId, ['id', 'email', 'name']);
-//   if (!user) {
-//     throw new NotFoundError('User not found');
-//   }
-//   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
-//     throw new ApplicationError('Email already taken');
-//   }
-//   const updatedUser = await prisma.user.update({
-//     where: {id: user.id},
-//     data: updateBody,
-//     select: keys.reduce((obj, k) => ({...obj, [k]: true}), {})
-//   });
-//   return updatedUser as Pick<User, Key> | null;
-// };
-//
-// /**
-//  * Delete user by id
-//  * @param {ObjectId} userId
-//  * @returns {Promise<User>}
-//  */
-// const deleteUserById = async (userId: number): Promise<User> => {
-//   const user = await getUserById(userId);
-//   if (!user) {
-//     throw new ApplicationError('User not found');
-//   }
-//   await prisma.user.delete({where: {id: user.id}});
-//   return user;
-// };
+/**
+ * Get user by email
+ * @param {string} email
+ * @returns {Promise<User | null>}
+ */
+const getUserByEmail = async (
+  email: string,
+): Promise<User | null> => {
+  const userRepository = dataSource.getRepository(User);
+
+  return await userRepository.findOneBy({
+    email: email
+  });
+};
+
+/**
+ * Update user by id
+ * @param {number} userId
+ * @param {UpdateUserDto} updateUserDto
+ * @returns {Promise<User>}
+ */
+const updateUserById = async (
+  userId: number,
+  updateUserDto: UpdateUserDto,
+): Promise<User | null> => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+
+  const updatedUser = {
+    email: updateUserDto.email,
+    name: updateUserDto.name,
+    role: updateUserDto.role,
+    password: await encryptPassword(updateUserDto.password),
+    isEmailVerified: false,
+    updatedAt: new Date()
+  };
+
+  const userRepository = dataSource.getRepository(User);
+
+  return await userRepository.save(updatedUser);
+};
+
+/**
+ * Delete user by id
+ * @param {number} userId
+ * @returns {Promise<User>}
+ */
+const deleteUserById = async (userId: number): Promise<User> => {
+  const user = await getUserById(userId);
+  if (!user) {
+    throw new NotFoundError('User not found');
+  }
+  const userRepository = await dataSource.getRepository(User);
+
+  await userRepository.remove(user);
+
+  return user;
+};
 
 export default {
   createUser,
-  // queryUsers,
+  queryUsers,
   getUserById,
-  // getUserByEmail,
-  // updateUserById,
-  // deleteUserById
+  getUserByEmail,
+  updateUserById,
+  deleteUserById
 };

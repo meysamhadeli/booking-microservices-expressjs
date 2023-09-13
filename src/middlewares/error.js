@@ -9,6 +9,7 @@ const notFoundError_1 = __importDefault(require("../types/notFoundError"));
 const unauthorizedError_1 = __importDefault(require("../types/unauthorizedError"));
 const applicationError_1 = __importDefault(require("../types/applicationError"));
 const forbiddenError_1 = __importDefault(require("../types/forbiddenError"));
+const conflictError_1 = __importDefault(require("../types/conflictError"));
 const errorHandler = (err, req, res, next) => {
     if (err instanceof applicationError_1.default) {
         res.status(err.statusCode).json({ error: err.message });
@@ -24,6 +25,10 @@ const errorHandler = (err, req, res, next) => {
     }
     if (err instanceof notFoundError_1.default) {
         res.status(http_status_1.default.NOT_FOUND).json({ error: err.message });
+        return next(err);
+    }
+    if (err instanceof conflictError_1.default) {
+        res.status(http_status_1.default.CONFLICT).json({ error: err.message });
         return next(err);
     }
     // Handle other unexpected errors

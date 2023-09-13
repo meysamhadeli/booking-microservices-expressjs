@@ -8,155 +8,117 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const encryption_1 = require("../utils/encryption");
+const notFoundError_1 = __importDefault(require("../types/notFoundError"));
 const dataSource_1 = require("../data/dataSource");
 const user_1 = require("../entities/user");
-const role_1 = require("../enums/role");
+const conflictError_1 = __importDefault(require("../types/conflictError"));
+const typeorm_1 = require("typeorm");
+const response_1 = require("../types/response");
 /**
  * Create a user
- * @param {Object} userBody
+ * @param {CreateUserDto} createUserDto
  * @returns {Promise<User>}
  */
-const createUser = (email, password, name, role = role_1.Role.USER) => __awaiter(void 0, void 0, void 0, function* () {
-    // if (await getUserByEmail(email)) {
-    //   throw new ApplicationError('Email already taken');
-    // }
+const createUser = (createUserDto) => __awaiter(void 0, void 0, void 0, function* () {
+    if (yield getUserByEmail(createUserDto.email)) {
+        throw new conflictError_1.default('Email already taken');
+    }
     const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
     const user = {
         createdAt: new Date(),
-        email: email,
-        name: name,
-        role: role,
-        password: yield (0, encryption_1.encryptPassword)(password),
+        email: createUserDto.email,
+        name: createUserDto.name,
+        role: createUserDto.role,
+        password: yield (0, encryption_1.encryptPassword)(createUserDto.password),
         isEmailVerified: false
     };
     return yield userRepository.save(user);
 });
 /**
  * Query for users
- * @param {Object} filter - Mongo filter
- * @param {Object} options - Query options
- * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
- * @param {number} [options.limit] - Maximum number of results per page (default = 10)
- * @param {number} [options.page] - Current page (default = 1)
- * @returns {Promise<QueryResult>}
+ * @param {SearchDto} searchDto
+ * @returns {Promise<PagedResult<User[]>>}
  */
-// const queryUsers = async <Key extends keyof User>(
-//   filter: object,
-//   options: {
-//     limit?: number;
-//     page?: number;
-//     sortBy?: string;
-//     sortType?: 'asc' | 'desc';
-//   },
-//   keys: Key[] = [
-//     'id',
-//     'email',
-//     'name',
-//     'password',
-//     'role',
-//     'isEmailVerified',
-//     'createdAt',
-//     'updatedAt'
-//   ] as Key[]
-// ): Promise<Pick<User, Key>[]> => {
-//   const page = options.page ?? 1;
-//   const limit = options.limit ?? 10;
-//   const sortBy = options.sortBy;
-//   const sortType = options.sortType ?? 'desc';
-//   const users = await prisma.user.findMany({
-//     where: filter,
-//     select: keys.reduce((obj, k) => ({...obj, [k]: true}), {}),
-//     skip: page * limit,
-//     take: limit,
-//     orderBy: sortBy ? {[sortBy]: sortType} : undefined
-//   });
-//   return users as Pick<User, Key>[];
-// };
-//
+const queryUsers = (searchDto) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
+    const [result, total] = yield userRepository.findAndCount({
+        where: { name: (0, typeorm_1.Like)('%' + (searchDto === null || searchDto === void 0 ? void 0 : searchDto.searchTerm) + '%') },
+        order: { id: (_a = searchDto === null || searchDto === void 0 ? void 0 : searchDto.order) !== null && _a !== void 0 ? _a : "ASC" },
+        take: searchDto.pageSize,
+        skip: searchDto.page
+    });
+    return new response_1.PagedResultResponse(result, total);
+});
 /**
  * Get user by id
- * @param {ObjectId} id
+ * @param {number} id
  * @returns {Promise<User | null>}
  */
 const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
-    const user = yield userRepository.findOneBy({
+    return yield userRepository.findOneBy({
         id: id
     });
+});
+/**
+ * Get user by email
+ * @param {string} email
+ * @returns {Promise<User | null>}
+ */
+const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
+    return yield userRepository.findOneBy({
+        email: email
+    });
+});
+/**
+ * Update user by id
+ * @param {number} userId
+ * @param {UpdateUserDto} updateUserDto
+ * @returns {Promise<User>}
+ */
+const updateUserById = (userId, updateUserDto) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield getUserById(userId);
+    if (!user) {
+        throw new notFoundError_1.default('User not found');
+    }
+    const updatedUser = {
+        email: updateUserDto.email,
+        name: updateUserDto.name,
+        role: updateUserDto.role,
+        password: yield (0, encryption_1.encryptPassword)(updateUserDto.password),
+        isEmailVerified: false,
+        updatedAt: new Date()
+    };
+    const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
+    return yield userRepository.save(updatedUser);
+});
+/**
+ * Delete user by id
+ * @param {number} userId
+ * @returns {Promise<User>}
+ */
+const deleteUserById = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield getUserById(userId);
+    if (!user) {
+        throw new notFoundError_1.default('User not found');
+    }
+    const userRepository = yield dataSource_1.dataSource.getRepository(user_1.User);
+    yield userRepository.remove(user);
     return user;
 });
-// /**
-//  * Get user by email
-//  * @param {string} email
-//  * @param {Array<Key>} keys
-//  * @returns {Promise<Pick<User, Key> | null>}
-//  */
-// const getUserByEmail = async <Key extends keyof User>(
-//   email: string,
-//   keys: Key[] = [
-//     'id',
-//     'email',
-//     'name',
-//     'password',
-//     'role',
-//     'isEmailVerified',
-//     'createdAt',
-//     'updatedAt'
-//   ] as Key[]
-// ): Promise<Pick<User, Key> | null> => {
-//   return prisma.user.findUnique({
-//     where: {email},
-//     select: keys.reduce((obj, k) => ({...obj, [k]: true}), {})
-//   }) as Promise<Pick<User, Key> | null>;
-// };
-//
-// /**
-//  * Update user by id
-//  * @param {ObjectId} userId
-//  * @param {Object} updateBody
-//  * @returns {Promise<User>}
-//  */
-// const updateUserById = async <Key extends keyof User>(
-//   userId: number,
-//   updateBody: Prisma.UserUpdateInput,
-//   keys: Key[] = ['id', 'email', 'name', 'role'] as Key[]
-// ): Promise<Pick<User, Key> | null> => {
-//   const user = await getUserById(userId, ['id', 'email', 'name']);
-//   if (!user) {
-//     throw new NotFoundError('User not found');
-//   }
-//   if (updateBody.email && (await getUserByEmail(updateBody.email as string))) {
-//     throw new ApplicationError('Email already taken');
-//   }
-//   const updatedUser = await prisma.user.update({
-//     where: {id: user.id},
-//     data: updateBody,
-//     select: keys.reduce((obj, k) => ({...obj, [k]: true}), {})
-//   });
-//   return updatedUser as Pick<User, Key> | null;
-// };
-//
-// /**
-//  * Delete user by id
-//  * @param {ObjectId} userId
-//  * @returns {Promise<User>}
-//  */
-// const deleteUserById = async (userId: number): Promise<User> => {
-//   const user = await getUserById(userId);
-//   if (!user) {
-//     throw new ApplicationError('User not found');
-//   }
-//   await prisma.user.delete({where: {id: user.id}});
-//   return user;
-// };
 exports.default = {
     createUser,
-    // queryUsers,
+    queryUsers,
     getUserById,
-    // getUserByEmail,
-    // updateUserById,
-    // deleteUserById
+    getUserByEmail,
+    updateUserById,
+    deleteUserById
 };
 //# sourceMappingURL=user.service.js.map
