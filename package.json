@@ -17,7 +17,7 @@
     "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml up",
     "docker:dev-db:start": "docker-compose -f docker-compose.only-db-dev.yml up -d",
     "docker:dev-db:stop": "docker-compose -f docker-compose.only-db-dev.yml down",
-    "generate:swagger": "tsoa routes && tsoa spec"
+    "generate:swagger": "tsoa routes && tsoa swagger"
   },
   "keywords": [
     "node",

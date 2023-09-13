@@ -250,17 +250,26 @@
 				"additionalProperties": false
 			}
 		},
-		"securitySchemes": {}
+    "securitySchemes": {
+        "jwt": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+    }
 	},
+  "security": [{
+    "jwt": []
+  }],
 	"info": {
-		"title": "typeorm-express-typescript-boilerplate",
+		"title": "node-express-template",
 		"version": "1.0.0",
-		"description": "REST API Boilerplate with Node JS, TypeScript, Express and TypeOrm",
+		"description": "REST API Template with Node JS, TypeScript, Express and Typeorm",
 		"license": {
 			"name": "ISC"
 		},
 		"contact": {
-			"name": "Antonio Lázaro"
+			"name": "Meysam Hadeli"
 		}
 	},
 	"openapi": "3.0.0",
