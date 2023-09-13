@@ -19,12 +19,14 @@ const user_1 = require("../entities/user");
 const conflictError_1 = __importDefault(require("../types/conflictError"));
 const typeorm_1 = require("typeorm");
 const response_1 = require("../types/response");
+const user_validation_1 = __importDefault(require("../validations/user.validation"));
 /**
  * Create a user
  * @param {CreateUserDto} createUserDto
  * @returns {Promise<User>}
  */
 const createUser = (createUserDto) => __awaiter(void 0, void 0, void 0, function* () {
+    yield user_validation_1.default.createUser.validateAsync(createUserDto);
     if (yield getUserByEmail(createUserDto.email)) {
         throw new conflictError_1.default('Email already taken');
     }
@@ -46,6 +48,7 @@ const createUser = (createUserDto) => __awaiter(void 0, void 0, void 0, function
  */
 const queryUsers = (searchDto) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
+    yield user_validation_1.default.queryUsers.validateAsync(searchDto);
     const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
     const [result, total] = yield userRepository.findAndCount({
         where: { name: (0, typeorm_1.Like)('%' + (searchDto === null || searchDto === void 0 ? void 0 : searchDto.searchTerm) + '%') },
@@ -61,6 +64,7 @@ const queryUsers = (searchDto) => __awaiter(void 0, void 0, void 0, function* ()
  * @returns {Promise<User | null>}
  */
 const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    yield user_validation_1.default.getUserById.params.validateAsync(id);
     const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
     return yield userRepository.findOneBy({
         id: id
@@ -72,6 +76,7 @@ const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
  * @returns {Promise<User | null>}
  */
 const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    yield user_validation_1.default.getUserByEmail.params.validateAsync(email);
     const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
     return yield userRepository.findOneBy({
         email: email
@@ -84,6 +89,7 @@ const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* ()
  * @returns {Promise<User>}
  */
 const updateUserById = (userId, updateUserDto) => __awaiter(void 0, void 0, void 0, function* () {
+    yield user_validation_1.default.updateUserById.validateAsync(updateUserDto);
     const user = yield getUserById(userId);
     if (!user) {
         throw new notFoundError_1.default('User not found');
@@ -105,6 +111,7 @@ const updateUserById = (userId, updateUserDto) => __awaiter(void 0, void 0, void
  * @returns {Promise<User>}
  */
 const deleteUserById = (userId) => __awaiter(void 0, void 0, void 0, function* () {
+    yield user_validation_1.default.deleteUserById.params.validateAsync(userId);
     const user = yield getUserById(userId);
     if (!user) {
         throw new notFoundError_1.default('User not found');

@@ -11,6 +11,8 @@ import moment from "moment/moment";
 import config from "../config/config";
 import jwt from "jsonwebtoken";
 import notFoundError from "../types/notFoundError";
+import authValidation from "../validations/auth.validation";
+import {LoginDto} from "../dtos/loginDto";
 
 /**
  * Login with username and password
@@ -18,12 +20,12 @@ import notFoundError from "../types/notFoundError";
  * @param {string} password
  * @returns {Promise<Omit<User, 'password'>>}
  */
-const login = async (
-  email: string,
-  password: string
+const login = async (loginDto: LoginDto
 ): Promise<AuthTokensResponse> => {
-  const user = await userService.getUserByEmail(email);
-  if (!user || !(await isPasswordMatch(password, user.password as string))) {
+  await authValidation.login.validateAsync(loginDto);
+
+  const user = await userService.getUserByEmail(loginDto.email);
+  if (!user || !(await isPasswordMatch(loginDto.password, user.password as string))) {
     throw new UnauthorizedError('Incorrect email or password');
   }
   const token = await generateTokens(user.id);
@@ -36,6 +38,8 @@ const login = async (
  * @returns {Promise<void>}
  */
 const logout = async (refreshToken: string): Promise<void> => {
+
+  await authValidation.logout.params.validateAsync(refreshToken);
 
   const tokenRepository = await dataSource.getRepository(Token);
 
@@ -57,6 +61,8 @@ const logout = async (refreshToken: string): Promise<void> => {
  * @returns {Promise<AuthTokensResponse>}
  */
 const refreshToken = async (refreshToken: string): Promise<AuthTokensResponse> => {
+  await authValidation.refreshToken.params.validateAsync(refreshToken);
+
   try {
     const refreshTokenData = await verifyToken(refreshToken, TokenType.REFRESH);
     const {userId} = refreshTokenData;

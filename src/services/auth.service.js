@@ -23,15 +23,17 @@ const moment_1 = __importDefault(require("moment/moment"));
 const config_1 = __importDefault(require("../config/config"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const notFoundError_2 = __importDefault(require("../types/notFoundError"));
+const auth_validation_1 = __importDefault(require("../validations/auth.validation"));
 /**
  * Login with username and password
  * @param {string} email
  * @param {string} password
  * @returns {Promise<Omit<User, 'password'>>}
  */
-const login = (email, password) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = yield user_service_1.default.getUserByEmail(email);
-    if (!user || !(yield (0, encryption_1.isPasswordMatch)(password, user.password))) {
+const login = (loginDto) => __awaiter(void 0, void 0, void 0, function* () {
+    yield auth_validation_1.default.login.validateAsync(loginDto);
+    const user = yield user_service_1.default.getUserByEmail(loginDto.email);
+    if (!user || !(yield (0, encryption_1.isPasswordMatch)(loginDto.password, user.password))) {
         throw new unauthorizedError_1.default('Incorrect email or password');
     }
     const token = yield generateTokens(user.id);
@@ -43,6 +45,7 @@ const login = (email, password) => __awaiter(void 0, void 0, void 0, function* (
  * @returns {Promise<void>}
  */
 const logout = (refreshToken) => __awaiter(void 0, void 0, void 0, function* () {
+    yield auth_validation_1.default.logout.params.validateAsync(refreshToken);
     const tokenRepository = yield dataSource_1.dataSource.getRepository(token_1.Token);
     const token = yield tokenRepository.findOneBy({
         token: refreshToken,
@@ -59,6 +62,7 @@ const logout = (refreshToken) => __awaiter(void 0, void 0, void 0, function* () 
  * @returns {Promise<AuthTokensResponse>}
  */
 const refreshToken = (refreshToken) => __awaiter(void 0, void 0, void 0, function* () {
+    yield auth_validation_1.default.refreshToken.params.validateAsync(refreshToken);
     try {
         const refreshTokenData = yield verifyToken(refreshToken, tokenType_1.TokenType.REFRESH);
         const { userId } = refreshTokenData;

@@ -6,8 +6,10 @@ import ConflictError from "../types/conflictError";
 import {CreateUserDto} from "../dtos/createUserDto";
 import {UpdateUserDto} from "../dtos/updateUserDto";
 import {SearchDto} from "../dtos/searchDto";
-import {FindOptionsOrderValue, Like} from "typeorm";
+import {Like} from "typeorm";
 import {PagedResultResponse} from "../types/response";
+import userValidation from '../validations/user.validation';
+
 
 /**
  * Create a user
@@ -16,6 +18,9 @@ import {PagedResultResponse} from "../types/response";
  */
 const createUser = async (createUserDto: CreateUserDto
 ): Promise<User> => {
+
+  await userValidation.createUser.validateAsync(createUserDto);
+
   if (await getUserByEmail(createUserDto.email)) {
     throw new ConflictError('Email already taken');
   }
@@ -40,8 +45,10 @@ const createUser = async (createUserDto: CreateUserDto
  */
 const queryUsers = async (searchDto: SearchDto
 ): Promise<PagedResultResponse<User[]>> => {
-  const userRepository = dataSource.getRepository(User);
 
+  await userValidation.queryUsers.validateAsync(searchDto);
+
+  const userRepository = dataSource.getRepository(User);
 
   const [result, total] =  await userRepository.findAndCount(
     {
@@ -64,6 +71,8 @@ const getUserById = async (
   id: number
 ): Promise<User | null> => {
 
+  await userValidation.getUserById.params.validateAsync(id);
+
   const userRepository = dataSource.getRepository(User);
 
   return await userRepository.findOneBy({
@@ -79,6 +88,9 @@ const getUserById = async (
 const getUserByEmail = async (
   email: string,
 ): Promise<User | null> => {
+
+  await userValidation.getUserByEmail.params.validateAsync(email);
+
   const userRepository = dataSource.getRepository(User);
 
   return await userRepository.findOneBy({
@@ -96,6 +108,9 @@ const updateUserById = async (
   userId: number,
   updateUserDto: UpdateUserDto,
 ): Promise<User | null> => {
+
+  await userValidation.updateUserById.validateAsync(updateUserDto);
+
   const user = await getUserById(userId);
   if (!user) {
     throw new NotFoundError('User not found');
@@ -121,6 +136,9 @@ const updateUserById = async (
  * @returns {Promise<User>}
  */
 const deleteUserById = async (userId: number): Promise<User> => {
+
+  await userValidation.deleteUserById.params.validateAsync(userId);
+
   const user = await getUserById(userId);
   if (!user) {
     throw new NotFoundError('User not found');

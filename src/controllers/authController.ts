@@ -5,12 +5,13 @@ import {RegisterRequestDto} from "../dtos/registerRequestDto";
 import {LoginRequestDto} from "../dtos/loginRequestDto";
 import {AuthTokensResponse} from "../types/response";
 import {Role} from "../enums/role";
+import {User} from "../entities/user";
 
 @Route('/auth')
 export class AuthController extends Controller {
   @Post('v1/register')
   @SuccessResponse('201', 'CREATED')
-  public async register(@Body() request: RegisterRequestDto): Promise<number> {
+  public async register(@Body() request: RegisterRequestDto): Promise<User> {
     const user = await userService.createUser({
       email: request.email,
       name: request.name,
@@ -18,13 +19,13 @@ export class AuthController extends Controller {
       role: Role.USER
     });
     this.setStatus(httpStatus.CREATED);
-    return user.id;
+    return user;
   }
 
   @Post('v1/login')
   @SuccessResponse('200', 'OK')
   public async login(@Body() request: LoginRequestDto): Promise<AuthTokensResponse> {
-    const token = await authService.login(request.email, request.password);
+    const token = await authService.login({email: request.email, password: request.password});
     return token;
   }
 

@@ -39,12 +39,12 @@ let AuthController = class AuthController extends tsoa_1.Controller {
                 role: role_1.Role.USER
             });
             this.setStatus(http_status_1.default.CREATED);
-            return user.id;
+            return user;
         });
     }
     login(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const token = yield services_1.authService.login(request.email, request.password);
+            const token = yield services_1.authService.login({ email: request.email, password: request.password });
             return token;
         });
     }

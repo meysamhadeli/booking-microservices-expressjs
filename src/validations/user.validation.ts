@@ -1,46 +1,44 @@
-import Joi from 'joi';
+import Joi, {object} from 'joi';
 import { password } from './custom.validation';
 import {Role} from "../enums/role";
 
-const createUser = {
-  body: Joi.object().keys({
+const createUser =
+  Joi.object({
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
     role: Joi.string().required().valid(Role.USER, Role.ADMIN)
-  })
-};
+  });
 
-const getUsers = {
-  query: Joi.object().keys({
-    name: Joi.string(),
-    role: Joi.string(),
-    sortBy: Joi.string(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer()
-  })
-};
+const queryUsers =
+  Joi.object({
+    page: Joi.number().required(),
+    pageSize: Joi.number().required(),
+  });
 
-const getUser = {
+
+const getUserById = {
   params: Joi.object().keys({
-    userId: Joi.number().integer()
+    id: Joi.number().integer()
   })
 };
 
-const updateUser = {
+const getUserByEmail = {
   params: Joi.object().keys({
-    userId: Joi.number().integer()
-  }),
-  body: Joi.object()
-    .keys({
-      email: Joi.string().email(),
-      password: Joi.string().custom(password),
-      name: Joi.string()
-    })
-    .min(1)
+    id: Joi.string().email()
+  })
 };
 
-const deleteUser = {
+const updateUserById =
+  Joi.object({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().custom(password),
+    name: Joi.string().required(),
+    role: Joi.string().required().valid(Role.USER, Role.ADMIN)
+  });
+
+
+const deleteUserById = {
   params: Joi.object().keys({
     userId: Joi.number().integer()
   })
@@ -48,8 +46,9 @@ const deleteUser = {
 
 export default {
   createUser,
-  getUsers,
-  getUser,
-  updateUser,
-  deleteUser
+  queryUsers,
+  getUserById,
+  getUserByEmail,
+  updateUserById,
+  deleteUserById
 };
