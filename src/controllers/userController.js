@@ -29,12 +29,19 @@ const http_status_1 = __importDefault(require("http-status"));
 const services_1 = require("../services");
 const tsoa_1 = require("tsoa");
 const notFoundError_1 = __importDefault(require("../types/notFoundError"));
+const mediatr_js_1 = require("../mediatr.js");
+const createUser_1 = require("../users/features/createUser");
 let UserController = class UserController extends tsoa_1.Controller {
     createUser(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            const user = yield services_1.userService.createUser(request);
+            var res = yield mediatr_js_1.mediatrJs.send(new createUser_1.CreateUser({
+                email: request.email,
+                password: request.password,
+                name: request.name,
+                role: request.role
+            }));
             this.setStatus(http_status_1.default.CREATED);
-            return user;
+            return null;
         });
     }
     getUsers(name, pageSize, page) {

@@ -76,7 +76,6 @@ const getUserById = (id) => __awaiter(void 0, void 0, void 0, function* () {
  * @returns {Promise<User | null>}
  */
 const getUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
-    yield user_validation_1.default.getUserByEmail.params.validateAsync(email);
     const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
     return yield userRepository.findOneBy({
         email: email

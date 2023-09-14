@@ -89,8 +89,6 @@ const getUserByEmail = async (
   email: string,
 ): Promise<User | null> => {
 
-  await userValidation.getUserByEmail.params.validateAsync(email);
-
   const userRepository = dataSource.getRepository(User);
 
   return await userRepository.findOneBy({

@@ -6,6 +6,8 @@ import NotFoundError from "../types/notFoundError";
 import {User} from "../entities/user";
 import {PagedResultResponse} from "../types/response";
 import {UpdateUserRequestDto} from "../dtos/updateUserRequestDto";
+import {mediatrJs} from "../mediatr.js";
+import {CreateUser} from "../users/features/createUser";
 
 @Route('/user')
 export class UserController extends Controller {
@@ -13,9 +15,16 @@ export class UserController extends Controller {
   @Security("jwt")
   @SuccessResponse('201', 'CREATED')
   public async createUser(@Body() request: CreateUserRequestDto): Promise<User> {
-    const user = await userService.createUser(request);
+
+    var res =  await mediatrJs.send(new CreateUser({
+      email: request.email,
+      password: request.password,
+      name: request.name,
+      role: request.role
+    }));
+
     this.setStatus(httpStatus.CREATED);
-    return user;
+    return null;
   }
 
   @Get('v1/get')

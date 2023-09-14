@@ -25,7 +25,7 @@ const getUserById = {
 
 const getUserByEmail = {
   params: Joi.object().keys({
-    id: Joi.string().email()
+    email: Joi.string().email().required()
   })
 };
 

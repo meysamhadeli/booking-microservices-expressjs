@@ -4265,6 +4265,11 @@ media-typer@0.3.0:
   resolved "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
   integrity sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==
 
+mediatr-ts@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.npmjs.org/mediatr-ts/-/mediatr-ts-1.2.1.tgz"
+  integrity sha512-+jSid6kcJteIKaFkTCkXaixl/0pgwgHPmHQSlUcxKOnr2Utpp0KXfkTSl6ugpRTbk6Pa/Ob7lBY0RWIY3XIQ+Q==
+
 merge-descriptors@^1.0.1, merge-descriptors@1.0.1:
   version "1.0.1"
   resolved "https://registry.npmjs.org/merge-descriptors/-/merge-descriptors-1.0.1.tgz"
@@ -5993,12 +5998,7 @@ typed-array-length@^1.0.4:
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
 
-typeorm-cursor-pagination@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.npmjs.org/typeorm-cursor-pagination/-/typeorm-cursor-pagination-0.10.1.tgz"
-  integrity sha512-ezMx9giREI8aBVUpOs7RPn5/uIdygqlduuXJcKiny9UnUXev3zIJaoXCHlrenT6pgcR1cx3baHG/HImPEgeVgA==
-
-typeorm@^0.3.17, typeorm@^0.3.6:
+typeorm@^0.3.17:
   version "0.3.17"
   resolved "https://registry.npmjs.org/typeorm/-/typeorm-0.3.17.tgz"
   integrity sha512-UDjUEwIQalO9tWw9O2A4GU+sT3oyoUXheHJy4ft+RFdnRdQctdQ34L9SqE2p7LdwzafHx1maxT+bqXON+Qnmig==

@@ -23,7 +23,7 @@ const getUserById = {
 };
 const getUserByEmail = {
     params: joi_1.default.object().keys({
-        id: joi_1.default.string().email()
+        email: joi_1.default.string().email().required()
     })
 };
 const updateUserById = joi_1.default.object({
