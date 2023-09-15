@@ -1,11 +1,11 @@
 import httpStatus from 'http-status';
 import { userService } from '../services';
 import {Body, Controller, Delete, Get, Post, Put, Query, Route, Security, SuccessResponse} from 'tsoa';
-import { CreateUserRequestDto } from '../dtos/createUserRequestDto';
+import { CreateUserRequestDto } from '../users/dtos/createUserRequestDto';
 import NotFoundError from "../types/notFoundError";
-import {User} from "../entities/user";
+import {User} from "../users/entities/user";
 import {PagedResultResponse} from "../types/response";
-import {UpdateUserRequestDto} from "../dtos/updateUserRequestDto";
+import {UpdateUserRequestDto} from "../users/dtos/updateUserRequestDto";
 import {mediatrJs} from "../mediatr.js";
 import {CreateUser} from "../users/features/createUser";
 

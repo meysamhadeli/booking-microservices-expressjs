@@ -11,6 +11,7 @@ const applicationError_1 = __importDefault(require("../types/applicationError"))
 const forbiddenError_1 = __importDefault(require("../types/forbiddenError"));
 const conflictError_1 = __importDefault(require("../types/conflictError"));
 const joi_1 = require("joi");
+const logger_1 = __importDefault(require("../config/logger"));
 const errorHandler = (err, req, res, next) => {
     if (err instanceof applicationError_1.default) {
         res.status(err.statusCode).json({ error: err.message });
@@ -41,7 +42,7 @@ const errorHandler = (err, req, res, next) => {
     const errorMessage = err.message || 'Internal Server Error'; // Default message if not provided
     const stackTrace = err.stack || ''; // Stack trace, if available
     // Log the error for debugging purposes
-    console.error(err);
+    logger_1.default.error(err);
     // Send a response with the extracted information
     res.status(statusCode).json({ error: errorMessage, stack: stackTrace });
     return next(err);

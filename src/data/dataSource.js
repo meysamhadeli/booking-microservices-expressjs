@@ -11,7 +11,7 @@ exports.dataSource = new typeorm_1.DataSource({
     database: "node_express_template_db",
     logging: true,
     synchronize: false,
-    entities: ['src/entities/*.js'],
+    entities: ['src/users/entities/*.js'],
     migrations: ['src/data/migrations/*.js']
 });
 //# sourceMappingURL=dataSource.js.map

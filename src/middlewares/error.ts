@@ -6,6 +6,7 @@ import ApplicationError from "../types/applicationError";
 import ForbiddenError from "../types/forbiddenError";
 import ConflictError from "../types/conflictError";
 import {ValidationError} from "joi";
+import Logger from "../config/logger";
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof ApplicationError) {
@@ -50,7 +51,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   const stackTrace = err.stack || ''; // Stack trace, if available
 
   // Log the error for debugging purposes
-  console.error(err);
+  Logger.error(err);
 
   // Send a response with the extracted information
   res.status(statusCode).json({ error: errorMessage, stack: stackTrace });

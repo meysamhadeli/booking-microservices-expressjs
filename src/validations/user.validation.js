@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const joi_1 = __importDefault(require("joi"));
 const custom_validation_1 = require("./custom.validation");
-const role_1 = require("../enums/role");
+const role_1 = require("../users/enums/role");
 const createUser = joi_1.default.object({
     email: joi_1.default.string().required().email(),
     password: joi_1.default.string().required().custom(custom_validation_1.password),

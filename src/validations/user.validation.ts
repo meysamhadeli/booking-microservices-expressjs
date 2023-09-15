@@ -1,6 +1,6 @@
 import Joi, {object} from 'joi';
 import { password } from './custom.validation';
-import {Role} from "../enums/role";
+import {Role} from "../users/enums/role";
 
 const createUser =
   Joi.object({

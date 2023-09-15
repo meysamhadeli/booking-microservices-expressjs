@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const encryption_1 = require("../utils/encryption");
 const notFoundError_1 = __importDefault(require("../types/notFoundError"));
 const dataSource_1 = require("../data/dataSource");
-const user_1 = require("../entities/user");
+const user_1 = require("../users/entities/user");
 const conflictError_1 = __importDefault(require("../types/conflictError"));
 const typeorm_1 = require("typeorm");
 const response_1 = require("../types/response");

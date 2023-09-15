@@ -1,11 +1,11 @@
 import httpStatus from 'http-status';
 import {authService, userService} from '../services';
 import {Body, BodyProp, Controller, Post, Route, SuccessResponse} from "tsoa";
-import {RegisterRequestDto} from "../dtos/registerRequestDto";
-import {LoginRequestDto} from "../dtos/loginRequestDto";
+import {RegisterRequestDto} from "../users/dtos/registerRequestDto";
+import {LoginRequestDto} from "../users/dtos/loginRequestDto";
 import {AuthTokensResponse} from "../types/response";
-import {Role} from "../enums/role";
-import {User} from "../entities/user";
+import {Role} from "../users/enums/role";
+import {User} from "../users/entities/user";
 
 @Route('/auth')
 export class AuthController extends Controller {

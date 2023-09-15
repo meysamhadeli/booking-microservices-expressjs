@@ -362,6 +362,11 @@
     enabled "2.0.x"
     kuler "^2.0.0"
 
+"@dynamic-mapper/mapper@^1.10.2":
+  version "1.10.2"
+  resolved "https://registry.npmjs.org/@dynamic-mapper/mapper/-/mapper-1.10.2.tgz"
+  integrity sha512-C+VPmBDGhl2aepCSkegbQd1ABPxxbN6oN5PRXD0HHmgx+FEh8w8yU4P86Yi73ICdkABSB8C7hcnhTcA2zGeRmw==
+
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.4.0"
   resolved "https://registry.npmjs.org/@eslint-community/eslint-utils/-/eslint-utils-4.4.0.tgz"
@@ -4264,11 +4269,6 @@ media-typer@0.3.0:
   version "0.3.0"
   resolved "https://registry.npmjs.org/media-typer/-/media-typer-0.3.0.tgz"
   integrity sha512-dq+qelQ9akHpcOl/gUVRTxVIOkAJ1wR3QAvb4RsVjS8oVoFjDGTc679wJYmUmknUF5HwMLOgb5O+a3KxfWapPQ==
-
-mediatr-ts@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.npmjs.org/mediatr-ts/-/mediatr-ts-1.2.1.tgz"
-  integrity sha512-+jSid6kcJteIKaFkTCkXaixl/0pgwgHPmHQSlUcxKOnr2Utpp0KXfkTSl6ugpRTbk6Pa/Ob7lBY0RWIY3XIQ+Q==
 
 merge-descriptors@^1.0.1, merge-descriptors@1.0.1:
   version "1.0.1"

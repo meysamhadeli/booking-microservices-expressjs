@@ -4,15 +4,15 @@ import {AuthTokensResponse} from '../types/response';
 import NotFoundError from "../types/notFoundError";
 import UnauthorizedError from "../types/unauthorizedError";
 import {dataSource} from "../data/dataSource";
-import {Token} from "../entities/token";
-import {TokenType} from "../enums/tokenType";
-import {User} from "../entities/user";
+import {Token} from "../users/entities/token";
+import {TokenType} from "../users/enums/tokenType";
+import {User} from "../users/entities/user";
 import moment from "moment/moment";
 import config from "../config/config";
 import jwt from "jsonwebtoken";
 import notFoundError from "../types/notFoundError";
 import authValidation from "../validations/auth.validation";
-import {LoginDto} from "../dtos/loginDto";
+import {LoginDto} from "../users/dtos/loginDto";
 
 /**
  * Login with username and password

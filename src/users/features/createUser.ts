@@ -1,11 +1,15 @@
 import {IHandler, IRequest, mediatrJs} from "../../mediatr.js";
-import {Role} from "../../enums/role";
+import {Role} from "../enums/role";
 import userValidation from "../../validations/user.validation";
 import {dataSource} from "../../data/dataSource";
-import {User} from "../../entities/user";
+import {User} from "../entities/user";
 import {encryptPassword} from "../../utils/encryption";
+import {UserDto} from "../dtos/userDto";
+import mapping from "../mapping";
+import mapper from "../mapping";
+import {MappingPair} from "@dynamic-mapper/mapper";
 
-export class CreateUser implements IRequest<CreateUserResult> {
+export class CreateUser implements IRequest<UserDto> {
   email: string;
   password: string;
   name: string;
@@ -16,23 +20,14 @@ export class CreateUser implements IRequest<CreateUserResult> {
   }
 }
 
-export interface CreateUserResult {
-  id: number;
-  email: string;
-  name: string;
-  isEmailVerified: boolean;
-  role: Role;
-  createdAt: Date;
-  updatedAt?: Date;
-}
-
-export class CreateUserHandler implements IHandler<CreateUser, CreateUserResult> {
-  async handle(request: CreateUser): Promise<CreateUserResult> {
+export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
+  async handle(request: CreateUser): Promise<UserDto> {
     await userValidation.createUser.validateAsync(request);
 
     // if (await getUserByEmail(createUserDto.email)) {
     //   throw new ConflictError('Email already taken');
     // }
+
     const userRepository = dataSource.getRepository(User);
 
     const user = {
@@ -43,6 +38,8 @@ export class CreateUserHandler implements IHandler<CreateUser, CreateUserResult>
       password: await encryptPassword(request.password),
       isEmailVerified: false
     };
+
+    const dto = mapping.mapper.map(mapping.userToUserDto, user);
 
     return await userRepository.save(user);
   }

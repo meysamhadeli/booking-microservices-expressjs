@@ -28,7 +28,7 @@ exports.AuthController = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const services_1 = require("../services");
 const tsoa_1 = require("tsoa");
-const role_1 = require("../enums/role");
+const role_1 = require("../users/enums/role");
 let AuthController = class AuthController extends tsoa_1.Controller {
     register(request) {
         return __awaiter(this, void 0, void 0, function* () {
