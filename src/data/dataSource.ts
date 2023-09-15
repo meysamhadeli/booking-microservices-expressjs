@@ -9,6 +9,6 @@ export const dataSource = new DataSource({
   database: "node_express_template_db",
   logging: true,
   synchronize: false, // Disable automatic table generation
-  entities: ['src/users/entities/*.js'],
+  entities: ['src/**/entities/*.js'],
   migrations: ['src/data/migrations/*.js']
 })

@@ -32,7 +32,7 @@ const compression_1 = __importDefault(require("compression"));
 const cors_1 = __importDefault(require("cors"));
 const passport_1 = __importDefault(require("passport"));
 const config_1 = __importDefault(require("./config/config"));
-const error_1 = require("./middlewares/error");
+const errorHandler_1 = require("./middlewares/errorHandler");
 const morgan_1 = require("./config/morgan");
 const routes_1 = require("./routes/routes");
 const swaggerUi = __importStar(require("swagger-ui-express"));
@@ -86,6 +86,6 @@ catch (err) {
     logger_1.default.error('Unable to read swagger.json', err);
 }
 // handle error
-app.use(error_1.errorHandler);
+app.use(errorHandler_1.errorHandler);
 exports.default = app;
 //# sourceMappingURL=app.js.map

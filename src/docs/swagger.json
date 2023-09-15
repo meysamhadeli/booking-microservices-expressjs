@@ -6,74 +6,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"RegisterRequestDto": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name",
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"TokenResponse": {
-				"properties": {
-					"token": {
-						"type": "string"
-					},
-					"expires": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"token",
-					"expires"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AuthTokensResponse": {
-				"properties": {
-					"access": {
-						"$ref": "#/components/schemas/TokenResponse"
-					},
-					"refresh": {
-						"$ref": "#/components/schemas/TokenResponse"
-					}
-				},
-				"required": [
-					"access"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"LoginRequestDto": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"Role": {
 				"enum": [
 					0,
@@ -81,14 +13,7 @@
 				],
 				"type": "number"
 			},
-			"TokenType": {
-				"enum": [
-					0,
-					1
-				],
-				"type": "number"
-			},
-			"User": {
+			"UserDto": {
 				"properties": {
 					"id": {
 						"type": "number",
@@ -98,9 +23,6 @@
 						"type": "string"
 					},
 					"name": {
-						"type": "string"
-					},
-					"password": {
 						"type": "string"
 					},
 					"isEmailVerified": {
@@ -115,68 +37,16 @@
 					},
 					"updatedAt": {
 						"type": "string",
-						"format": "date-time",
-						"nullable": true
-					},
-					"tokens": {
-						"items": {
-							"$ref": "#/components/schemas/Token"
-						},
-						"type": "array"
+						"format": "date-time"
 					}
 				},
 				"required": [
 					"id",
 					"email",
 					"name",
-					"password",
 					"isEmailVerified",
 					"role",
-					"createdAt",
-					"tokens"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Token": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"token": {
-						"type": "string"
-					},
-					"expires": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"type": {
-						"$ref": "#/components/schemas/TokenType"
-					},
-					"blacklisted": {
-						"type": "boolean"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"user": {
-						"$ref": "#/components/schemas/User"
-					},
-					"userId": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"id",
-					"token",
-					"expires",
-					"type",
-					"blacklisted",
-					"createdAt",
-					"user"
+					"createdAt"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -205,11 +75,11 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"PagedResultResponse_User-Array_": {
+			"PagedResult_UserDto-Array_": {
 				"properties": {
 					"result": {
 						"items": {
-							"$ref": "#/components/schemas/User"
+							"$ref": "#/components/schemas/UserDto"
 						},
 						"type": "array"
 					},
@@ -221,6 +91,58 @@
 				"required": [
 					"result",
 					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TokenDto": {
+				"properties": {
+					"token": {
+						"type": "string"
+					},
+					"expires": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"token",
+					"expires"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AuthDto": {
+				"properties": {
+					"access": {
+						"$ref": "#/components/schemas/TokenDto"
+					},
+					"refresh": {
+						"$ref": "#/components/schemas/TokenDto"
+					}
+				},
+				"required": [
+					"access"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginRequestDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -250,157 +172,28 @@
 				"additionalProperties": false
 			}
 		},
-    "securitySchemes": {
-        "jwt": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        }
+		"securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
 	},
-  "security": [{
-    "jwt": []
-  }],
 	"info": {
-		"title": "node-express-template",
+		"title": "typeorm-express-typescript-boilerplate",
 		"version": "1.0.0",
-		"description": "REST API Template with Node JS, TypeScript, Express and Typeorm",
+		"description": "REST API Boilerplate with Node JS, TypeScript, Express and TypeOrm",
 		"license": {
 			"name": "ISC"
 		},
 		"contact": {
-			"name": "Meysam Hadeli"
+			"name": "Antonio Lázaro"
 		}
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/auth/v1/register": {
-			"post": {
-				"operationId": "Register",
-				"responses": {
-					"201": {
-						"description": "CREATED",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "number",
-									"format": "double"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/RegisterRequestDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/v1/login": {
-			"post": {
-				"operationId": "Login",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AuthTokensResponse"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/LoginRequestDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/v1/logout": {
-			"post": {
-				"operationId": "Logout",
-				"responses": {
-					"204": {
-						"description": "NO_CONTENT"
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"refreshToken": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"refreshToken"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/auth/v1/refreshToken": {
-			"post": {
-				"operationId": "RefreshToken",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AuthTokensResponse"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"refreshToken": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"refreshToken"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/user/v1/create": {
+		"/identity/v1/create": {
 			"post": {
 				"operationId": "CreateUser",
 				"responses": {
@@ -409,17 +202,13 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/User"
+									"$ref": "#/components/schemas/UserDto"
 								}
 							}
 						}
 					}
 				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -433,57 +222,7 @@
 				}
 			}
 		},
-		"/user/v1/get": {
-			"get": {
-				"operationId": "GetUsers",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/PagedResultResponse_User-Array_"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "name",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pageSize",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					},
-					{
-						"in": "query",
-						"name": "page",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/user/v1/get-by-id": {
+		"/identity/v1/get-by-id": {
 			"get": {
 				"operationId": "GetUserById",
 				"responses": {
@@ -492,7 +231,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/User"
+									"$ref": "#/components/schemas/UserDto"
 								}
 							}
 						}
@@ -516,7 +255,143 @@
 				]
 			}
 		},
-		"/user/v1/update": {
+		"/identity/v1/delete": {
+			"delete": {
+				"operationId": "DeleteUserById",
+				"responses": {
+					"204": {
+						"description": "NO_CONTENT",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/identity/v1/get": {
+			"get": {
+				"operationId": "GetUsers",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PagedResult_UserDto-Array_"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "order",
+						"required": false,
+						"schema": {
+							"default": "ASC",
+							"type": "string",
+							"enum": [
+								"ASC",
+								"DESC"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "orderBy",
+						"required": false,
+						"schema": {
+							"default": "id",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "searchTerm",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/identity/v1/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/identity/v1/update": {
 			"put": {
 				"operationId": "UpdateUser",
 				"responses": {
@@ -525,7 +400,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/User"
+									"$ref": "#/components/schemas/UserDto"
 								}
 							}
 						}
@@ -559,37 +434,71 @@
 				}
 			}
 		},
-		"/user/v1/delete": {
-			"delete": {
-				"operationId": "DeleteUserById",
+		"/identity/v1/logout": {
+			"post": {
+				"operationId": "Logout",
 				"responses": {
 					"204": {
-						"description": "NO_CONTENT",
+						"description": "NO_CONTENT"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/identity/v1/refreshToken": {
+			"post": {
+				"operationId": "RefreshToken",
+				"responses": {
+					"200": {
+						"description": "OK",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/User"
+									"$ref": "#/components/schemas/AuthDto"
 								}
 							}
 						}
 					}
 				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object"
+							}
 						}
 					}
-				]
+				}
 			}
 		}
 	},

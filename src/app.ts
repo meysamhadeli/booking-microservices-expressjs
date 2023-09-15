@@ -4,7 +4,7 @@ import compression from 'compression';
 import cors from 'cors';
 import passport from 'passport';
 import config from './config/config';
-import {errorHandler} from './middlewares/error';
+import {errorHandler} from './middlewares/errorHandler';
 import {morganMiddleware} from './config/morgan';
 import {RegisterRoutes} from './routes/routes';
 import * as swaggerUi from 'swagger-ui-express';
