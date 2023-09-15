@@ -8,4 +8,8 @@ export class UserDto {
   role: Role;
   createdAt: Date;
   updatedAt?: Date;
+
+  // constructor(request: Partial<UserDto> = {}) {
+  //   Object.assign(this, request);
+  // }
 }

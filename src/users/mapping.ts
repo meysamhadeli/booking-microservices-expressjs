@@ -1,23 +1,25 @@
-import {MapperConfiguration, MappingPair} from "@dynamic-mapper/mapper";
+import { TypeMapper } from "ts-mapper";
 import {User} from "./entities/user";
 import {UserDto} from "./dtos/userDto";
 
-const userToUserDto = new MappingPair<User, UserDto>();
+export class Mapper extends TypeMapper {
+  constructor() {
+    super();
+    this.config();
+  }
 
-const mapper = new MapperConfiguration(cfg => {
-  cfg.createMap(userToUserDto, {
-    email: opt => opt.mapFrom(src => src.email),
-    isEmailVerified: opt => opt.mapFrom(src => src.isEmailVerified),
-    role: opt => opt.mapFrom(src => src.role),
-    name: opt => opt.mapFrom(src => src.name),
-    id: opt => opt.mapFrom(src => src.id),
-    createdAt: opt => opt.mapFrom(src => src.createdAt),
-    updatedAt: opt => opt.mapFrom(src => src.updatedAt)
-  });
+  private config(): void {
+    this.createMap<User, UserDto>()
+      .map(src => src.name, dest => dest.name)
+      .map(src => src.role, dest => dest.role)
+      .map(src => src.id, dest => dest.id)
+      .map(src => src.email, dest => dest.email)
+      .map(src => src.updatedAt, dest => dest.updatedAt)
+      .map(src => src.createdAt, dest => dest.createdAt)
+      .map(src => src.isEmailVerified, dest => dest.isEmailVerified);
+  }
+}
 
-}).createMapper();
+const mapper = new Mapper();
 
-export default {
-  mapper,
-  userToUserDto
-};
+export default mapper;

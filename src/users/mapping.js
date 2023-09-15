@@ -1,20 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mapper_1 = require("@dynamic-mapper/mapper");
-const userToUserDto = new mapper_1.MappingPair();
-const mapper = new mapper_1.MapperConfiguration(cfg => {
-    cfg.createMap(userToUserDto, {
-        email: opt => opt.mapFrom(src => src.email),
-        isEmailVerified: opt => opt.mapFrom(src => src.isEmailVerified),
-        role: opt => opt.mapFrom(src => src.role),
-        name: opt => opt.mapFrom(src => src.name),
-        id: opt => opt.mapFrom(src => src.id),
-        createdAt: opt => opt.mapFrom(src => src.createdAt),
-        updatedAt: opt => opt.mapFrom(src => src.updatedAt)
-    });
-}).createMapper();
-exports.default = {
-    mapper,
-    userToUserDto
-};
+exports.Mapper = void 0;
+const ts_mapper_1 = require("ts-mapper");
+class Mapper extends ts_mapper_1.TypeMapper {
+    constructor() {
+        super();
+        this.config();
+    }
+    config() {
+        this.createMap()
+            .map(src => src.name, dest => dest.name)
+            .map(src => src.role, dest => dest.role)
+            .map(src => src.id, dest => dest.id)
+            .map(src => src.email, dest => dest.email)
+            .map(src => src.updatedAt, dest => dest.updatedAt)
+            .map(src => src.createdAt, dest => dest.createdAt)
+            .map(src => src.isEmailVerified, dest => dest.isEmailVerified);
+    }
+}
+exports.Mapper = Mapper;
+const mapper = new Mapper();
+exports.default = mapper;
 //# sourceMappingURL=mapping.js.map

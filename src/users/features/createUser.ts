@@ -5,9 +5,7 @@ import {dataSource} from "../../data/dataSource";
 import {User} from "../entities/user";
 import {encryptPassword} from "../../utils/encryption";
 import {UserDto} from "../dtos/userDto";
-import mapping from "../mapping";
 import mapper from "../mapping";
-import {MappingPair} from "@dynamic-mapper/mapper";
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;
@@ -39,9 +37,11 @@ export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
       isEmailVerified: false
     };
 
-    const dto = mapping.mapper.map(mapping.userToUserDto, user);
+    var userEntity = await userRepository.save(user);
 
-    return await userRepository.save(user);
+    const f = mapper.map(userEntity, new UserDto());
+
+    return null;
   }
 }
 

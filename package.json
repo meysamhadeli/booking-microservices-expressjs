@@ -76,7 +76,6 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
-    "@dynamic-mapper/mapper": "^1.10.2",
     "@types/bcryptjs": "^2.4.2",
     "@types/nodemailer": "^6.4.7",
     "@types/pg": "^8.10.2",
@@ -99,6 +98,7 @@
     "pg": "^8.11.3",
     "pm2": "^5.2.2",
     "reflect-metadata": "^0.1.13",
+    "ts-mapper": "^1.2.4",
     "tsoa": "^5.1.1",
     "typeorm": "^0.3.17",
     "winston": "^3.8.2",

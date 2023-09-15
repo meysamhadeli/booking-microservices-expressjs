@@ -18,6 +18,7 @@ const user_validation_1 = __importDefault(require("../../validations/user.valida
 const dataSource_1 = require("../../data/dataSource");
 const user_1 = require("../entities/user");
 const encryption_1 = require("../../utils/encryption");
+const userDto_1 = require("../dtos/userDto");
 const mapping_1 = __importDefault(require("../mapping"));
 class CreateUser {
     constructor(request = {}) {
@@ -41,8 +42,9 @@ class CreateUserHandler {
                 password: yield (0, encryption_1.encryptPassword)(request.password),
                 isEmailVerified: false
             };
-            const dto = mapping_1.default.mapper.map(mapping_1.default.userToUserDto, user);
-            return yield userRepository.save(user);
+            var userEntity = yield userRepository.save(user);
+            const f = mapping_1.default.map(userEntity, new userDto_1.UserDto());
+            return null;
         });
     }
 }
