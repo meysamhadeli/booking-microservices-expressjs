@@ -1,0 +1,82 @@
+{
+    "name": "@types/jsonwebtoken",
+    "version": "9.0.3",
+    "description": "TypeScript definitions for jsonwebtoken",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/jsonwebtoken",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Maxime LUCE",
+            "url": "https://github.com/SomaticIT",
+            "githubUsername": "SomaticIT"
+        },
+        {
+            "name": "Daniel Heim",
+            "url": "https://github.com/danielheim",
+            "githubUsername": "danielheim"
+        },
+        {
+            "name": "Brice BERNARD",
+            "url": "https://github.com/brikou",
+            "githubUsername": "brikou"
+        },
+        {
+            "name": "Veli-Pekka Kestilä",
+            "url": "https://github.com/vpk",
+            "githubUsername": "vpk"
+        },
+        {
+            "name": "Daniel Parker",
+            "url": "https://github.com/GeneralistDev",
+            "githubUsername": "GeneralistDev"
+        },
+        {
+            "name": "Kjell Dießel",
+            "url": "https://github.com/kettil",
+            "githubUsername": "kettil"
+        },
+        {
+            "name": "Robert Gajda",
+            "url": "https://github.com/RunAge",
+            "githubUsername": "RunAge"
+        },
+        {
+            "name": "Nico Flaig",
+            "url": "https://github.com/nflaig",
+            "githubUsername": "nflaig"
+        },
+        {
+            "name": "Linus Unnebäck",
+            "url": "https://github.com/LinusU",
+            "githubUsername": "LinusU"
+        },
+        {
+            "name": "Ivan Sieder",
+            "url": "https://github.com/ivansieder",
+            "githubUsername": "ivansieder"
+        },
+        {
+            "name": "Piotr Błażejewicz",
+            "url": "https://github.com/peterblazejewicz",
+            "githubUsername": "peterblazejewicz"
+        },
+        {
+            "name": "Nandor Kraszlan",
+            "url": "https://github.com/nandi95",
+            "githubUsername": "nandi95"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/jsonwebtoken"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/node": "*"
+    },
+    "typesPublisherContentHash": "fc15f887c0b608ef3b24af14ff04ff74f798d49187cea3e6f00c9a3db3595ef8",
+    "typeScriptVersion": "4.5"
+}
