@@ -1,0 +1,1 @@
+{"version":3,"file":"empty.const.js","sourceRoot":"","sources":["../../src/empty.const.ts"],"names":[],"mappings":"AAAA,MAAM,CAAC,IAAM,WAAW,GAAG,MAAM,CAAC,aAAa,CAAC,CAAC","sourcesContent":["export const EMPTY_VALUE = Symbol('EMPTY_VALUE');\n"]}
