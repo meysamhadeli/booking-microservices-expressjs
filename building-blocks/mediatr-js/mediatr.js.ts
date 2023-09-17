@@ -19,7 +19,6 @@ export interface IHandler<TRequest extends IRequestBase, TResponse> {
 }
 /**
 
-
 /**
  * Manage registration and resolving handlers
  */
