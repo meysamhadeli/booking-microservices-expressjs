@@ -1,0 +1,37 @@
+{
+  "name": "typedi",
+  "version": "0.10.0",
+  "description": "Dependency injection for TypeScript.",
+  "author": "TypeStack contributors",
+  "license": "MIT",
+  "sideEffects": false,
+  "main": "./cjs/index.js",
+  "module": "./esm5/index.js",
+  "es2015": "./esm2015/index.js",
+  "typings": "./types/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pleerock/typedi.git"
+  },
+  "tags": [
+    "di",
+    "container",
+    "di-container",
+    "typescript",
+    "typescript-di",
+    "dependency-injection"
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.md": [
+      "npm run prettier:fix"
+    ],
+    "*.ts": [
+      "npm run prettier:fix"
+    ]
+  }
+}
