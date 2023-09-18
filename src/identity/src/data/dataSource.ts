@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
-import Logger from "building-blocks/logging/logger";
-import applicationException from "building-blocks/types/exception/applicationException";
+import Logger from 'building-blocks/logging/logger';
+import applicationException from 'building-blocks/types/exception/applicationException';
 
 export const dataSource = new DataSource({
   type: 'postgres',
