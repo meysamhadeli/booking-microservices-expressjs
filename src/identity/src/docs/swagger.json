@@ -6,95 +6,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"Role": {
-				"enum": [
-					0,
-					1
-				],
-				"type": "number"
-			},
-			"UserDto": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"email": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"isEmailVerified": {
-						"type": "boolean"
-					},
-					"role": {
-						"$ref": "#/components/schemas/Role"
-					},
-					"createdAt": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updatedAt": {
-						"type": "string",
-						"format": "date-time"
-					}
-				},
-				"required": [
-					"id",
-					"email",
-					"name",
-					"isEmailVerified",
-					"role",
-					"createdAt"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreateUserRequestDto": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					},
-					"name": {
-						"type": "string"
-					},
-					"role": {
-						"$ref": "#/components/schemas/Role"
-					}
-				},
-				"required": [
-					"email",
-					"password",
-					"name",
-					"role"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"PagedResult_UserDto-Array_": {
-				"properties": {
-					"result": {
-						"items": {
-							"$ref": "#/components/schemas/UserDto"
-						},
-						"type": "array"
-					},
-					"total": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"result",
-					"total"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"TokenDto": {
 				"properties": {
 					"token": {
@@ -147,6 +58,103 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Role": {
+				"enum": [
+					0,
+					1
+				],
+				"type": "number"
+			},
+			"UserDto": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"email": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"isEmailVerified": {
+						"type": "boolean"
+					},
+					"role": {
+						"$ref": "#/components/schemas/Role"
+					},
+					"passportNumber": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"email",
+					"name",
+					"isEmailVerified",
+					"role",
+					"passportNumber",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateUserRequestDto": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/Role"
+					},
+					"passportNumber": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password",
+					"name",
+					"role",
+					"passportNumber"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PagedResult_UserDto-Array_": {
+				"properties": {
+					"result": {
+						"items": {
+							"$ref": "#/components/schemas/UserDto"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"result",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UpdateUserRequestDto": {
 				"properties": {
 					"email": {
@@ -160,13 +168,17 @@
 					},
 					"role": {
 						"$ref": "#/components/schemas/Role"
+					},
+					"passportNumber": {
+						"type": "string"
 					}
 				},
 				"required": [
 					"email",
 					"password",
 					"name",
-					"role"
+					"role",
+					"passportNumber"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -181,19 +193,115 @@
     }
 	},
 	"info": {
-		"title": "typeorm-express-typescript-boilerplate",
+		"title": "identity",
 		"version": "1.0.0",
-		"description": "REST API Boilerplate with Node JS, TypeScript, Express and TypeOrm",
+		"description": "identity service for authentication and authorization",
 		"license": {
-			"name": "ISC"
+			"name": "MIT"
 		},
 		"contact": {
-			"name": "Antonio Lázaro"
+			"name": "Meysam Hadeli"
 		}
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/identity/v1/create": {
+		"/identity/v1/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/identity/v1/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"204": {
+						"description": "NO_CONTENT"
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/identity/v1/refreshToken": {
+			"post": {
+				"operationId": "RefreshToken",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/user/v1/create": {
 			"post": {
 				"operationId": "CreateUser",
 				"responses": {
@@ -208,7 +316,11 @@
 						}
 					}
 				},
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -222,40 +334,7 @@
 				}
 			}
 		},
-		"/identity/v1/get-by-id": {
-			"get": {
-				"operationId": "GetUserById",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/UserDto"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/identity/v1/delete": {
+		"/user/v1/delete": {
 			"delete": {
 				"operationId": "DeleteUserById",
 				"responses": {
@@ -288,7 +367,40 @@
 				]
 			}
 		},
-		"/identity/v1/get": {
+		"/user/v1/get-by-id": {
+			"get": {
+				"operationId": "GetUserById",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/user/v1/get": {
 			"get": {
 				"operationId": "GetUsers",
 				"responses": {
@@ -362,36 +474,7 @@
 				]
 			}
 		},
-		"/identity/v1/login": {
-			"post": {
-				"operationId": "Login",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AuthDto"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/LoginRequestDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/identity/v1/update": {
+		"/user/v1/update": {
 			"put": {
 				"operationId": "UpdateUser",
 				"responses": {
@@ -428,73 +511,6 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/UpdateUserRequestDto"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/identity/v1/logout": {
-			"post": {
-				"operationId": "Logout",
-				"responses": {
-					"204": {
-						"description": "NO_CONTENT"
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"refreshToken": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"refreshToken"
-								],
-								"type": "object"
-							}
-						}
-					}
-				}
-			}
-		},
-		"/identity/v1/refreshToken": {
-			"post": {
-				"operationId": "RefreshToken",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AuthDto"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"refreshToken": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"refreshToken"
-								],
-								"type": "object"
 							}
 						}
 					}

@@ -2,6 +2,7 @@ import * as amqp from 'amqplib';
 import {snakeCase} from 'lodash';
 import {getTypeName} from "../utils/reflection";
 import {deserializeObject} from "../utils/serialization";
+import {connection} from "./rabbitmq";
 
 export type handlerFunc<T> = (queue: string, message: T) => void;
 
@@ -10,17 +11,17 @@ export interface IConsumer {
 }
 
 export class Consumer implements IConsumer {
-    constructor(private connection: amqp.Connection) {
+    constructor() {
     }
 
     async consumeMessage<T>(type: T, handler: handlerFunc<T>): Promise<void> {
         let channel: amqp.Channel;
         try {
-            if (this.connection === null) {
+            if (connection === null) {
                 throw new Error('Connection is not established.');
             }
 
-            channel = await this.connection.createChannel();
+            channel = await connection.createChannel();
 
             const exchangeName = snakeCase(getTypeName(type));
 

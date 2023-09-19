@@ -2,22 +2,23 @@ import  {amqp} from 'amqplib';
 import { snakeCase } from 'lodash';
 import {getTypeName} from "../utils/reflection";
 import {serializeObject} from "../utils/serialization";
+import {connection} from "./rabbitmq";
 
 export interface IPublisher {
     publishMessage<T>(message: T): Promise<void>;
 }
 
 export class Publisher implements IPublisher {
-    constructor(private connection: amqp.Connection) {}
+    constructor() {}
     async publishMessage<T>(message: T ) {
         let channel: amqp.Channel;
 
         try {
-            if (this.connection === null) {
+            if (connection === null) {
                 throw new Error('Connection is not established.');
             }
 
-            channel = await this.connection.createChannel();
+            channel = await connection.createChannel();
 
             const exchangeName = snakeCase(getTypeName(message));
 

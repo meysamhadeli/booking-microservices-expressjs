@@ -1,9 +1,9 @@
 import * as amqp from 'amqplib';
-
+export let connection: amqp.Connection;
 export class RabbitMQConnection {
-    async connect(): Promise<amqp.Connection> {
+    async createConnection(): Promise<void> {
         try{
-            return  await amqp.connect('amqp://localhost');
+            connection =  await amqp.connect('amqp://localhost');
         }catch (error){
             console.log(error);
             throw new Error(error);

@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import Logger from 'building-blocks/logging/logger';
 import applicationException from 'building-blocks/types/exception/applicationException';
+import { seedUser } from './seeds/seedUser';
 
 export const dataSource = new DataSource({
   type: 'postgres',
@@ -8,14 +9,14 @@ export const dataSource = new DataSource({
   port: 5432,
   username: 'postgres',
   password: 'postgres',
-  database: 'node_express_template_db',
+  database: 'identity',
   logging: true,
   synchronize: false, // Disable automatic table generation
   entities: ['src/**/entities/*.js'],
   migrations: ['src/data/migrations/*.js']
 });
 
-export const initialDataSource = () => {
+export const initialDataSource = async () => {
   dataSource
     .initialize()
     .then(() => {
@@ -23,8 +24,11 @@ export const initialDataSource = () => {
 
       dataSource
         .runMigrations()
-        .then(() => {
+        .then(async () => {
           Logger.info('Migrations run successfully!');
+
+          await seedUser();
+          Logger.info('Seed user inserted successfully!');
         })
         .catch((err) => {
           throw new applicationException('Error during running the Migrations!');
