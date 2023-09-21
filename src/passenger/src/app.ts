@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express from 'express';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -9,7 +10,7 @@ import Logger from 'building-blocks/logging/logger';
 import logger from 'building-blocks/logging/logger';
 import config from 'building-blocks/config/config';
 import {errorHandler} from 'building-blocks/middlewares/errorHandler';
-import {initialDataSource} from "./data/dataSource";
+import {dataSource, initialDataSource} from "./data/dataSource";
 import {registerMediatrHandlers} from "./extensions/mediatrExtensions";
 import {initialRabbitmq} from "./extensions/rabbitmqExtensions";
 import {RegisterRoutes} from "./routes/routes";
@@ -42,11 +43,18 @@ const start = async () => {
     app.use(cors());
     app.options('*', cors());
 
+    // metrics middleware
+    // app.use(requestCounterMiddleware);
+    // app.use(requestLatencyMiddleware);
+
+    // register openTelemetry
+    //const tracer = await initialOpenTelemetry();
+
 // jwt authentication
     app.use(passport.initialize());
 
 // register routes with tsoa
-RegisterRoutes(app);
+    RegisterRoutes(app);
 
 // error handler
     app.use(errorHandler);
@@ -69,7 +77,13 @@ RegisterRoutes(app);
     await registerMediatrHandlers();
 
 // register rabbitmq
-    await initialRabbitmq();
+    const rabbitmq = await initialRabbitmq();
+
+    // gracefully shut down on process exit
+    process.on('SIGTERM', () => {
+        rabbitmq.closeConnection();
+        dataSource.destroy();
+    });
 }
 
 start();

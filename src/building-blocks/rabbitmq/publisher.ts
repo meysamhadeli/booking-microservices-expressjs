@@ -1,53 +1,68 @@
-import { amqp } from 'amqplib';
-import { snakeCase } from 'lodash';
-import { getTypeName } from "../utils/reflection";
-import { serializeObject } from "../utils/serialization";
-import { connection } from "./rabbitmq";
+import {snakeCase} from 'lodash';
+import {v4 as uuidv4} from 'uuid';
+import {getUnixTime} from 'date-fns';
 import asyncRetry from 'async-retry';
+import {container, Lifecycle, scoped} from 'tsyringe';
+import {getTypeName} from "../utils/reflection";
+import {serializeObject} from "../utils/serialization";
 import config from "../config/config";
 import Logger from "../logging/logger";
+import {RabbitMQConnection} from "./rabbitmq";
 
 export interface IPublisher {
     publishMessage<T>(message: T): Promise<void>;
 }
 
+@scoped(Lifecycle.ResolutionScoped)
 export class Publisher implements IPublisher {
-    constructor() {}
-    async publishMessage<T>(message: T ) {
-        let channel: amqp.Channel;
-
+    async publishMessage<T>(message: T) {
+        const rabbitMQConnection = container.resolve(RabbitMQConnection);
         try {
             await asyncRetry(
                 async () => {
-                    if (connection === null) {
-                        throw new Error('Connection is not established.');
-                    }
-
-                    channel = await connection.createChannel();
+                    const channel = await rabbitMQConnection.getChannel();
 
                     const exchangeName = snakeCase(getTypeName(message));
-
                     const routingKey = exchangeName;
-
                     const serializedMessage = serializeObject(message);
 
-                    // Send the message to the exchange with the specified routing key
-                    channel.publish(exchangeName, routingKey, Buffer.from(serializedMessage));
+                    // Start a new span for this RabbitMQ operation
+                    //const span = this.tracer.startSpan(`publish_message_${exchangeName}`);
 
-                    Logger.info(`Sent: ${message} with routing key "${routingKey}"`);
-                    if (channel) channel.close();
+                    await channel.assertExchange(exchangeName, 'topic', {durable: false});
+
+                    // Create custom message properties
+                    const messageProperties = {
+                        messageId: uuidv4().toString(),
+                        timestamp: getUnixTime(new Date()),
+                        contentType: 'application/json',
+                        exchange: exchangeName,
+                        routingKey: routingKey,
+                        type: 'topic'
+                    };
+
+                    channel.publish(exchangeName, routingKey, Buffer.from(serializedMessage), {
+                        headers: messageProperties
+                    });
+
+                    Logger.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
+
+                    // Set attributes on the span
+                    //span.setAttributes(messageProperties);
+
+                    // Ensure the span ends when this operation is complete
+                    //span.end();
                 },
                 {
                     retries: config.retry.count,
                     factor: config.retry.factor,
-                    minTimeout: config.retry.minTimout,
+                    minTimeout: config.retry.minTimeout,
                     maxTimeout: config.retry.maxTimeout
                 }
             );
         } catch (error) {
-            if (channel) channel.close();
-
-            throw new Error(error);
+            Logger.error(error);
+            await rabbitMQConnection.closeChanel();
         }
     }
 }

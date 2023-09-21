@@ -18,7 +18,7 @@ const passenger_1 = require("../../passenger/entities/passenger");
 const passengerType_1 = require("../../passenger/enums/passengerType");
 const logger_1 = __importDefault(require("building-blocks/logging/logger"));
 const createUserConsumerHandler = (queue, message) => __awaiter(void 0, void 0, void 0, function* () {
-    if (message !== null && message !== void 0 ? message : false)
+    if (message == null || message == undefined)
         return;
     const passengerRepository = new passengerRepository_1.PassengerRepository();
     const passenger = yield passengerRepository.createPassenger(new passenger_1.Passenger(message.name, message.passportNumber, 20, passengerType_1.PassengerType.MALE));

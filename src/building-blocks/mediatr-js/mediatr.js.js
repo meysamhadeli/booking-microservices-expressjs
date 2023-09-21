@@ -13,7 +13,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.mediatrJs = void 0;
 /**
 
-
 /**
  * Manage registration and resolving handlers
  */

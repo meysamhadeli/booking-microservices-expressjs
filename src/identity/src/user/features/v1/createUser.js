@@ -37,6 +37,7 @@ const validation_1 = require("building-blocks/utils/validation");
 const conflictException_1 = __importDefault(require("building-blocks/types/exception/conflictException"));
 const encryption_1 = require("building-blocks/utils/encryption");
 const userRepository_1 = require("../../../data/repositories/userRepository");
+const tsyringe_1 = require("tsyringe");
 const publisher_1 = require("building-blocks/rabbitmq/publisher");
 const identityContract_1 = require("building-blocks/contracts/identityContract");
 class CreateUser {
@@ -90,7 +91,7 @@ class CreateUserHandler {
                 throw new conflictException_1.default('Email already taken');
             }
             const userEntity = yield userRepository.createUser(new user_1.User(request.email, request.name, yield (0, encryption_1.encryptPassword)(request.password), false, request.role, request.passportNumber));
-            const publisher = new publisher_1.Publisher();
+            const publisher = tsyringe_1.container.resolve(publisher_1.Publisher);
             yield publisher.publishMessage(new identityContract_1.UserCreated(userEntity.id, userEntity.name, userEntity.passportNumber));
             const result = mapping_1.default.map(userEntity, new userDto_1.UserDto());
             return result;

@@ -7,6 +7,7 @@ dotenv.config({path: path.join(process.cwd(), '.env')});
 const envVarsSchema = Joi.object()
     .keys({
         NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
+        SERVICE_NAME: Joi.string(),
         PORT: Joi.number().default(3000),
         JWT_SECRET: Joi.string().required().description('JWT secret key'),
         JWT_ACCESS_EXPIRATION_MINUTES: Joi.number()
@@ -17,6 +18,8 @@ const envVarsSchema = Joi.object()
             .description('days after which refresh tokens expire'),
         RABBITMQ_Host: Joi.string().default('localhost').description('Rabbitmq host'),
         RABBITMQ_PORT: Joi.number().default(5672).description('Rabbitmq port'),
+        RABBITMQ_USERNAME: Joi.string().default('guest').description('Rabbitmq username'),
+        RABBITMQ_PASSWORD: Joi.string().default('guest').description('Rabbitmq password'),
         RETRY_COUNT: Joi.number().default(3).description('Number of retries'),
         RETRY_FACTOR: Joi.number().default(2).description('Exponential backoff factor'),
         RETRY_MIN_TIMEOUT: Joi.number().default(1000).description('Minimum time before retrying (1 second)'),
@@ -34,20 +37,23 @@ if (error) {
 
 export default {
     env: envVars.NODE_ENV,
+    serviceName: envVars.SERVICE_NAME,
     port: envVars.PORT,
     jwt: {
         secret: envVars.JWT_SECRET,
         accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
         refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS
     },
-    rabbitmq:{
+    rabbitmq: {
         host: envVars.RABBITMQ_Host,
-        port: envVars.RABBITMQ_PORT
+        port: envVars.RABBITMQ_PORT,
+        userName: envVars.RABBITMQ_USERNAME,
+        password: envVars.RABBITMQ_PASSWORD
     },
-    retry:{
+    retry: {
         count: envVars.RETRY_COUNT,
         factor: envVars.RETRY_FACTOR,
-        minTimout: envVars.RETRY_MIN_TIMEOUT,
-        maxTimeout: envVars.maxTimeout
+        minTimeout: envVars.RETRY_MIN_TIMEOUT,
+        maxTimeout: envVars.RETRY_MAX_TIMEOUT
     }
 };

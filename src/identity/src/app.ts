@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express from 'express';
 import helmet from 'helmet';
 import compression from 'compression';
@@ -6,7 +7,7 @@ import passport from 'passport';
 import { morganMiddleware } from 'building-blocks/logging/morgan';
 import { RegisterRoutes } from './routes/routes';
 import * as swaggerUi from 'swagger-ui-express';
-import { initialDataSource } from './data/dataSource';
+import { dataSource, initialDataSource } from './data/dataSource';
 import Logger from 'building-blocks/logging/logger';
 import logger from 'building-blocks/logging/logger';
 import config from 'building-blocks/config/config';
@@ -41,6 +42,13 @@ const start = async () => {
   app.use(cors());
   app.options('*', cors());
 
+  // metrics middleware
+  // app.use(requestCounterMiddleware);
+  // app.use(requestLatencyMiddleware);
+
+  // register openTelemetry
+  //const tracer = await initialOpenTelemetry();
+
   // jwt authentication
   app.use(passport.initialize());
 
@@ -68,7 +76,13 @@ const start = async () => {
   await registerMediatrHandlers();
 
   // register rabbitmq
-  await initialRabbitmq();
+  const rabbitmq = await initialRabbitmq();
+
+  // gracefully shut down on process exit
+  process.on('SIGTERM', async () => {
+    await rabbitmq.closeConnection();
+    await dataSource.destroy();
+  });
 };
 
 start();

@@ -11,9 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialRabbitmq = void 0;
 const rabbitmq_1 = require("building-blocks/rabbitmq/rabbitmq");
+const tsyringe_1 = require("tsyringe");
 const initialRabbitmq = () => __awaiter(void 0, void 0, void 0, function* () {
-    const rabbitMQConnection = new rabbitmq_1.RabbitMQConnection();
+    const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_1.RabbitMQConnection);
     yield rabbitMQConnection.createConnection();
+    return rabbitMQConnection;
 });
 exports.initialRabbitmq = initialRabbitmq;
 //# sourceMappingURL=rabbitmqExtensions.js.map

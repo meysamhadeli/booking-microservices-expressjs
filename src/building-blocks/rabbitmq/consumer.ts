@@ -1,11 +1,11 @@
-import config from "../config/config";
 import {snakeCase} from 'lodash';
-import {getTypeName} from "../utils/reflection";
-import {deserializeObject} from "../utils/serialization";
-import {connection} from "./rabbitmq";
-import Logger from "../logging/logger";
-import { amqp } from 'amqplib';
 import asyncRetry from 'async-retry';
+import {container, Lifecycle, scoped} from "tsyringe";
+import {getTypeName} from "../utils/reflection";
+import Logger from "../logging/logger";
+import {deserializeObject} from "../utils/serialization";
+import config from "../config/config";
+import {RabbitMQConnection} from "./rabbitmq";
 
 export type handlerFunc<T> = (queue: string, message: T) => void;
 
@@ -13,58 +13,64 @@ export interface IConsumer {
     consumeMessage<T>(type: T, handler: handlerFunc<T>): Promise<void>;
 }
 
+@scoped(Lifecycle.ResolutionScoped)
 export class Consumer implements IConsumer {
-    constructor() {}
-
     async consumeMessage<T>(type: T, handler: handlerFunc<T>): Promise<void> {
-        let channel: amqp.Channel;
-
+        const rabbitMQConnection = container.resolve(RabbitMQConnection);
         try {
-            // Use asyncRetry to retry channel creation and message consumption with a backoff strategy
             await asyncRetry(
                 async () => {
-                    if (connection === null) {
-                        throw new Error('Connection is not established.');
-                    }
-
-                    channel = await connection.createChannel();
+                    const channel = await rabbitMQConnection.getChannel();
 
                     const exchangeName = snakeCase(getTypeName(type));
 
-                    await channel.assertExchange(exchangeName, 'topic', { durable: false });
+                    // Declare the exchange as 'topic' to enable topic-based routing
+                    await channel.assertExchange(exchangeName, 'topic', {durable: false});
 
+                    // Define a unique queue name for this subscriber
                     const queueName = `${exchangeName}_queue`;
                     const bindingKey = exchangeName;
 
-                    await channel.assertQueue(queueName, { exclusive: true });
-                    channel.bindQueue(queueName, exchangeName, bindingKey);
+                    // Create a queue and bind it to the exchange with the specified binding key
+                    await channel.assertQueue(queueName, {exclusive: true});
+
+                    await channel.bindQueue(queueName, exchangeName, bindingKey);
 
                     Logger.info(`Waiting for messages with binding key "${bindingKey}". To exit, press CTRL+C`);
 
-                    channel.consume(
+                    // Consume messages from the queue
+                    await channel.consume(
                         queueName,
                         (message) => {
                             if (message !== null) {
-                                channel.ack(message);
+                                // Start a new span for this RabbitMQ operation
+                                // const span = this.tracer.startSpan(`receive_message_${exchangeName}`);
+
                                 const messageContent = message?.content?.toString();
+                                const headers = message.properties.headers || {};
+
                                 handler(queueName, deserializeObject<T>(messageContent));
-                                Logger.info(`message: ${messageContent} delivered to queue: ${queueName}`);
-                                if (channel) channel.close();
+                                Logger.info(`Message: ${messageContent} delivered to queue: ${queueName}`);
+                                channel.ack(message); // Acknowledge the message
+                                // Set attributes on the span
+                                // span.setAttributes(headers);
+                                // End the message handling span
+                                // span.end();
                             }
                         },
-                        { noAck: false }
+                        {noAck: false} // Ensure that we acknowledge messages
                     );
                 },
                 {
                     retries: config.retry.count,
                     factor: config.retry.factor,
-                    minTimeout: config.retry.minTimout,
+                    minTimeout: config.retry.minTimeout,
                     maxTimeout: config.retry.maxTimeout
                 }
             );
         } catch (error) {
-            if (channel) channel.close();
-            throw new Error(error);
+            Logger.error(error);
+            await rabbitMQConnection.closeChanel();
         }
     }
 }

@@ -5,7 +5,7 @@ import {PassengerType} from "../../passenger/enums/passengerType";
 import logger from "building-blocks/logging/logger";
 
 export const createUserConsumerHandler = async (queue: string, message: UserCreated)=> {
-    if (message ?? false) return;
+    if (message == null || message == undefined) return;
 
     const passengerRepository = new PassengerRepository();
     const passenger = await passengerRepository.createPassenger(new Passenger(message.name, message.passportNumber, 20, PassengerType.MALE));

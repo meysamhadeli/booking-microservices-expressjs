@@ -2,6 +2,8 @@ import { Response } from 'express';
 import morgan from 'morgan';
 import config from '../config/config';
 import logger from './logger';
+import WinstonLogger from "./logger";
+import Logger from "./logger";
 
 // Define your Morgan token for the message
 morgan.token('message', (req, res: Response) => res.locals.errorMessage || '');
@@ -16,7 +18,7 @@ const errorResponseFormat = `${getIpFormat()}:method :url :status - :response-ti
 // Create Morgan middleware for success and error logging
 const successHandler = morgan(successResponseFormat, {
   skip: (req, res) => res.statusCode >= 400,
-  stream: { write: (message) => logger.info(message.trim()) }
+  stream: { write: (message) => Logger.info(message.trim()) }
 });
 
 const errorHandler = morgan(errorResponseFormat, {

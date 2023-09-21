@@ -1,6 +1,5 @@
 import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Role } from '../../enums/role';
-import { dataSource } from '../../../data/dataSource';
 import { User } from '../../entities/user';
 import { UserDto } from '../../dtos/userDto';
 import mapper from '../../mapping';
@@ -11,6 +10,7 @@ import { password } from 'building-blocks/utils/validation';
 import ConflictException from 'building-blocks/types/exception/conflictException';
 import { encryptPassword } from 'building-blocks/utils/encryption';
 import { UserRepository } from '../../../data/repositories/userRepository';
+import { container } from 'tsyringe';
 import { Publisher } from 'building-blocks/rabbitmq/publisher';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
 
@@ -86,7 +86,8 @@ export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
       )
     );
 
-    const publisher = new Publisher();
+    const publisher = container.resolve(Publisher);
+
     await publisher.publishMessage(
       new UserCreated(userEntity.id, userEntity.name, userEntity.passportNumber)
     );
