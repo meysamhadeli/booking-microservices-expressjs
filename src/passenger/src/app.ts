@@ -4,91 +4,95 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
 import passport from 'passport';
-import {morganMiddleware} from 'building-blocks/logging/morgan';
+import { morganMiddleware } from 'building-blocks/logging/morgan';
 import * as swaggerUi from 'swagger-ui-express';
 import Logger from 'building-blocks/logging/logger';
 import logger from 'building-blocks/logging/logger';
 import config from 'building-blocks/config/config';
-import {errorHandler} from 'building-blocks/middlewares/errorHandler';
-import {dataSource, initialDataSource} from "./data/dataSource";
-import {registerMediatrHandlers} from "./extensions/mediatrExtensions";
-import {initialRabbitmq} from "./extensions/rabbitmqExtensions";
-import {RegisterRoutes} from "./routes/routes";
-import {initialOtel} from "./extensions/otelExtensions";
+import { errorHandler } from 'building-blocks/middlewares/errorHandler';
+import { dataSource, initialDataSource } from './data/dataSource';
+import { registerMediatrHandlers } from './extensions/mediatrExtensions';
+import { initialRabbitmq } from './extensions/rabbitmqExtensions';
+import { RegisterRoutes } from './routes/routes';
+import { initialOtel } from './extensions/otelExtensions';
+import { initialMonitoring } from './extensions/monitoringExtensions';
+import { collectDefaultMetrics } from 'prom-client';
+
+collectDefaultMetrics();
 
 const app = express();
 
 const start = async () => {
+  // request and response logging
+  if (config.env !== 'test') {
+    app.use(morganMiddleware);
+  }
 
-    // request and response logging
-    if (config.env !== 'test') {
-        app.use(morganMiddleware);
-    }
+  // register monitoring
+  await initialMonitoring(app);
 
-    // establish database connection
-    await initialDataSource();
+  // establish database connection
+  await initialDataSource();
 
-    // set security HTTP headers
-    app.use(helmet());
+  // set security HTTP headers
+  app.use(helmet());
 
-    // parse json request body
-    app.use(express.json());
+  // parse json request body
+  app.use(express.json());
 
-    // parse urlencoded request body
-    app.use(express.urlencoded({extended: true}));
+  // parse urlencoded request body
+  app.use(express.urlencoded({ extended: true }));
 
-    // gzip compression
-    app.use(compression());
+  // gzip compression
+  app.use(compression());
 
-    // enable cors
-    app.use(cors());
-    app.options('*', cors());
+  // enable cors
+  app.use(cors());
+  app.options('*', cors());
 
-    // register openTelemetry
-    await initialOtel();
+  // register openTelemetry
+  await initialOtel();
 
-    // metrics middleware
-    // app.use(requestCounterMiddleware);
-    // app.use(requestLatencyMiddleware);
+  // metrics middleware
+  // app.use(requestCounterMiddleware);
+  // app.use(requestLatencyMiddleware);
 
-    // jwt authentication
-    app.use(passport.initialize());
+  // jwt authentication
+  app.use(passport.initialize());
 
-    // register routes with tsoa
-    RegisterRoutes(app);
+  // register routes with tsoa
+  RegisterRoutes(app);
 
-    // error handler
-    app.use(errorHandler);
+  // error handler
+  app.use(errorHandler);
 
-    //register swagger
-    try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const swaggerDocument = require('./docs/swagger.json');
-        app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    } catch (err) {
-        Logger.error('Unable to read swagger.json', err);
-    }
+  //register swagger
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const swaggerDocument = require('./docs/swagger.json');
+    app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  } catch (err) {
+    Logger.error('Unable to read swagger.json', err);
+  }
 
-    // run the server
-    app.listen(config.port, () => {
-        logger.info(`Listening to port ${config.port}`);
-    });
+  // run the server
+  app.listen(config.port, () => {
+    logger.info(`Listening to port ${config.port}`);
+  });
 
-    // register rabbitmq
-    const rabbitmq = await initialRabbitmq();
+  // register rabbitmq
+  const rabbitmq = await initialRabbitmq();
 
-    // register mediatr handlers
-    await registerMediatrHandlers();
+  // register mediatr handlers
+  await registerMediatrHandlers();
 
-    // gracefully shut down on process exit
-    process.on('SIGTERM', () => {
-        rabbitmq.closeConnection();
-        dataSource.destroy();
-    });
-}
+  // gracefully shut down on process exit
+  process.on('SIGTERM', () => {
+    rabbitmq.closeConnection();
+    dataSource.destroy();
+  });
+};
 
 start();
 
 export default app;
-
-

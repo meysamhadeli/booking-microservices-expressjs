@@ -1,26 +1,24 @@
-import {errorsCounter, requestLatencyHistogram, requestsCounter} from "../openTelemetry/metrics";
+import { errorCounter, requestCounter, requestDurationHistogram } from '../openTelemetry/metrics';
 
 export const requestCounterMiddleware = (err, req, res, next) => {
+  const route = req.route ? req.route.path : 'unknown';
 
-    if (err) {
-        errorsCounter.inc();
-        next(err);
-    }
+  if (err) {
+    requestCounter.inc(req.method, route, res.statusCode);
+    next(err);
+  }
 
-    requestsCounter.inc();
-    next();
+  errorCounter.inc(req.method, route, res.statusCode);
+  next();
 };
 
-export const requestLatencyMiddleware = (err, req, res, next) => {
+export function requestDurationMiddleware(req, res, next) {
+  const end = requestDurationHistogram.startTimer();
+  const route = req.route ? req.route.path : 'unknown';
 
-    const start = Date.now();
+  res.on('finish', () => {
+    end({ method: req.method, route });
+  });
 
-    res.on('finish', () => {
-        const end = Date.now();
-        const elapsedTimeInSeconds = (end - start) / 1000;
-
-        requestLatencyHistogram.labels(req.path).observe(elapsedTimeInSeconds);
-    });
-
-    next();
-};
+  next();
+}

@@ -1,2 +1,2 @@
 // Marker interface
-export interface IEvent{}
+export interface IEvent {}

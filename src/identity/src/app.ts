@@ -14,7 +14,11 @@ import config from 'building-blocks/config/config';
 import { errorHandler } from 'building-blocks/middlewares/errorHandler';
 import { initialRabbitmq } from './extensions/rabbitmqExtensions';
 import { registerMediatrHandlers } from './extensions/mediatrExtensions';
-import {initialOtel} from "./extensions/otelExtensions";
+import { initialOtel } from './extensions/otelExtensions';
+import { initialMonitoring } from './extensions/monitoringExtensions';
+import { collectDefaultMetrics } from 'prom-client';
+
+collectDefaultMetrics();
 
 const app = express();
 
@@ -23,6 +27,9 @@ const start = async () => {
   if (config.env !== 'test') {
     app.use(morganMiddleware);
   }
+
+  // register monitoring
+  await initialMonitoring(app);
 
   // establish database connection
   await initialDataSource();

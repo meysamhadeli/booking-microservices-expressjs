@@ -1,24 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requestLatencyHistogram = exports.errorsCounter = exports.requestsCounter = void 0;
-const prom_client_1 = require("prom-client");
-// Define custom metrics
-exports.requestsCounter = new prom_client_1.Counter({
-    name: 'express_requests_total',
-    help: 'Total number of Express requests',
+exports.requestDurationHistogram = exports.errorCounter = exports.requestCounter = exports.register = void 0;
+const client = require('prom-client');
+exports.register = new client.Registry();
+// Create and register custom metrics
+exports.requestCounter = new client.Counter({
+    name: 'express_request_total',
+    help: 'Total number of HTTP requests handled by the Express app',
+    labelNames: ['method', 'route', 'statusCode']
 });
-exports.errorsCounter = new prom_client_1.Counter({
-    name: 'express_errors_total',
-    help: 'Total number of Express errors',
+exports.errorCounter = new client.Counter({
+    name: 'express_error_total',
+    help: 'Total number of errors encountered by the Express app',
+    labelNames: ['route']
 });
-exports.requestLatencyHistogram = new prom_client_1.Histogram({
-    name: 'express_request_latency_seconds',
-    help: 'Request latency in seconds for Express routes',
-    labelNames: ['route'],
-    buckets: [0.1, 0.5, 1, 2, 5],
+exports.requestDurationHistogram = new client.Histogram({
+    name: 'express_request_duration_seconds',
+    help: 'Duration of HTTP requests in seconds',
+    labelNames: ['method', 'route'],
+    buckets: [0.1, 0.5, 1, 2, 5]
 });
-// Register the custom metrics
-prom_client_1.register.registerMetric(exports.requestsCounter);
-prom_client_1.register.registerMetric(exports.errorsCounter);
-prom_client_1.register.registerMetric(exports.requestLatencyHistogram);
+exports.register.registerMetric(exports.requestCounter);
+exports.register.registerMetric(exports.errorCounter);
+exports.register.registerMetric(exports.requestDurationHistogram);
 //# sourceMappingURL=metrics.js.map

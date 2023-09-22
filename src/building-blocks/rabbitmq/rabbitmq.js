@@ -59,9 +59,9 @@ let RabbitMQConnection = class RabbitMQConnection {
                     yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
                         this.connection = yield amqp.connect(`amqp://${config_1.default.rabbitmq.host}:${config_1.default.rabbitmq.port}`, {
                             username: config_1.default.rabbitmq.userName,
-                            password: config_1.default.rabbitmq.password,
+                            password: config_1.default.rabbitmq.password
                         });
-                        logger_1.default.info("RabbitMq connection created successfully");
+                        logger_1.default.info('RabbitMq connection created successfully');
                     }), {
                         retries: config_1.default.retry.count,
                         factor: config_1.default.retry.factor,

@@ -25,8 +25,18 @@ const envVarsSchema = joi_1.default.object()
     RABBITMQ_PASSWORD: joi_1.default.string().default('guest').description('Rabbitmq password'),
     RETRY_COUNT: joi_1.default.number().default(3).description('Number of retries'),
     RETRY_FACTOR: joi_1.default.number().default(2).description('Exponential backoff factor'),
-    RETRY_MIN_TIMEOUT: joi_1.default.number().default(1000).description('Minimum time before retrying (1 second)'),
-    RETRY_MAX_TIMEOUT: joi_1.default.number().default(60000).description('Maximum time before retrying (60 seconds)'),
+    RETRY_MIN_TIMEOUT: joi_1.default.number()
+        .default(1000)
+        .description('Minimum time before retrying (1 second)'),
+    RETRY_MAX_TIMEOUT: joi_1.default.number()
+        .default(60000)
+        .description('Maximum time before retrying (60 seconds)'),
+    MONITORING_JAEGER_ENDPOINT: joi_1.default.string()
+        .default('http://localhost:14268/api/traces')
+        .description('Jaeger Endpoint'),
+    MONITORING_ZIPKIN_ENDPOINT: joi_1.default.string()
+        .default('http://zipkin-server:9411/api/v2/spans')
+        .description('Zipkin Endpoint')
 })
     .unknown();
 const { value: envVars, error } = envVarsSchema
@@ -55,6 +65,10 @@ exports.default = {
         factor: envVars.RETRY_FACTOR,
         minTimeout: envVars.RETRY_MIN_TIMEOUT,
         maxTimeout: envVars.RETRY_MAX_TIMEOUT
+    },
+    monitoring: {
+        jaegerEndpoint: envVars.MONITORING_JAEGER_ENDPOINT,
+        zipkinEndpoint: envVars.MONITORING_ZIPKIN_ENDPOINT
     }
 };
 //# sourceMappingURL=config.js.map

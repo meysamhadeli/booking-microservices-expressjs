@@ -1,24 +1,26 @@
-import { Counter, Histogram, register } from 'prom-client';
+const client = require('prom-client');
+export const register = new client.Registry();
 
-// Define custom metrics
-export const requestsCounter = new Counter({
-    name: 'express_requests_total',
-    help: 'Total number of Express requests',
+// Create and register custom metrics
+export const requestCounter = new client.Counter({
+  name: 'express_request_total',
+  help: 'Total number of HTTP requests handled by the Express app',
+  labelNames: ['method', 'route', 'statusCode']
 });
 
-export const errorsCounter = new Counter({
-    name: 'express_errors_total',
-    help: 'Total number of Express errors',
+export const errorCounter = new client.Counter({
+  name: 'express_error_total',
+  help: 'Total number of errors encountered by the Express app',
+  labelNames: ['route']
 });
 
-export const requestLatencyHistogram = new Histogram({
-    name: 'express_request_latency_seconds',
-    help: 'Request latency in seconds for Express routes',
-    labelNames: ['route'],
-    buckets: [0.1, 0.5, 1, 2, 5],
+export const requestDurationHistogram = new client.Histogram({
+  name: 'express_request_duration_seconds',
+  help: 'Duration of HTTP requests in seconds',
+  labelNames: ['method', 'route'],
+  buckets: [0.1, 0.5, 1, 2, 5]
 });
 
-// Register the custom metrics
-register.registerMetric(requestsCounter);
-register.registerMetric(errorsCounter);
-register.registerMetric(requestLatencyHistogram);
+register.registerMetric(requestCounter);
+register.registerMetric(errorCounter);
+register.registerMetric(requestDurationHistogram);

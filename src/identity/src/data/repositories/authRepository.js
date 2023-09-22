@@ -13,16 +13,17 @@ exports.AuthRepository = void 0;
 const dataSource_1 = require("../dataSource");
 const token_1 = require("../../auth/entities/token");
 class AuthRepository {
+    constructor() {
+        this.ormRepository = dataSource_1.dataSource.getRepository(token_1.Token);
+    }
     createToken(token) {
         return __awaiter(this, void 0, void 0, function* () {
-            const tokenRepository = dataSource_1.dataSource.getRepository(token_1.Token);
-            yield tokenRepository.save(token);
+            yield this.ormRepository.save(token);
         });
     }
     findToken(token, tokenType) {
         return __awaiter(this, void 0, void 0, function* () {
-            const tokenRepository = dataSource_1.dataSource.getRepository(token_1.Token);
-            return yield tokenRepository.findOneBy({
+            return yield this.ormRepository.findOneBy({
                 token: token,
                 type: tokenType
             });
@@ -30,8 +31,7 @@ class AuthRepository {
     }
     findTokenByUserId(token, tokenType, userId, blacklisted) {
         return __awaiter(this, void 0, void 0, function* () {
-            const tokenRepository = dataSource_1.dataSource.getRepository(token_1.Token);
-            return yield tokenRepository.findOneBy({
+            return yield this.ormRepository.findOneBy({
                 token: token,
                 type: tokenType,
                 userId: userId,
@@ -41,8 +41,7 @@ class AuthRepository {
     }
     removeToken(token) {
         return __awaiter(this, void 0, void 0, function* () {
-            const tokenRepository = dataSource_1.dataSource.getRepository(token_1.Token);
-            return yield tokenRepository.remove(token);
+            return yield this.ormRepository.remove(token);
         });
     }
 }

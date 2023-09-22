@@ -17,7 +17,7 @@ const initialRabbitmq = () => __awaiter(void 0, void 0, void 0, function* () {
     const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_1.RabbitMQConnection);
     yield rabbitMQConnection.createConnection();
     tsyringe_1.container.register('IPublisher', publisher_1.Publisher);
-    return null;
+    return rabbitMQConnection;
 });
 exports.initialRabbitmq = initialRabbitmq;
 //# sourceMappingURL=rabbitmqExtensions.js.map

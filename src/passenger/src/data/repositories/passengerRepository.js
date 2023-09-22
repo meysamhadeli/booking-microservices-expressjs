@@ -13,24 +13,24 @@ exports.PassengerRepository = void 0;
 const passenger_1 = require("../../passenger/entities/passenger");
 const dataSource_1 = require("../dataSource");
 class PassengerRepository {
+    constructor() {
+        this.ormRepository = dataSource_1.dataSource.getRepository(passenger_1.Passenger);
+    }
     createPassenger(passenger) {
         return __awaiter(this, void 0, void 0, function* () {
-            const passengerRepository = dataSource_1.dataSource.getRepository(passenger_1.Passenger);
-            return yield passengerRepository.save(passenger);
+            return yield this.ormRepository.save(passenger);
         });
     }
     findPassengerById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const passengerRepository = dataSource_1.dataSource.getRepository(passenger_1.Passenger);
-            return passengerRepository.findOneBy({ id: id });
+            return this.ormRepository.findOneBy({ id: id });
         });
     }
     findPassengers(page, pageSize, orderBy, order, searchTerm) {
         return __awaiter(this, void 0, void 0, function* () {
-            const passengerRepository = dataSource_1.dataSource.getRepository(passenger_1.Passenger);
             const skip = (page - 1) * pageSize;
             const take = pageSize;
-            const queryBuilder = passengerRepository
+            const queryBuilder = this.ormRepository
                 .createQueryBuilder('passenger')
                 .orderBy(`passenger.${orderBy}`, order)
                 .skip(skip)

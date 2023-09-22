@@ -1,6 +1,6 @@
-import {User} from '../../user/entities/user';
-import {dataSource} from '../dataSource';
-import {SelectQueryBuilder} from 'typeorm';
+import { User } from '../../user/entities/user';
+import { dataSource } from '../dataSource';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 
 export interface IUserRepository {
   createUser(user: User): Promise<User>;
@@ -27,16 +27,18 @@ export interface IUserRepository {
 }
 
 export class UserRepository implements IUserRepository {
-  async createUser(user: User): Promise<User> {
-    const userRepository = dataSource.getRepository(User);
+  private ormRepository: Repository<User>;
 
-    return await userRepository.save(user);
+  constructor() {
+    this.ormRepository = dataSource.getRepository(User);
+  }
+
+  async createUser(user: User): Promise<User> {
+    return await this.ormRepository.save(user);
   }
 
   async updateUser(user: User): Promise<User> {
-    const userRepository = dataSource.getRepository(User);
-
-    return await userRepository.save(user);
+    return await this.ormRepository.save(user);
   }
 
   async findUsers(
@@ -46,12 +48,10 @@ export class UserRepository implements IUserRepository {
     order: 'ASC' | 'DESC',
     searchTerm?: string
   ): Promise<[User[], number]> {
-    const userRepository = dataSource.getRepository(User);
-
     const skip = (page - 1) * pageSize;
     const take = pageSize;
 
-    const queryBuilder: SelectQueryBuilder<User> = userRepository
+    const queryBuilder: SelectQueryBuilder<User> = this.ormRepository
       .createQueryBuilder('user')
       .orderBy(`user.${orderBy}`, order)
       .skip(skip)
@@ -59,45 +59,35 @@ export class UserRepository implements IUserRepository {
 
     // Apply filter criteria to the query
     if (searchTerm) {
-      queryBuilder.andWhere('user.name LIKE :name', {name: `%${searchTerm}%`});
+      queryBuilder.andWhere('user.name LIKE :name', { name: `%${searchTerm}%` });
     }
 
     return await queryBuilder.getManyAndCount();
   }
 
   async findUserByEmail(email: string): Promise<User> {
-    const userRepository = dataSource.getRepository(User);
-
-    return await userRepository.findOneBy({
+    return await this.ormRepository.findOneBy({
       email: email
     });
   }
 
   async findUserById(id: number): Promise<User> {
-    const userRepository = dataSource.getRepository(User);
-
-    return await userRepository.findOneBy({
+    return await this.ormRepository.findOneBy({
       id: id
     });
   }
 
   async findUserByName(name: string): Promise<User> {
-    const userRepository = dataSource.getRepository(User);
-
-    return await userRepository.findOneBy({
+    return await this.ormRepository.findOneBy({
       name: name
     });
   }
 
   async removeUser(user: User): Promise<User> {
-    const userRepository = dataSource.getRepository(User);
-
-    return await userRepository.remove(user);
+    return await this.ormRepository.remove(user);
   }
 
   async getAllUsers(): Promise<User[]> {
-    const userRepository = dataSource.getRepository(User);
-
-    return await userRepository.find();
+    return await this.ormRepository.find();
   }
 }

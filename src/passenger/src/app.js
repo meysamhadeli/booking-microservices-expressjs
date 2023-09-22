@@ -52,12 +52,17 @@ const mediatrExtensions_1 = require("./extensions/mediatrExtensions");
 const rabbitmqExtensions_1 = require("./extensions/rabbitmqExtensions");
 const routes_1 = require("./routes/routes");
 const otelExtensions_1 = require("./extensions/otelExtensions");
+const monitoringExtensions_1 = require("./extensions/monitoringExtensions");
+const prom_client_1 = require("prom-client");
+(0, prom_client_1.collectDefaultMetrics)();
 const app = (0, express_1.default)();
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     // request and response logging
     if (config_1.default.env !== 'test') {
         app.use(morgan_1.morganMiddleware);
     }
+    // register monitoring
+    yield (0, monitoringExtensions_1.initialMonitoring)(app);
     // establish database connection
     yield (0, dataSource_1.initialDataSource)();
     // set security HTTP headers

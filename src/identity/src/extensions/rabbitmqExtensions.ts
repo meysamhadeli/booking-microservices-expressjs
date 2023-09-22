@@ -8,5 +8,5 @@ export const initialRabbitmq = async (): Promise<RabbitMQConnection> => {
 
   container.register<IPublisher>('IPublisher', Publisher);
 
-  return null;
+  return rabbitMQConnection;
 };

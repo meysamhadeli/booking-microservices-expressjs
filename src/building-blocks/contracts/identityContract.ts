@@ -1,13 +1,13 @@
-import {IEvent} from "../types/core/event";
+import { IEvent } from '../types/core/event';
 
 export class UserCreated implements IEvent {
-    id: number;
-    name: string;
-    passportNumber: string;
+  id: number;
+  name: string;
+  passportNumber: string;
 
-    constructor(id?: number, name?: string, passportNumber?: string) {
-        this.id = id ?? 0;
-        this.name = name ?? '';
-        this.passportNumber = passportNumber ?? '';
-    }
+  constructor(id?: number, name?: string, passportNumber?: string) {
+    this.id = id ?? 0;
+    this.name = name ?? '';
+    this.passportNumber = passportNumber ?? '';
+  }
 }

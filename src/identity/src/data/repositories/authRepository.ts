@@ -1,6 +1,7 @@
-import {dataSource} from '../dataSource';
-import {Token} from '../../auth/entities/token';
-import {TokenType} from '../../auth/enums/tokenType';
+import { dataSource } from '../dataSource';
+import { Token } from '../../auth/entities/token';
+import { TokenType } from '../../auth/enums/tokenType';
+import { Repository } from 'typeorm';
 
 export interface IAuthRepository {
   createToken(token: Token): Promise<void>;
@@ -18,16 +19,18 @@ export interface IAuthRepository {
 }
 
 export class AuthRepository implements IAuthRepository {
-  async createToken(token: Token): Promise<void> {
-    const tokenRepository = dataSource.getRepository(Token);
+  private ormRepository: Repository<Token>;
 
-    await tokenRepository.save(token);
+  constructor() {
+    this.ormRepository = dataSource.getRepository(Token);
+  }
+
+  async createToken(token: Token): Promise<void> {
+    await this.ormRepository.save(token);
   }
 
   async findToken(token: string, tokenType: TokenType): Promise<Token> {
-    const tokenRepository = dataSource.getRepository(Token);
-
-    return await tokenRepository.findOneBy({
+    return await this.ormRepository.findOneBy({
       token: token,
       type: tokenType
     });
@@ -39,9 +42,7 @@ export class AuthRepository implements IAuthRepository {
     userId: number,
     blacklisted: boolean
   ): Promise<Token> {
-    const tokenRepository = dataSource.getRepository(Token);
-
-    return await tokenRepository.findOneBy({
+    return await this.ormRepository.findOneBy({
       token: token,
       type: tokenType,
       userId: userId,
@@ -50,8 +51,6 @@ export class AuthRepository implements IAuthRepository {
   }
 
   async removeToken(token: Token): Promise<Token> {
-    const tokenRepository = dataSource.getRepository(Token);
-
-    return await tokenRepository.remove(token);
+    return await this.ormRepository.remove(token);
   }
 }

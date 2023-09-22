@@ -13,24 +13,24 @@ exports.UserRepository = void 0;
 const user_1 = require("../../user/entities/user");
 const dataSource_1 = require("../dataSource");
 class UserRepository {
+    constructor() {
+        this.ormRepository = dataSource_1.dataSource.getRepository(user_1.User);
+    }
     createUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
-            return yield userRepository.save(user);
+            return yield this.ormRepository.save(user);
         });
     }
     updateUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
-            return yield userRepository.save(user);
+            return yield this.ormRepository.save(user);
         });
     }
     findUsers(page, pageSize, orderBy, order, searchTerm) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
             const skip = (page - 1) * pageSize;
             const take = pageSize;
-            const queryBuilder = userRepository
+            const queryBuilder = this.ormRepository
                 .createQueryBuilder('user')
                 .orderBy(`user.${orderBy}`, order)
                 .skip(skip)
@@ -44,38 +44,33 @@ class UserRepository {
     }
     findUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
-            return yield userRepository.findOneBy({
+            return yield this.ormRepository.findOneBy({
                 email: email
             });
         });
     }
     findUserById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
-            return yield userRepository.findOneBy({
+            return yield this.ormRepository.findOneBy({
                 id: id
             });
         });
     }
     findUserByName(name) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
-            return yield userRepository.findOneBy({
+            return yield this.ormRepository.findOneBy({
                 name: name
             });
         });
     }
     removeUser(user) {
         return __awaiter(this, void 0, void 0, function* () {
-            const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
-            return yield userRepository.remove(user);
+            return yield this.ormRepository.remove(user);
         });
     }
     getAllUsers() {
         return __awaiter(this, void 0, void 0, function* () {
-            const userRepository = dataSource_1.dataSource.getRepository(user_1.User);
-            return yield userRepository.find();
+            return yield this.ormRepository.find();
         });
     }
 }

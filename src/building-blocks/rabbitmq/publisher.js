@@ -35,7 +35,7 @@ let Publisher = class Publisher {
         return __awaiter(this, void 0, void 0, function* () {
             const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_1.RabbitMQConnection);
             const openTelemetryTracer = tsyringe_1.container.resolve(otel_1.OpenTelemetryTracer);
-            const tracer = yield openTelemetryTracer.createTracer("rabbitmq-publisher");
+            const tracer = yield openTelemetryTracer.createTracer('rabbitmq-publisher');
             try {
                 yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
                     const channel = yield rabbitMQConnection.getChannel();

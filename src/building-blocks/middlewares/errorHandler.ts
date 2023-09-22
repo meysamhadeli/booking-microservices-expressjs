@@ -2,13 +2,13 @@ import { ErrorRequestHandler } from 'express';
 import httpStatus from 'http-status';
 import { ValidationError } from 'joi';
 import { ProblemDocument } from 'http-problem-details';
-import ApplicationException from "../types/exception/applicationException";
-import applicationException from "../types/exception/applicationException";
-import Logger from "../logging/logger";
-import UnauthorizedException from "../types/exception/unauthorizedException";
-import ForbiddenException from "../types/exception/forbiddenException";
-import NotFoundException from "../types/exception/notFoundException";
-import ConflictException from "../types/exception/conflictException";
+import ApplicationException from '../types/exception/applicationException';
+import applicationException from '../types/exception/applicationException';
+import Logger from '../logging/logger';
+import UnauthorizedException from '../types/exception/unauthorizedException';
+import ForbiddenException from '../types/exception/forbiddenException';
+import NotFoundException from '../types/exception/notFoundException';
+import ConflictException from '../types/exception/conflictException';
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof ApplicationException) {

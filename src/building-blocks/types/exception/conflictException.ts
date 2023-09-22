@@ -1,10 +1,15 @@
-import httpStatus from "http-status";
+import httpStatus from 'http-status';
 
 class ConflictException extends Error {
   statusCode: number;
   isOperational: boolean;
 
-  constructor(message: string | undefined, statusCode: number = httpStatus.CONFLICT, isOperational = true, stack = '') {
+  constructor(
+    message: string | undefined,
+    statusCode: number = httpStatus.CONFLICT,
+    isOperational = true,
+    stack = ''
+  ) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = isOperational;

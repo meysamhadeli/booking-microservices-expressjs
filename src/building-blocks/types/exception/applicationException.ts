@@ -1,10 +1,15 @@
-import httpStatus from "http-status";
+import httpStatus from 'http-status';
 
 class ApplicationException extends Error {
   statusCode: number;
   isOperational: boolean;
 
-  constructor(message: string | undefined, statusCode: number = httpStatus.BAD_REQUEST, isOperational = true, stack = '') {
+  constructor(
+    message: string | undefined,
+    statusCode: number = httpStatus.BAD_REQUEST,
+    isOperational = true,
+    stack = ''
+  ) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = isOperational;

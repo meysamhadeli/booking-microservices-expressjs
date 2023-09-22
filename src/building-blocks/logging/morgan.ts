@@ -2,8 +2,8 @@ import { Response } from 'express';
 import morgan from 'morgan';
 import config from '../config/config';
 import logger from './logger';
-import WinstonLogger from "./logger";
-import Logger from "./logger";
+import WinstonLogger from './logger';
+import Logger from './logger';
 
 // Define your Morgan token for the message
 morgan.token('message', (req, res: Response) => res.locals.errorMessage || '');
