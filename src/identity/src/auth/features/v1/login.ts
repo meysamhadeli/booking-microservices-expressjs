@@ -7,6 +7,7 @@ import { password } from 'building-blocks/utils/validation';
 import { isPasswordMatch } from 'building-blocks/utils/encryption';
 import UnauthorizedException from 'building-blocks/types/exception/unauthorizedException';
 import { UserRepository } from '../../../data/repositories/userRepository';
+import { injectable } from 'tsyringe';
 
 export class Login implements IRequest<AuthDto> {
   email: string;
@@ -38,6 +39,7 @@ export class LoginController extends Controller {
   }
 }
 
+@injectable()
 export class LoginHandler implements IHandler<Login, AuthDto> {
   async handle(request: Login): Promise<AuthDto> {
     await loginValidations.validateAsync(request);

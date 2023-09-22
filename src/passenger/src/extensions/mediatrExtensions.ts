@@ -1,8 +1,12 @@
+import {container} from "tsyringe";
 import {mediatrJs} from "building-blocks/mediatr-js/mediatr.js";
 import {GetPassengerById, GetPassengerByIdHandler} from "../passenger/features/v1/getPassengerById";
-import {GetAllPassenger, GetAllPassengerHandler} from "../passenger/features/v1/getAllPassengers";
+import {
+    GetPassengers,
+    GetPassengersHandler
+} from "../passenger/features/v1/getPassengers";
 
 export const registerMediatrHandlers = () => {
-    mediatrJs.registerHandler(GetPassengerById, new GetPassengerByIdHandler());
-    mediatrJs.registerHandler(GetAllPassenger, new GetAllPassengerHandler());
+    mediatrJs.registerHandler(GetPassengerById, container.resolve(GetPassengerByIdHandler));
+    mediatrJs.registerHandler(GetPassengers, container.resolve(GetPassengersHandler));
 };

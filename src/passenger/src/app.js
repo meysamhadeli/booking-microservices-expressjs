@@ -51,6 +51,7 @@ const dataSource_1 = require("./data/dataSource");
 const mediatrExtensions_1 = require("./extensions/mediatrExtensions");
 const rabbitmqExtensions_1 = require("./extensions/rabbitmqExtensions");
 const routes_1 = require("./routes/routes");
+const otelExtensions_1 = require("./extensions/otelExtensions");
 const app = (0, express_1.default)();
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     // request and response logging
@@ -70,11 +71,11 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
     // enable cors
     app.use((0, cors_1.default)());
     app.options('*', (0, cors_1.default)());
+    // register openTelemetry
+    yield (0, otelExtensions_1.initialOtel)();
     // metrics middleware
     // app.use(requestCounterMiddleware);
     // app.use(requestLatencyMiddleware);
-    // register openTelemetry
-    //const tracer = await initialOpenTelemetry();
     // jwt authentication
     app.use(passport_1.default.initialize());
     // register routes with tsoa
@@ -94,10 +95,10 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
     app.listen(config_1.default.port, () => {
         logger_2.default.info(`Listening to port ${config_1.default.port}`);
     });
-    // register mediatr handlers
-    yield (0, mediatrExtensions_1.registerMediatrHandlers)();
     // register rabbitmq
     const rabbitmq = yield (0, rabbitmqExtensions_1.initialRabbitmq)();
+    // register mediatr handlers
+    yield (0, mediatrExtensions_1.registerMediatrHandlers)();
     // gracefully shut down on process exit
     process.on('SIGTERM', () => {
         rabbitmq.closeConnection();

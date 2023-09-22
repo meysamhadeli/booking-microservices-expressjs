@@ -44,9 +44,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RabbitMQConnection = void 0;
 const amqp = __importStar(require("amqplib"));
 const async_retry_1 = __importDefault(require("async-retry"));
-const tsyringe_1 = require("tsyringe");
 const logger_1 = __importDefault(require("../logging/logger"));
 const config_1 = __importDefault(require("../config/config"));
+const tsyringe_1 = require("tsyringe");
 let RabbitMQConnection = class RabbitMQConnection {
     constructor() {
         this.connection = null;

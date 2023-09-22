@@ -76,32 +76,6 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/passenger/v1/get-all": {
-			"get": {
-				"operationId": "GetPassengerById",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/PassengerDto"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": []
-			}
-		},
 		"/passenger/v1/get-by-id": {
 			"get": {
 				"operationId": "GetPassengerById",
@@ -130,6 +104,83 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/passenger/v1/get-all": {
+			"get": {
+				"operationId": "GetPassengers",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/PassengerDto"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "order",
+						"required": false,
+						"schema": {
+							"default": "ASC",
+							"type": "string",
+							"enum": [
+								"ASC",
+								"DESC"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "orderBy",
+						"required": false,
+						"schema": {
+							"default": "id",
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "searchTerm",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]

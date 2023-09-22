@@ -21,16 +21,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Consumer = void 0;
 const lodash_1 = require("lodash");
 const async_retry_1 = __importDefault(require("async-retry"));
-const tsyringe_1 = require("tsyringe");
 const reflection_1 = require("../utils/reflection");
 const logger_1 = __importDefault(require("../logging/logger"));
 const serialization_1 = require("../utils/serialization");
 const config_1 = __importDefault(require("../config/config"));
 const rabbitmq_1 = require("./rabbitmq");
+const tsyringe_1 = require("tsyringe");
+const otel_1 = require("../openTelemetry/otel");
 let Consumer = class Consumer {
     consumeMessage(type, handler) {
         return __awaiter(this, void 0, void 0, function* () {
             const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_1.RabbitMQConnection);
+            const openTelemetryTracer = tsyringe_1.container.resolve(otel_1.OpenTelemetryTracer);
+            const tracer = yield openTelemetryTracer.createTracer("rabbitmq-consumer");
             try {
                 yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
                     const channel = yield rabbitMQConnection.getChannel();
@@ -49,16 +52,16 @@ let Consumer = class Consumer {
                         var _a;
                         if (message !== null) {
                             // Start a new span for this RabbitMQ operation
-                            // const span = this.tracer.startSpan(`receive_message_${exchangeName}`);
+                            const span = tracer.startSpan(`receive_message_${exchangeName}`);
                             const messageContent = (_a = message === null || message === void 0 ? void 0 : message.content) === null || _a === void 0 ? void 0 : _a.toString();
                             const headers = message.properties.headers || {};
                             handler(queueName, (0, serialization_1.deserializeObject)(messageContent));
                             logger_1.default.info(`Message: ${messageContent} delivered to queue: ${queueName}`);
                             channel.ack(message); // Acknowledge the message
                             // Set attributes on the span
-                            // span.setAttributes(headers);
+                            span.setAttributes(headers);
                             // End the message handling span
-                            // span.end();
+                            span.end();
                         }
                     }, { noAck: false } // Ensure that we acknowledge messages
                     );
@@ -78,6 +81,6 @@ let Consumer = class Consumer {
 };
 exports.Consumer = Consumer;
 exports.Consumer = Consumer = __decorate([
-    (0, tsyringe_1.scoped)(tsyringe_1.Lifecycle.ResolutionScoped)
+    (0, tsyringe_1.injectable)()
 ], Consumer);
 //# sourceMappingURL=consumer.js.map

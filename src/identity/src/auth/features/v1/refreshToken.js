@@ -33,6 +33,7 @@ const tokenType_1 = require("../../enums/tokenType");
 const unauthorizedException_1 = __importDefault(require("building-blocks/types/exception/unauthorizedException"));
 const validateToken_1 = require("./validateToken");
 const authRepository_1 = require("../../../data/repositories/authRepository");
+const tsyringe_1 = require("tsyringe");
 class RefreshToken {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -64,7 +65,7 @@ __decorate([
 exports.RefreshTokenController = RefreshTokenController = __decorate([
     (0, tsoa_1.Route)('/identity')
 ], RefreshTokenController);
-class RefreshTokenHandler {
+let RefreshTokenHandler = class RefreshTokenHandler {
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield refreshTokenValidations.params.validateAsync(request);
@@ -84,6 +85,9 @@ class RefreshTokenHandler {
             }
         });
     }
-}
+};
 exports.RefreshTokenHandler = RefreshTokenHandler;
+exports.RefreshTokenHandler = RefreshTokenHandler = __decorate([
+    (0, tsyringe_1.injectable)()
+], RefreshTokenHandler);
 //# sourceMappingURL=refreshToken.js.map

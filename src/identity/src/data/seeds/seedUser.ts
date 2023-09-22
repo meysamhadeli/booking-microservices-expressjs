@@ -2,11 +2,12 @@ import { UserRepository } from '../repositories/userRepository';
 import { User } from '../../user/entities/user';
 import { Role } from '../../user/enums/role';
 import { encryptPassword } from 'building-blocks/utils/encryption';
+import Logger from 'building-blocks/logging/logger';
 
 export const seedUser = async () => {
   const userRepository = new UserRepository();
 
-  if ((await userRepository.getAllUsers())?.length == 0)
+  if ((await userRepository.getAllUsers())?.length == 0) {
     await userRepository.createUser(
       new User(
         'dev@dev.com',
@@ -17,4 +18,6 @@ export const seedUser = async () => {
         '12345678'
       )
     );
+    Logger.info('Seed users run successfully!');
+  }
 };

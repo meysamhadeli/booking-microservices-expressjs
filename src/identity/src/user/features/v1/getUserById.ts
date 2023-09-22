@@ -1,12 +1,12 @@
 import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
-import { dataSource } from '../../../data/dataSource';
 import { User } from '../../entities/user';
 import { UserDto } from '../../dtos/userDto';
 import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import mapper from '../../mapping';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
-import {UserRepository} from "../../../data/repositories/userRepository";
+import { UserRepository } from '../../../data/repositories/userRepository';
+import { injectable } from 'tsyringe';
 
 export class GetUserById implements IRequest<UserDto> {
   id: number;
@@ -41,6 +41,7 @@ export class GetUserByIdController extends Controller {
   }
 }
 
+@injectable()
 export class GetUserByIdHandler implements IHandler<GetUserById, UserDto> {
   async handle(request: GetUserById): Promise<UserDto> {
     await getUserByIdValidations.params.validateAsync(request);

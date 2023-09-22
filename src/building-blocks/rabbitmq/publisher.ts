@@ -2,21 +2,25 @@ import {snakeCase} from 'lodash';
 import {v4 as uuidv4} from 'uuid';
 import {getUnixTime} from 'date-fns';
 import asyncRetry from 'async-retry';
-import {container, Lifecycle, scoped} from 'tsyringe';
 import {getTypeName} from "../utils/reflection";
 import {serializeObject} from "../utils/serialization";
 import config from "../config/config";
 import Logger from "../logging/logger";
 import {RabbitMQConnection} from "./rabbitmq";
+import {container, injectable} from "tsyringe";
+import {OpenTelemetryTracer} from "../openTelemetry/otel";
 
 export interface IPublisher {
     publishMessage<T>(message: T): Promise<void>;
 }
 
-@scoped(Lifecycle.ResolutionScoped)
+@injectable()
 export class Publisher implements IPublisher {
     async publishMessage<T>(message: T) {
         const rabbitMQConnection = container.resolve(RabbitMQConnection);
+        const openTelemetryTracer = container.resolve(OpenTelemetryTracer);
+        const tracer = await openTelemetryTracer.createTracer("rabbitmq-publisher");
+
         try {
             await asyncRetry(
                 async () => {
@@ -27,7 +31,7 @@ export class Publisher implements IPublisher {
                     const serializedMessage = serializeObject(message);
 
                     // Start a new span for this RabbitMQ operation
-                    //const span = this.tracer.startSpan(`publish_message_${exchangeName}`);
+                    const span = tracer.startSpan(`publish_message_${exchangeName}`);
 
                     await channel.assertExchange(exchangeName, 'topic', {durable: false});
 
@@ -48,10 +52,10 @@ export class Publisher implements IPublisher {
                     Logger.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
 
                     // Set attributes on the span
-                    //span.setAttributes(messageProperties);
+                    span.setAttributes(messageProperties);
 
                     // Ensure the span ends when this operation is complete
-                    //span.end();
+                    span.end();
                 },
                 {
                     retries: config.retry.count,

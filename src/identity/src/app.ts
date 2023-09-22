@@ -12,8 +12,9 @@ import Logger from 'building-blocks/logging/logger';
 import logger from 'building-blocks/logging/logger';
 import config from 'building-blocks/config/config';
 import { errorHandler } from 'building-blocks/middlewares/errorHandler';
-import { registerMediatrHandlers } from './extensions/mediatrExtensions';
 import { initialRabbitmq } from './extensions/rabbitmqExtensions';
+import { registerMediatrHandlers } from './extensions/mediatrExtensions';
+import {initialOtel} from "./extensions/otelExtensions";
 
 const app = express();
 
@@ -42,12 +43,12 @@ const start = async () => {
   app.use(cors());
   app.options('*', cors());
 
+  // register openTelemetry
+  await initialOtel();
+
   // metrics middleware
   // app.use(requestCounterMiddleware);
   // app.use(requestLatencyMiddleware);
-
-  // register openTelemetry
-  //const tracer = await initialOpenTelemetry();
 
   // jwt authentication
   app.use(passport.initialize());
@@ -72,11 +73,11 @@ const start = async () => {
     logger.info(`Listening to port ${config.port}`);
   });
 
-  // register mediatr handlers
-  await registerMediatrHandlers();
-
   // register rabbitmq
   const rabbitmq = await initialRabbitmq();
+
+  // register mediatr handlers
+  await registerMediatrHandlers();
 
   // gracefully shut down on process exit
   process.on('SIGTERM', async () => {

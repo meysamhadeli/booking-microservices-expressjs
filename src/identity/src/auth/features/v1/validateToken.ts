@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import config from 'building-blocks/config/config';
 import notFoundException from 'building-blocks/types/exception/notFoundException';
 import { AuthRepository } from '../../../data/repositories/authRepository';
+import { injectable } from 'tsyringe';
 
 export class ValidateToken implements IRequest<Token> {
   token: string;
@@ -27,6 +28,7 @@ const validateTokenValidations = Joi.object({
   type: Joi.string().required().valid(TokenType.ACCESS, TokenType.REFRESH)
 });
 
+@injectable()
 export class ValidateTokenHandler implements IHandler<ValidateToken, Token> {
   async handle(request: ValidateToken): Promise<Token> {
     await validateTokenValidations.validateAsync(request);

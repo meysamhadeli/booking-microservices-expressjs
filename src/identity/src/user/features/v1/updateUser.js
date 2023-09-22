@@ -37,6 +37,7 @@ const encryption_1 = require("building-blocks/utils/encryption");
 const userRepository_1 = require("../../../data/repositories/userRepository");
 const http_status_1 = __importDefault(require("http-status"));
 const joi_1 = __importDefault(require("joi"));
+const tsyringe_1 = require("tsyringe");
 class UpdateUser {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -80,7 +81,7 @@ __decorate([
 exports.UpdateUserController = UpdateUserController = __decorate([
     (0, tsoa_1.Route)('/user')
 ], UpdateUserController);
-class UpdateUserHandler {
+let UpdateUserHandler = class UpdateUserHandler {
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield updateUserValidations.validateAsync(request);
@@ -94,6 +95,9 @@ class UpdateUserHandler {
             return result;
         });
     }
-}
+};
 exports.UpdateUserHandler = UpdateUserHandler;
+exports.UpdateUserHandler = UpdateUserHandler = __decorate([
+    (0, tsyringe_1.injectable)()
+], UpdateUserHandler);
 //# sourceMappingURL=updateUser.js.map

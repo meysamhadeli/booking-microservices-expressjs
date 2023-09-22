@@ -28,7 +28,6 @@ export const initialDataSource = async () => {
           Logger.info('Migrations run successfully!');
 
           await seedUser();
-          Logger.info('Seed user inserted successfully!');
         })
         .catch((err) => {
           throw new applicationException('Error during running the Migrations!');

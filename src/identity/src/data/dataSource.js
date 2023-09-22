@@ -39,7 +39,6 @@ const initialDataSource = () => __awaiter(void 0, void 0, void 0, function* () {
             .then(() => __awaiter(void 0, void 0, void 0, function* () {
             logger_1.default.info('Migrations run successfully!');
             yield (0, seedUser_1.seedUser)();
-            logger_1.default.info('Seed user inserted successfully!');
         }))
             .catch((err) => {
             throw new applicationException_1.default('Error during running the Migrations!');

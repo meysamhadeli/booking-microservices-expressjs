@@ -23,16 +23,19 @@ const lodash_1 = require("lodash");
 const uuid_1 = require("uuid");
 const date_fns_1 = require("date-fns");
 const async_retry_1 = __importDefault(require("async-retry"));
-const tsyringe_1 = require("tsyringe");
 const reflection_1 = require("../utils/reflection");
 const serialization_1 = require("../utils/serialization");
 const config_1 = __importDefault(require("../config/config"));
 const logger_1 = __importDefault(require("../logging/logger"));
 const rabbitmq_1 = require("./rabbitmq");
+const tsyringe_1 = require("tsyringe");
+const otel_1 = require("../openTelemetry/otel");
 let Publisher = class Publisher {
     publishMessage(message) {
         return __awaiter(this, void 0, void 0, function* () {
             const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_1.RabbitMQConnection);
+            const openTelemetryTracer = tsyringe_1.container.resolve(otel_1.OpenTelemetryTracer);
+            const tracer = yield openTelemetryTracer.createTracer("rabbitmq-publisher");
             try {
                 yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
                     const channel = yield rabbitMQConnection.getChannel();
@@ -40,7 +43,7 @@ let Publisher = class Publisher {
                     const routingKey = exchangeName;
                     const serializedMessage = (0, serialization_1.serializeObject)(message);
                     // Start a new span for this RabbitMQ operation
-                    //const span = this.tracer.startSpan(`publish_message_${exchangeName}`);
+                    const span = tracer.startSpan(`publish_message_${exchangeName}`);
                     yield channel.assertExchange(exchangeName, 'topic', { durable: false });
                     // Create custom message properties
                     const messageProperties = {
@@ -56,9 +59,9 @@ let Publisher = class Publisher {
                     });
                     logger_1.default.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
                     // Set attributes on the span
-                    //span.setAttributes(messageProperties);
+                    span.setAttributes(messageProperties);
                     // Ensure the span ends when this operation is complete
-                    //span.end();
+                    span.end();
                 }), {
                     retries: config_1.default.retry.count,
                     factor: config_1.default.retry.factor,
@@ -75,6 +78,6 @@ let Publisher = class Publisher {
 };
 exports.Publisher = Publisher;
 exports.Publisher = Publisher = __decorate([
-    (0, tsyringe_1.scoped)(tsyringe_1.Lifecycle.ResolutionScoped)
+    (0, tsyringe_1.injectable)()
 ], Publisher);
 //# sourceMappingURL=publisher.js.map

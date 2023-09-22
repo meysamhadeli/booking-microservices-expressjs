@@ -33,6 +33,7 @@ const validation_1 = require("building-blocks/utils/validation");
 const encryption_1 = require("building-blocks/utils/encryption");
 const unauthorizedException_1 = __importDefault(require("building-blocks/types/exception/unauthorizedException"));
 const userRepository_1 = require("../../../data/repositories/userRepository");
+const tsyringe_1 = require("tsyringe");
 class Login {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -63,7 +64,7 @@ __decorate([
 exports.LoginController = LoginController = __decorate([
     (0, tsoa_1.Route)('/identity')
 ], LoginController);
-class LoginHandler {
+let LoginHandler = class LoginHandler {
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield loginValidations.validateAsync(request);
@@ -76,6 +77,9 @@ class LoginHandler {
             return token;
         });
     }
-}
+};
 exports.LoginHandler = LoginHandler;
+exports.LoginHandler = LoginHandler = __decorate([
+    (0, tsyringe_1.injectable)()
+], LoginHandler);
 //# sourceMappingURL=login.js.map

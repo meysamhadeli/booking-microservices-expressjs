@@ -14,52 +14,53 @@ import {dataSource, initialDataSource} from "./data/dataSource";
 import {registerMediatrHandlers} from "./extensions/mediatrExtensions";
 import {initialRabbitmq} from "./extensions/rabbitmqExtensions";
 import {RegisterRoutes} from "./routes/routes";
+import {initialOtel} from "./extensions/otelExtensions";
 
 const app = express();
 
 const start = async () => {
 
-// request and response logging
+    // request and response logging
     if (config.env !== 'test') {
         app.use(morganMiddleware);
     }
 
-// establish database connection
+    // establish database connection
     await initialDataSource();
 
-// set security HTTP headers
+    // set security HTTP headers
     app.use(helmet());
 
-// parse json request body
+    // parse json request body
     app.use(express.json());
 
-// parse urlencoded request body
+    // parse urlencoded request body
     app.use(express.urlencoded({extended: true}));
 
-// gzip compression
+    // gzip compression
     app.use(compression());
 
-// enable cors
+    // enable cors
     app.use(cors());
     app.options('*', cors());
+
+    // register openTelemetry
+    await initialOtel();
 
     // metrics middleware
     // app.use(requestCounterMiddleware);
     // app.use(requestLatencyMiddleware);
 
-    // register openTelemetry
-    //const tracer = await initialOpenTelemetry();
-
-// jwt authentication
+    // jwt authentication
     app.use(passport.initialize());
 
-// register routes with tsoa
+    // register routes with tsoa
     RegisterRoutes(app);
 
-// error handler
+    // error handler
     app.use(errorHandler);
 
-//register swagger
+    //register swagger
     try {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const swaggerDocument = require('./docs/swagger.json');
@@ -68,16 +69,16 @@ const start = async () => {
         Logger.error('Unable to read swagger.json', err);
     }
 
-// run the server
+    // run the server
     app.listen(config.port, () => {
         logger.info(`Listening to port ${config.port}`);
     });
 
-// register mediatr handlers
-    await registerMediatrHandlers();
-
-// register rabbitmq
+    // register rabbitmq
     const rabbitmq = await initialRabbitmq();
+
+    // register mediatr handlers
+    await registerMediatrHandlers();
 
     // gracefully shut down on process exit
     process.on('SIGTERM', () => {

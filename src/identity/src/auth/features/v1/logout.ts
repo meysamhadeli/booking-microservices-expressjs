@@ -1,12 +1,11 @@
 import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
-import { dataSource } from '../../../data/dataSource';
 import { BodyProp, Controller, Post, Route, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import httpStatus from 'http-status';
-import { Token } from '../../entities/token';
 import { TokenType } from '../../enums/tokenType';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
 import { AuthRepository } from '../../../data/repositories/authRepository';
+import { injectable } from 'tsyringe';
 
 export class Logout implements IRequest<number> {
   refreshToken: string;
@@ -33,6 +32,7 @@ export class LogoutController extends Controller {
   }
 }
 
+@injectable()
 export class LogoutHandler implements IHandler<Logout, number> {
   async handle(request: Logout): Promise<number> {
     await logoutValidations.params.validateAsync(request);

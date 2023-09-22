@@ -10,6 +10,7 @@ import { encryptPassword } from 'building-blocks/utils/encryption';
 import { UserRepository } from '../../../data/repositories/userRepository';
 import httpStatus from 'http-status';
 import Joi from 'joi';
+import { injectable } from 'tsyringe';
 
 export class UpdateUser implements IRequest<UserDto> {
   id: number;
@@ -64,6 +65,7 @@ export class UpdateUserController extends Controller {
   }
 }
 
+@injectable()
 export class UpdateUserHandler implements IHandler<UpdateUser, UserDto> {
   async handle(request: UpdateUser): Promise<UserDto> {
     await updateUserValidations.validateAsync(request);

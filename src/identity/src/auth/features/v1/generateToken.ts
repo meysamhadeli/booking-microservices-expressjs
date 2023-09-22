@@ -7,6 +7,7 @@ import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 import config from 'building-blocks/config/config';
 import { AuthRepository } from '../../../data/repositories/authRepository';
+import { injectable } from 'tsyringe';
 
 export class GenerateToken implements IRequest<AuthDto> {
   userId: number;
@@ -37,6 +38,7 @@ const generateJwtToken = (
   return jwt.sign(payload, secret);
 };
 
+@injectable()
 export class GenerateTokenHandler implements IHandler<GenerateToken, AuthDto> {
   async handle(request: GenerateToken): Promise<AuthDto> {
     await generateTokenValidations.params.validateAsync(request);

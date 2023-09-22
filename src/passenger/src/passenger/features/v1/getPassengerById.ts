@@ -6,6 +6,7 @@ import NotFoundException from 'building-blocks/types/exception/notFoundException
 import {PassengerRepository} from "../../../data/repositories/passengerRepository";
 import {Passenger} from "../../entities/passenger";
 import mapper from "../../mappings";
+import {injectable} from "tsyringe";
 
 export class GetPassengerById implements IRequest<PassengerDto> {
     id: number;
@@ -40,6 +41,7 @@ export class GetPassengerByIdController extends Controller {
     }
 }
 
+@injectable()
 export class GetPassengerByIdHandler implements IHandler<GetPassengerById, PassengerDto> {
     async handle(request: GetPassengerById): Promise<PassengerDto> {
         await getPassengerByIdValidations.params.validateAsync(request);

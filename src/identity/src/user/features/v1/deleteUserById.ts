@@ -7,6 +7,7 @@ import mapper from '../../mapping';
 import httpStatus from 'http-status';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
 import { UserRepository } from '../../../data/repositories/userRepository';
+import { injectable } from 'tsyringe';
 
 export class DeleteUserById implements IRequest<UserDto> {
   id: number;
@@ -42,6 +43,7 @@ export class DeleteUserByIdController extends Controller {
   }
 }
 
+@injectable()
 export class DeleteUserByIdHandler implements IHandler<DeleteUserById, UserDto> {
   async handle(request: DeleteUserById): Promise<UserDto> {
     await deleteUserValidations.params.validateAsync(request);

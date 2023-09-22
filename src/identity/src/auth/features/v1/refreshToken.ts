@@ -8,6 +8,7 @@ import { Token } from '../../entities/token';
 import UnauthorizedException from 'building-blocks/types/exception/unauthorizedException';
 import { ValidateToken } from './validateToken';
 import { AuthRepository } from '../../../data/repositories/authRepository';
+import { injectable } from 'tsyringe';
 
 export class RefreshToken implements IRequest<RefreshToken> {
   refreshToken: string;
@@ -34,6 +35,7 @@ export class RefreshTokenController extends Controller {
   }
 }
 
+@injectable()
 export class RefreshTokenHandler implements IHandler<RefreshToken, AuthDto> {
   async handle(request: RefreshToken): Promise<AuthDto> {
     await refreshTokenValidations.params.validateAsync(request);

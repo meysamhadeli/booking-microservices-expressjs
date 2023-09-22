@@ -10,12 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialRabbitmq = void 0;
-const rabbitmq_1 = require("building-blocks/rabbitmq/rabbitmq");
 const tsyringe_1 = require("tsyringe");
+const rabbitmq_1 = require("building-blocks/rabbitmq/rabbitmq");
+const publisher_1 = require("building-blocks/rabbitmq/publisher");
 const initialRabbitmq = () => __awaiter(void 0, void 0, void 0, function* () {
     const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_1.RabbitMQConnection);
     yield rabbitMQConnection.createConnection();
-    return rabbitMQConnection;
+    tsyringe_1.container.register('IPublisher', publisher_1.Publisher);
+    return null;
 });
 exports.initialRabbitmq = initialRabbitmq;
 //# sourceMappingURL=rabbitmqExtensions.js.map

@@ -32,6 +32,7 @@ const joi_1 = __importDefault(require("joi"));
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
 const passengerRepository_1 = require("../../../data/repositories/passengerRepository");
 const mappings_1 = __importDefault(require("../../mappings"));
+const tsyringe_1 = require("tsyringe");
 class GetPassengerById {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -69,7 +70,7 @@ __decorate([
 exports.GetPassengerByIdController = GetPassengerByIdController = __decorate([
     (0, tsoa_1.Route)('/passenger')
 ], GetPassengerByIdController);
-class GetPassengerByIdHandler {
+let GetPassengerByIdHandler = class GetPassengerByIdHandler {
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield getPassengerByIdValidations.params.validateAsync(request);
@@ -79,6 +80,9 @@ class GetPassengerByIdHandler {
             return result;
         });
     }
-}
+};
 exports.GetPassengerByIdHandler = GetPassengerByIdHandler;
+exports.GetPassengerByIdHandler = GetPassengerByIdHandler = __decorate([
+    (0, tsyringe_1.injectable)()
+], GetPassengerByIdHandler);
 //# sourceMappingURL=getPassengerById.js.map

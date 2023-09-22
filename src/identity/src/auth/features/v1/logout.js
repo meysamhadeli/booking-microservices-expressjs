@@ -32,6 +32,7 @@ const http_status_1 = __importDefault(require("http-status"));
 const tokenType_1 = require("../../enums/tokenType");
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
 const authRepository_1 = require("../../../data/repositories/authRepository");
+const tsyringe_1 = require("tsyringe");
 class Logout {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -63,7 +64,7 @@ __decorate([
 exports.LogoutController = LogoutController = __decorate([
     (0, tsoa_1.Route)('/identity')
 ], LogoutController);
-class LogoutHandler {
+let LogoutHandler = class LogoutHandler {
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield logoutValidations.params.validateAsync(request);
@@ -76,6 +77,9 @@ class LogoutHandler {
             return tokenEntity === null || tokenEntity === void 0 ? void 0 : tokenEntity.userId;
         });
     }
-}
+};
 exports.LogoutHandler = LogoutHandler;
+exports.LogoutHandler = LogoutHandler = __decorate([
+    (0, tsyringe_1.injectable)()
+], LogoutHandler);
 //# sourceMappingURL=logout.js.map

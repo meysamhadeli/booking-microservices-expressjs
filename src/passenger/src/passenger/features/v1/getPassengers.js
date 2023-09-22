@@ -24,16 +24,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GetUsersHandler = exports.GetUsersController = exports.GetUsers = void 0;
+exports.GetPassengersHandler = exports.GetPassengersController = exports.GetPassengers = void 0;
 const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
-const userDto_1 = require("../../dtos/userDto");
+const passengerDto_1 = require("../../dtos/passengerDto");
 const tsoa_1 = require("tsoa");
-const joi_1 = __importDefault(require("joi"));
-const mapping_1 = __importDefault(require("../../mapping"));
-const pagedResult_1 = require("building-blocks/types/pagination/pagedResult");
-const userRepository_1 = require("../../../data/repositories/userRepository");
+const passengerRepository_1 = require("../../../data/repositories/passengerRepository");
+const mappings_1 = __importDefault(require("../../mappings"));
 const tsyringe_1 = require("tsyringe");
-class GetUsers {
+const joi_1 = __importDefault(require("joi"));
+const pagedResult_1 = require("building-blocks/types/pagination/pagedResult");
+class GetPassengers {
     constructor(request = {}) {
         this.page = 1;
         this.pageSize = 10;
@@ -43,18 +43,18 @@ class GetUsers {
         Object.assign(this, request);
     }
 }
-exports.GetUsers = GetUsers;
-const getUsersValidations = joi_1.default.object({
+exports.GetPassengers = GetPassengers;
+const getPassengersValidations = joi_1.default.object({
     page: joi_1.default.number().integer().min(1).default(1),
     pageSize: joi_1.default.number().integer().min(1).default(10),
     orderBy: joi_1.default.string().valid('id', 'name', 'email').default('id'),
     order: joi_1.default.string().valid('ASC', 'DESC').default('ASC'),
     searchTerm: joi_1.default.string().allow(null).optional()
 });
-let GetUsersController = class GetUsersController extends tsoa_1.Controller {
-    getUsers(pageSize = 10, page = 1, order = 'ASC', orderBy = 'id', searchTerm) {
+let GetPassengersController = class GetPassengersController extends tsoa_1.Controller {
+    getPassengers(pageSize = 10, page = 1, order = 'ASC', orderBy = 'id', searchTerm) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield mediatr_js_1.mediatrJs.send(new GetUsers({
+            const result = yield mediatr_js_1.mediatrJs.send(new GetPassengers({
                 page: page,
                 pageSize: pageSize,
                 searchTerm: searchTerm,
@@ -65,9 +65,9 @@ let GetUsersController = class GetUsersController extends tsoa_1.Controller {
         });
     }
 };
-exports.GetUsersController = GetUsersController;
+exports.GetPassengersController = GetPassengersController;
 __decorate([
-    (0, tsoa_1.Get)('v1/get'),
+    (0, tsoa_1.Get)('v1/get-all'),
     (0, tsoa_1.Security)('jwt'),
     (0, tsoa_1.SuccessResponse)('200', 'OK'),
     __param(0, (0, tsoa_1.Query)()),
@@ -78,25 +78,25 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object, String, Object, String]),
     __metadata("design:returntype", Promise)
-], GetUsersController.prototype, "getUsers", null);
-exports.GetUsersController = GetUsersController = __decorate([
-    (0, tsoa_1.Route)('/user')
-], GetUsersController);
-let GetUsersHandler = class GetUsersHandler {
+], GetPassengersController.prototype, "getPassengers", null);
+exports.GetPassengersController = GetPassengersController = __decorate([
+    (0, tsoa_1.Route)('/passenger')
+], GetPassengersController);
+let GetPassengersHandler = class GetPassengersHandler {
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield getUsersValidations.validateAsync(request);
-            const userRepository = new userRepository_1.UserRepository();
-            const [usersEntity, total] = yield userRepository.findUsers(request.page, request.pageSize, request.orderBy, request.order, request.searchTerm);
-            if ((usersEntity === null || usersEntity === void 0 ? void 0 : usersEntity.length) == 0)
+            yield getPassengersValidations.validateAsync(request);
+            const passengerRepository = new passengerRepository_1.PassengerRepository();
+            const [passengersEntity, total] = yield passengerRepository.findPassengers(request.page, request.pageSize, request.orderBy, request.order, request.searchTerm);
+            if ((passengersEntity === null || passengersEntity === void 0 ? void 0 : passengersEntity.length) == 0)
                 return new pagedResult_1.PagedResult(null, total);
-            const result = usersEntity.map((user) => mapping_1.default.map(user, new userDto_1.UserDto()));
+            const result = passengersEntity.map((user) => mappings_1.default.map(user, new passengerDto_1.PassengerDto()));
             return new pagedResult_1.PagedResult(result, total);
         });
     }
 };
-exports.GetUsersHandler = GetUsersHandler;
-exports.GetUsersHandler = GetUsersHandler = __decorate([
+exports.GetPassengersHandler = GetPassengersHandler;
+exports.GetPassengersHandler = GetPassengersHandler = __decorate([
     (0, tsyringe_1.injectable)()
-], GetUsersHandler);
-//# sourceMappingURL=getUsers.js.map
+], GetPassengersHandler);
+//# sourceMappingURL=getPassengers.js.map

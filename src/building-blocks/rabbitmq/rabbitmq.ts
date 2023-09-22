@@ -1,8 +1,8 @@
 import * as amqp from 'amqplib';
 import asyncRetry from 'async-retry';
-import {singleton} from 'tsyringe';
 import Logger from "../logging/logger";
 import config from "../config/config";
+import {injectable, singleton} from "tsyringe";
 
 export interface IRabbitMQConnection {
     createConnection(): Promise<amqp.Connection>;

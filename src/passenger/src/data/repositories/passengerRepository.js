@@ -25,10 +25,21 @@ class PassengerRepository {
             return passengerRepository.findOneBy({ id: id });
         });
     }
-    getAllPassenger() {
+    findPassengers(page, pageSize, orderBy, order, searchTerm) {
         return __awaiter(this, void 0, void 0, function* () {
             const passengerRepository = dataSource_1.dataSource.getRepository(passenger_1.Passenger);
-            return passengerRepository.find();
+            const skip = (page - 1) * pageSize;
+            const take = pageSize;
+            const queryBuilder = passengerRepository
+                .createQueryBuilder('passenger')
+                .orderBy(`passenger.${orderBy}`, order)
+                .skip(skip)
+                .take(take);
+            // Apply filter criteria to the query
+            if (searchTerm) {
+                queryBuilder.andWhere('passenger.name LIKE :name', { name: `%${searchTerm}%` });
+            }
+            return yield queryBuilder.getManyAndCount();
         });
     }
 }

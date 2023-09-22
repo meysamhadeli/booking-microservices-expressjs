@@ -15,9 +15,9 @@ exports.RegisterRoutes = void 0;
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const runtime_1 = require("@tsoa/runtime");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const getAllPassengers_1 = require("./../passenger/features/v1/getAllPassengers");
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const getPassengerById_1 = require("./../passenger/features/v1/getPassengerById");
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+const getPassengers_1 = require("./../passenger/features/v1/getPassengers");
 const authentication_1 = require("./../configurations/authentication");
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
@@ -50,21 +50,6 @@ function RegisterRoutes(app) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-    app.get('/passenger/v1/get-all', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getAllPassengers_1.GetAllPassengerController)), ...((0, runtime_1.fetchMiddlewares)(getAllPassengers_1.GetAllPassengerController.prototype.getPassengerById)), function GetAllPassengerController_getPassengerById(request, response, next) {
-        const args = {};
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        let validatedArgs = [];
-        try {
-            validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new getAllPassengers_1.GetAllPassengerController();
-            const promise = controller.getPassengerById.apply(controller, validatedArgs);
-            promiseHandler(controller, promise, response, 200, next);
-        }
-        catch (err) {
-            return next(err);
-        }
-    });
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.get('/passenger/v1/get-by-id', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getPassengerById_1.GetPassengerByIdController)), ...((0, runtime_1.fetchMiddlewares)(getPassengerById_1.GetPassengerByIdController.prototype.getPassengerById)), function GetPassengerByIdController_getPassengerById(request, response, next) {
         const args = {
             id: { "in": "query", "name": "id", "required": true, "dataType": "double" },
@@ -75,6 +60,27 @@ function RegisterRoutes(app) {
             validatedArgs = getValidatedArgs(args, request, response);
             const controller = new getPassengerById_1.GetPassengerByIdController();
             const promise = controller.getPassengerById.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, 200, next);
+        }
+        catch (err) {
+            return next(err);
+        }
+    });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/passenger/v1/get-all', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getPassengers_1.GetPassengersController)), ...((0, runtime_1.fetchMiddlewares)(getPassengers_1.GetPassengersController.prototype.getPassengers)), function GetPassengersController_getPassengers(request, response, next) {
+        const args = {
+            pageSize: { "default": 10, "in": "query", "name": "pageSize", "dataType": "double" },
+            page: { "default": 1, "in": "query", "name": "page", "dataType": "double" },
+            order: { "default": "ASC", "in": "query", "name": "order", "dataType": "union", "subSchemas": [{ "dataType": "enum", "enums": ["ASC"] }, { "dataType": "enum", "enums": ["DESC"] }] },
+            orderBy: { "default": "id", "in": "query", "name": "orderBy", "dataType": "string" },
+            searchTerm: { "in": "query", "name": "searchTerm", "dataType": "string" },
+        };
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        let validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request, response);
+            const controller = new getPassengers_1.GetPassengersController();
+            const promise = controller.getPassengers.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 200, next);
         }
         catch (err) {

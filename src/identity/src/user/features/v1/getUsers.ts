@@ -6,6 +6,7 @@ import Joi from 'joi';
 import mapper from '../../mapping';
 import { PagedResult } from 'building-blocks/types/pagination/pagedResult';
 import { UserRepository } from '../../../data/repositories/userRepository';
+import { injectable } from 'tsyringe';
 
 export class GetUsers implements IRequest<PagedResult<UserDto[]>> {
   page = 1;
@@ -53,6 +54,7 @@ export class GetUsersController extends Controller {
   }
 }
 
+@injectable()
 export class GetUsersHandler implements IHandler<GetUsers, PagedResult<UserDto[]>> {
   async handle(request: GetUsers): Promise<PagedResult<UserDto[]>> {
     await getUsersValidations.validateAsync(request);

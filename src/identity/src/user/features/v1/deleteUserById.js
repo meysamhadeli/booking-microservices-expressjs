@@ -33,6 +33,7 @@ const mapping_1 = __importDefault(require("../../mapping"));
 const http_status_1 = __importDefault(require("http-status"));
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
 const userRepository_1 = require("../../../data/repositories/userRepository");
+const tsyringe_1 = require("tsyringe");
 class DeleteUserById {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -71,7 +72,7 @@ __decorate([
 exports.DeleteUserByIdController = DeleteUserByIdController = __decorate([
     (0, tsoa_1.Route)('/user')
 ], DeleteUserByIdController);
-class DeleteUserByIdHandler {
+let DeleteUserByIdHandler = class DeleteUserByIdHandler {
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield deleteUserValidations.params.validateAsync(request);
@@ -85,6 +86,9 @@ class DeleteUserByIdHandler {
             return result;
         });
     }
-}
+};
 exports.DeleteUserByIdHandler = DeleteUserByIdHandler;
+exports.DeleteUserByIdHandler = DeleteUserByIdHandler = __decorate([
+    (0, tsyringe_1.injectable)()
+], DeleteUserByIdHandler);
 //# sourceMappingURL=deleteUserById.js.map

@@ -10,9 +10,9 @@ import { password } from 'building-blocks/utils/validation';
 import ConflictException from 'building-blocks/types/exception/conflictException';
 import { encryptPassword } from 'building-blocks/utils/encryption';
 import { UserRepository } from '../../../data/repositories/userRepository';
-import { container } from 'tsyringe';
-import { Publisher } from 'building-blocks/rabbitmq/publisher';
+import { IPublisher, Publisher } from 'building-blocks/rabbitmq/publisher';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
+import { inject, injectable } from 'tsyringe';
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;
@@ -63,7 +63,9 @@ export class CreateUserController extends Controller {
   }
 }
 
+@injectable()
 export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
+  constructor(@inject('IPublisher') private publisher: IPublisher) {}
   async handle(request: CreateUser): Promise<UserDto> {
     await createUserValidations.validateAsync(request);
 
@@ -86,9 +88,7 @@ export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
       )
     );
 
-    const publisher = container.resolve(Publisher);
-
-    await publisher.publishMessage(
+    await this.publisher.publishMessage(
       new UserCreated(userEntity.id, userEntity.name, userEntity.passportNumber)
     );
 
