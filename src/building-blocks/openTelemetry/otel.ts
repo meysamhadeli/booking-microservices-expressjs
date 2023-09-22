@@ -1,32 +1,37 @@
-import { ConsoleSpanExporter, Tracer } from "@opentelemetry/sdk-trace-node";
-const { NodeTracerProvider } = require('@opentelemetry/node');
-const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
-const { registerInstrumentations } = require('@opentelemetry/instrumentation');
-const { AmqplibInstrumentation } = require('@opentelemetry/instrumentation-amqplib');
-const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
-// const { PrometheusExporter } = require('@opentelemetry/exporter-prometheus'); // Import PrometheusExporter
+import {ConsoleSpanExporter, Tracer} from "@opentelemetry/sdk-trace-node";
+import {singleton} from "tsyringe";
 
-export const initialOpenTelemetry = async (): Promise<Tracer> => {
+const {NodeTracerProvider} = require('@opentelemetry/node');
+const {SimpleSpanProcessor} = require('@opentelemetry/tracing');
+const {registerInstrumentations} = require('@opentelemetry/instrumentation');
+const {AmqplibInstrumentation} = require('@opentelemetry/instrumentation-amqplib');
+const {ExpressInstrumentation} = require('@opentelemetry/instrumentation-express');
 
-    const provider = new NodeTracerProvider();
-    const tracerExporter = new ConsoleSpanExporter();
 
-    provider.addSpanProcessor(new SimpleSpanProcessor(tracerExporter));
+export interface IOpenTelemetryTracer {
+    createTracer(tracerName: string): Promise<Tracer>
+}
 
-    // const prometheusExporter = new PrometheusExporter({startServer: true});
-    //
-    // provider.addSpanProcessor(new SimpleSpanProcessor(prometheusExporter));
+@singleton()
+export class OpenTelemetryTracer implements IOpenTelemetryTracer {
+    async createTracer(tracerName: string): Promise<Tracer> {
+        const provider = new NodeTracerProvider();
+        const tracerExporter = new ConsoleSpanExporter();
 
-    provider.register();
+        provider.addSpanProcessor(new SimpleSpanProcessor(tracerExporter));
 
-    registerInstrumentations({
-        instrumentations: [
-            new AmqplibInstrumentation(),
-            new ExpressInstrumentation(),
-        ],
-    });
+        provider.register();
 
-    const tracer = provider.getTracer('rabbitmq-tracing');
+        registerInstrumentations({
+            instrumentations: [
+                new AmqplibInstrumentation(),
+                new ExpressInstrumentation(),
+            ],
+        });
 
-    return tracer;
-};
+        const tracer = provider.getTracer(tracerName);
+
+        return tracer;
+    }
+
+}

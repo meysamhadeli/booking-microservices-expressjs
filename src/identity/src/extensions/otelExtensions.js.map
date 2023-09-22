@@ -1,0 +1,1 @@
+{"version":3,"file":"otelExtensions.js","sourceRoot":"","sources":["otelExtensions.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;AAAA,uCAAqC;AACrC,6DAAyE;AACzE,2EAAmD;AAE5C,MAAM,WAAW,GAAG,GAAuC,EAAE;IAClE,MAAM,mBAAmB,GAAG,oBAAS,CAAC,OAAO,CAAC,0BAAmB,CAAC,CAAC;IACnE,MAAM,mBAAmB,CAAC,YAAY,CAAC,gBAAM,CAAC,WAAW,CAAC,CAAC;IAE3D,OAAO,mBAAmB,CAAC;AAC7B,CAAC,CAAA,CAAC;AALW,QAAA,WAAW,eAKtB"}
