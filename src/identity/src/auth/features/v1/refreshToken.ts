@@ -7,8 +7,8 @@ import { TokenType } from '../../enums/tokenType';
 import { Token } from '../../entities/token';
 import UnauthorizedException from 'building-blocks/types/exception/unauthorizedException';
 import { ValidateToken } from './validateToken';
-import { AuthRepository } from '../../../data/repositories/authRepository';
-import { injectable } from 'tsyringe';
+import { IAuthRepository } from '../../../data/repositories/authRepository';
+import { inject, injectable } from 'tsyringe';
 
 export class RefreshToken implements IRequest<RefreshToken> {
   refreshToken: string;
@@ -37,6 +37,10 @@ export class RefreshTokenController extends Controller {
 
 @injectable()
 export class RefreshTokenHandler implements IHandler<RefreshToken, AuthDto> {
+  constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {
+  }
+
+
   async handle(request: RefreshToken): Promise<AuthDto> {
     await refreshTokenValidations.params.validateAsync(request);
 
@@ -49,8 +53,7 @@ export class RefreshTokenHandler implements IHandler<RefreshToken, AuthDto> {
       );
       const { userId } = refreshTokenData;
 
-      const authRepository = new AuthRepository();
-      await authRepository.removeToken(refreshTokenData);
+      await this.authRepository.removeToken(refreshTokenData);
 
       const result = await mediatrJs.send<AuthDto>(new GenerateToken({ userId: userId }));
 

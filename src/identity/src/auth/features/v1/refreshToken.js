@@ -32,7 +32,6 @@ const generateToken_1 = require("./generateToken");
 const tokenType_1 = require("../../enums/tokenType");
 const unauthorizedException_1 = __importDefault(require("building-blocks/types/exception/unauthorizedException"));
 const validateToken_1 = require("./validateToken");
-const authRepository_1 = require("../../../data/repositories/authRepository");
 const tsyringe_1 = require("tsyringe");
 class RefreshToken {
     constructor(request = {}) {
@@ -66,6 +65,9 @@ exports.RefreshTokenController = RefreshTokenController = __decorate([
     (0, tsoa_1.Route)('/identity')
 ], RefreshTokenController);
 let RefreshTokenHandler = class RefreshTokenHandler {
+    constructor(authRepository) {
+        this.authRepository = authRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield refreshTokenValidations.params.validateAsync(request);
@@ -75,8 +77,7 @@ let RefreshTokenHandler = class RefreshTokenHandler {
                     type: tokenType_1.TokenType.REFRESH
                 }));
                 const { userId } = refreshTokenData;
-                const authRepository = new authRepository_1.AuthRepository();
-                yield authRepository.removeToken(refreshTokenData);
+                yield this.authRepository.removeToken(refreshTokenData);
                 const result = yield mediatr_js_1.mediatrJs.send(new generateToken_1.GenerateToken({ userId: userId }));
                 return result;
             }
@@ -88,6 +89,8 @@ let RefreshTokenHandler = class RefreshTokenHandler {
 };
 exports.RefreshTokenHandler = RefreshTokenHandler;
 exports.RefreshTokenHandler = RefreshTokenHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IAuthRepository')),
+    __metadata("design:paramtypes", [Object])
 ], RefreshTokenHandler);
 //# sourceMappingURL=refreshToken.js.map

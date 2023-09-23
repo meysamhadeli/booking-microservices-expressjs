@@ -5,8 +5,8 @@ import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import mapper from '../../mapping';
 import { PagedResult } from 'building-blocks/types/pagination/pagedResult';
-import { UserRepository } from '../../../data/repositories/userRepository';
-import { injectable } from 'tsyringe';
+import { IUserRepository, UserRepository } from '../../../data/repositories/userRepository';
+import { inject, injectable } from 'tsyringe';
 
 export class GetUsers implements IRequest<PagedResult<UserDto[]>> {
   page = 1;
@@ -56,12 +56,12 @@ export class GetUsersController extends Controller {
 
 @injectable()
 export class GetUsersHandler implements IHandler<GetUsers, PagedResult<UserDto[]>> {
+  constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
+
   async handle(request: GetUsers): Promise<PagedResult<UserDto[]>> {
     await getUsersValidations.validateAsync(request);
 
-    const userRepository = new UserRepository();
-
-    const [usersEntity, total] = await userRepository.findUsers(
+    const [usersEntity, total] = await this.userRepository.findUsers(
       request.page,
       request.pageSize,
       request.orderBy,

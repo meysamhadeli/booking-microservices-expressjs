@@ -36,7 +36,6 @@ const joi_1 = __importDefault(require("joi"));
 const validation_1 = require("building-blocks/utils/validation");
 const conflictException_1 = __importDefault(require("building-blocks/types/exception/conflictException"));
 const encryption_1 = require("building-blocks/utils/encryption");
-const userRepository_1 = require("../../../data/repositories/userRepository");
 const identityContract_1 = require("building-blocks/contracts/identityContract");
 const tsyringe_1 = require("tsyringe");
 class CreateUser {
@@ -81,18 +80,18 @@ exports.CreateUserController = CreateUserController = __decorate([
     (0, tsoa_1.Route)('/user')
 ], CreateUserController);
 let CreateUserHandler = class CreateUserHandler {
-    constructor(publisher) {
+    constructor(publisher, userRepository) {
         this.publisher = publisher;
+        this.userRepository = userRepository;
     }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield createUserValidations.validateAsync(request);
-            const userRepository = new userRepository_1.UserRepository();
-            const existUser = yield userRepository.findUserByEmail(request.email);
+            const existUser = yield this.userRepository.findUserByEmail(request.email);
             if (existUser) {
                 throw new conflictException_1.default('Email already taken');
             }
-            const userEntity = yield userRepository.createUser(new user_1.User(request.email, request.name, yield (0, encryption_1.encryptPassword)(request.password), false, request.role, request.passportNumber));
+            const userEntity = yield this.userRepository.createUser(new user_1.User(request.email, request.name, yield (0, encryption_1.encryptPassword)(request.password), false, request.role, request.passportNumber));
             yield this.publisher.publishMessage(new identityContract_1.UserCreated(userEntity.id, userEntity.name, userEntity.passportNumber));
             const result = mapping_1.default.map(userEntity, new userDto_1.UserDto());
             return result;
@@ -103,6 +102,7 @@ exports.CreateUserHandler = CreateUserHandler;
 exports.CreateUserHandler = CreateUserHandler = __decorate([
     (0, tsyringe_1.injectable)(),
     __param(0, (0, tsyringe_1.inject)('IPublisher')),
-    __metadata("design:paramtypes", [Object])
+    __param(1, (0, tsyringe_1.inject)('IUserRepository')),
+    __metadata("design:paramtypes", [Object, Object])
 ], CreateUserHandler);
 //# sourceMappingURL=createUser.js.map

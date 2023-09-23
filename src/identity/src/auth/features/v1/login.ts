@@ -6,8 +6,9 @@ import { AuthDto } from '../../dtos/authDto';
 import { password } from 'building-blocks/utils/validation';
 import { isPasswordMatch } from 'building-blocks/utils/encryption';
 import UnauthorizedException from 'building-blocks/types/exception/unauthorizedException';
-import { UserRepository } from '../../../data/repositories/userRepository';
-import { injectable } from 'tsyringe';
+import { IUserRepository, UserRepository } from '../../../data/repositories/userRepository';
+import { inject, injectable } from 'tsyringe';
+import { IAuthRepository } from '../../../data/repositories/authRepository';
 
 export class Login implements IRequest<AuthDto> {
   email: string;
@@ -41,12 +42,11 @@ export class LoginController extends Controller {
 
 @injectable()
 export class LoginHandler implements IHandler<Login, AuthDto> {
+  constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
   async handle(request: Login): Promise<AuthDto> {
     await loginValidations.validateAsync(request);
 
-    const userRepository = new UserRepository();
-
-    const user = await userRepository.findUserByEmail(request.email);
+    const user = await this.userRepository.findUserByEmail(request.email);
 
     if (!user || !(await isPasswordMatch(request.password, user.password as string))) {
       throw new UnauthorizedException('Incorrect email or password');

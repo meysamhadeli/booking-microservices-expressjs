@@ -7,10 +7,10 @@ import { Body, Controller, Put, Query, Route, Security, SuccessResponse } from '
 import { password } from 'building-blocks/utils/validation';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
 import { encryptPassword } from 'building-blocks/utils/encryption';
-import { UserRepository } from '../../../data/repositories/userRepository';
+import { IUserRepository, UserRepository } from '../../../data/repositories/userRepository';
 import httpStatus from 'http-status';
 import Joi from 'joi';
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 
 export class UpdateUser implements IRequest<UserDto> {
   id: number;
@@ -67,18 +67,18 @@ export class UpdateUserController extends Controller {
 
 @injectable()
 export class UpdateUserHandler implements IHandler<UpdateUser, UserDto> {
+  constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
+
   async handle(request: UpdateUser): Promise<UserDto> {
     await updateUserValidations.validateAsync(request);
 
-    const userRepository = new UserRepository();
-
-    const existUser = await userRepository.findUserById(request.id);
+    const existUser = await this.userRepository.findUserById(request.id);
 
     if (!existUser) {
       throw new NotFoundException('User not found');
     }
 
-    const userEntity = await userRepository.updateUser(
+    const userEntity = await this.userRepository.updateUser(
       new User(
         request.email,
         request.name,

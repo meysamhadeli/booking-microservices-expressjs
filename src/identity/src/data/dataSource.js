@@ -12,41 +12,43 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initialDataSource = exports.dataSource = void 0;
+exports.initialDatabase = exports.dataSource = void 0;
 const typeorm_1 = require("typeorm");
-const logger_1 = __importDefault(require("building-blocks/logging/logger"));
-const applicationException_1 = __importDefault(require("building-blocks/types/exception/applicationException"));
+const config_1 = __importDefault(require("building-blocks/config/config"));
 const seedUser_1 = require("./seeds/seedUser");
-exports.dataSource = new typeorm_1.DataSource({
-    type: 'postgres',
-    host: 'localhost',
-    port: 5432,
-    username: 'postgres',
-    password: 'postgres',
-    database: 'identity',
-    logging: true,
-    synchronize: false,
-    entities: ['src/**/entities/*.js'],
-    migrations: ['src/data/migrations/*.js']
-});
-const initialDataSource = () => __awaiter(void 0, void 0, void 0, function* () {
-    exports.dataSource
-        .initialize()
-        .then(() => {
-        logger_1.default.info('Data Source has been initialized!');
+const logger_1 = __importDefault(require("building-blocks/logging/logger"));
+exports.dataSource = null;
+const initialDatabase = () => __awaiter(void 0, void 0, void 0, function* () {
+    const dataSourceOptions = {
+        type: 'postgres',
+        host: config_1.default.postgres.host,
+        port: config_1.default.postgres.port,
+        username: config_1.default.postgres.userName,
+        password: config_1.default.postgres.password,
+        database: config_1.default.postgres.database,
+        entities: ['src/**/entities/*.js'],
+        migrations: ['src/**/migrations/*.js'],
+        synchronize: false,
+        logging: false
+    };
+    yield (0, typeorm_1.createConnection)(dataSourceOptions)
+        .then((connection) => {
+        exports.dataSource = connection;
         exports.dataSource
             .runMigrations()
             .then(() => __awaiter(void 0, void 0, void 0, function* () {
             logger_1.default.info('Migrations run successfully!');
             yield (0, seedUser_1.seedUser)();
+            return exports.dataSource;
         }))
             .catch((err) => {
-            throw new applicationException_1.default('Error during running the Migrations!');
+            throw new Error('Error during running the Migrations!');
         });
     })
-        .catch((err) => {
-        throw new applicationException_1.default('Error during Data Source initialization:', err);
+        .catch((error) => {
+        throw new Error(`Error during Data Source initialization: ${error.toString()}`);
     });
+    return exports.dataSource;
 });
-exports.initialDataSource = initialDataSource;
+exports.initialDatabase = initialDatabase;
 //# sourceMappingURL=dataSource.js.map

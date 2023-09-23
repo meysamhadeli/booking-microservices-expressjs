@@ -32,7 +32,6 @@ const joi_1 = __importDefault(require("joi"));
 const mapping_1 = __importDefault(require("../../mapping"));
 const http_status_1 = __importDefault(require("http-status"));
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
-const userRepository_1 = require("../../../data/repositories/userRepository");
 const tsyringe_1 = require("tsyringe");
 class DeleteUserById {
     constructor(request = {}) {
@@ -73,15 +72,17 @@ exports.DeleteUserByIdController = DeleteUserByIdController = __decorate([
     (0, tsoa_1.Route)('/user')
 ], DeleteUserByIdController);
 let DeleteUserByIdHandler = class DeleteUserByIdHandler {
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield deleteUserValidations.params.validateAsync(request);
-            const userRepository = new userRepository_1.UserRepository();
-            const user = yield userRepository.findUserById(request.id);
+            const user = yield this.userRepository.findUserById(request.id);
             if (!user) {
                 throw new notFoundException_1.default('User not found');
             }
-            const usersEntity = yield userRepository.removeUser(user);
+            const usersEntity = yield this.userRepository.removeUser(user);
             const result = mapping_1.default.map(usersEntity, new userDto_1.UserDto());
             return result;
         });
@@ -89,6 +90,8 @@ let DeleteUserByIdHandler = class DeleteUserByIdHandler {
 };
 exports.DeleteUserByIdHandler = DeleteUserByIdHandler;
 exports.DeleteUserByIdHandler = DeleteUserByIdHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IUserRepository')),
+    __metadata("design:paramtypes", [Object])
 ], DeleteUserByIdHandler);
 //# sourceMappingURL=deleteUserById.js.map

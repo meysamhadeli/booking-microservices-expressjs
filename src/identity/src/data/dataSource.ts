@@ -1,26 +1,27 @@
-import { DataSource } from 'typeorm';
-import Logger from 'building-blocks/logging/logger';
-import applicationException from 'building-blocks/types/exception/applicationException';
+import { createConnection, DataSource, DataSourceOptions } from 'typeorm';
+import config from 'building-blocks/config/config';
 import { seedUser } from './seeds/seedUser';
+import Logger from 'building-blocks/logging/logger';
 
-export const dataSource = new DataSource({
-  type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'postgres',
-  password: 'postgres',
-  database: 'identity',
-  logging: true,
-  synchronize: false, // Disable automatic table generation
-  entities: ['src/**/entities/*.js'],
-  migrations: ['src/data/migrations/*.js']
-});
+export let dataSource: DataSource = null;
 
-export const initialDataSource = async () => {
-  dataSource
-    .initialize()
-    .then(() => {
-      Logger.info('Data Source has been initialized!');
+export const initialDatabase = async (): Promise<DataSource> => {
+  const dataSourceOptions: DataSourceOptions = {
+    type: 'postgres',
+    host: config.postgres.host,
+    port: config.postgres.port,
+    username: config.postgres.userName,
+    password: config.postgres.password,
+    database: config.postgres.database,
+    entities: ['src/**/entities/*.js'],
+    migrations: ['src/**/migrations/*.js'],
+    synchronize: false,
+    logging: false
+  };
+
+  await createConnection(dataSourceOptions)
+    .then((connection) => {
+      dataSource = connection;
 
       dataSource
         .runMigrations()
@@ -28,12 +29,16 @@ export const initialDataSource = async () => {
           Logger.info('Migrations run successfully!');
 
           await seedUser();
+
+          return dataSource;
         })
         .catch((err) => {
-          throw new applicationException('Error during running the Migrations!');
+          throw new Error('Error during running the Migrations!');
         });
     })
-    .catch((err) => {
-      throw new applicationException('Error during Data Source initialization:', err);
+    .catch((error) => {
+      throw new Error(`Error during Data Source initialization: ${error.toString()}`);
     });
+
+  return dataSource;
 };

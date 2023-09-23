@@ -9,6 +9,12 @@ const envVarsSchema = Joi.object()
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
     SERVICE_NAME: Joi.string(),
     PORT: Joi.number().default(3000),
+    POSTGRES_HOST: Joi.string().default('localhost').description('Postgres host'),
+    POSTGRES_PORT: Joi.number().default(5432).description('Postgres host'),
+    POSTGRES_USERNAME: Joi.string().default('postgres').description('Postgres userName'),
+    POSTGRES_PASSWORD: Joi.string().default('postgres').description('Postgres password'),
+    POSTGRES_Database: Joi.string().default('default_database').description('Postgres database name'),
+    POSTGRES_SYNCHRONIZE: Joi.boolean().default(false).description('Synchronize if true it dosent use migrations'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number()
       .default(30)
@@ -49,6 +55,14 @@ export default {
   env: envVars.NODE_ENV,
   serviceName: envVars.SERVICE_NAME,
   port: envVars.PORT,
+  postgres: {
+    host: envVars.POSTGRES_HOST,
+    port: envVars.POSTGRES_PORT,
+    userName: envVars.POSTGRES_USERNAME,
+    password: envVars.POSTGRES_PASSWORD,
+    database: envVars.POSTGRES_Database,
+    synchronize: envVars.POSTGRES_SYNCHRONIZE
+  },
   jwt: {
     secret: envVars.JWT_SECRET,
     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,

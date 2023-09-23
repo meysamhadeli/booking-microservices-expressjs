@@ -5,6 +5,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -26,7 +32,6 @@ const token_1 = require("../../entities/token");
 const joi_1 = __importDefault(require("joi"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("building-blocks/config/config"));
-const authRepository_1 = require("../../../data/repositories/authRepository");
 const tsyringe_1 = require("tsyringe");
 class GenerateToken {
     constructor(request = {}) {
@@ -49,6 +54,9 @@ const generateJwtToken = (userId, expires, type, secret = config_1.default.jwt.s
     return jsonwebtoken_1.default.sign(payload, secret);
 };
 let GenerateTokenHandler = class GenerateTokenHandler {
+    constructor(authRepository) {
+        this.authRepository = authRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield generateTokenValidations.params.validateAsync(request);
@@ -56,8 +64,7 @@ let GenerateTokenHandler = class GenerateTokenHandler {
             const accessToken = generateJwtToken(request.userId, accessTokenExpires.unix(), tokenType_1.TokenType.ACCESS);
             const refreshTokenExpires = (0, moment_1.default)().add(config_1.default.jwt.refreshExpirationDays, 'days');
             const refreshToken = generateJwtToken(request.userId, refreshTokenExpires.unix(), tokenType_1.TokenType.REFRESH);
-            const authRepository = new authRepository_1.AuthRepository();
-            yield authRepository.createToken(new token_1.Token(refreshToken, refreshTokenExpires.toDate(), tokenType_1.TokenType.REFRESH, false, request.userId));
+            yield this.authRepository.createToken(new token_1.Token(refreshToken, refreshTokenExpires.toDate(), tokenType_1.TokenType.REFRESH, false, request.userId));
             const result = {
                 access: {
                     token: accessToken,
@@ -74,6 +81,8 @@ let GenerateTokenHandler = class GenerateTokenHandler {
 };
 exports.GenerateTokenHandler = GenerateTokenHandler;
 exports.GenerateTokenHandler = GenerateTokenHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IAuthRepository')),
+    __metadata("design:paramtypes", [Object])
 ], GenerateTokenHandler);
 //# sourceMappingURL=generateToken.js.map

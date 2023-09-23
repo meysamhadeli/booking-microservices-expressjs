@@ -34,7 +34,6 @@ const tsoa_1 = require("tsoa");
 const validation_1 = require("building-blocks/utils/validation");
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
 const encryption_1 = require("building-blocks/utils/encryption");
-const userRepository_1 = require("../../../data/repositories/userRepository");
 const http_status_1 = __importDefault(require("http-status"));
 const joi_1 = __importDefault(require("joi"));
 const tsyringe_1 = require("tsyringe");
@@ -82,15 +81,17 @@ exports.UpdateUserController = UpdateUserController = __decorate([
     (0, tsoa_1.Route)('/user')
 ], UpdateUserController);
 let UpdateUserHandler = class UpdateUserHandler {
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield updateUserValidations.validateAsync(request);
-            const userRepository = new userRepository_1.UserRepository();
-            const existUser = yield userRepository.findUserById(request.id);
+            const existUser = yield this.userRepository.findUserById(request.id);
             if (!existUser) {
                 throw new notFoundException_1.default('User not found');
             }
-            const userEntity = yield userRepository.updateUser(new user_1.User(request.email, request.name, yield (0, encryption_1.encryptPassword)(request.password), existUser.isEmailVerified, request.role, request.passportNumber, existUser.createdAt, existUser.tokens, new Date()));
+            const userEntity = yield this.userRepository.updateUser(new user_1.User(request.email, request.name, yield (0, encryption_1.encryptPassword)(request.password), existUser.isEmailVerified, request.role, request.passportNumber, existUser.createdAt, existUser.tokens, new Date()));
             const result = mapping_1.default.map(userEntity, new userDto_1.UserDto());
             return result;
         });
@@ -98,6 +99,8 @@ let UpdateUserHandler = class UpdateUserHandler {
 };
 exports.UpdateUserHandler = UpdateUserHandler;
 exports.UpdateUserHandler = UpdateUserHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IUserRepository')),
+    __metadata("design:paramtypes", [Object])
 ], UpdateUserHandler);
 //# sourceMappingURL=updateUser.js.map

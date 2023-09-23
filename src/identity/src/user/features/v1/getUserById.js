@@ -31,7 +31,6 @@ const tsoa_1 = require("tsoa");
 const joi_1 = __importDefault(require("joi"));
 const mapping_1 = __importDefault(require("../../mapping"));
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
-const userRepository_1 = require("../../../data/repositories/userRepository");
 const tsyringe_1 = require("tsyringe");
 class GetUserById {
     constructor(request = {}) {
@@ -71,11 +70,13 @@ exports.GetUserByIdController = GetUserByIdController = __decorate([
     (0, tsoa_1.Route)('/user')
 ], GetUserByIdController);
 let GetUserByIdHandler = class GetUserByIdHandler {
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield getUserByIdValidations.params.validateAsync(request);
-            const userRepository = new userRepository_1.UserRepository();
-            const usersEntity = yield userRepository.findUserById(request.id);
+            const usersEntity = yield this.userRepository.findUserById(request.id);
             const result = mapping_1.default.map(usersEntity, new userDto_1.UserDto());
             return result;
         });
@@ -83,6 +84,8 @@ let GetUserByIdHandler = class GetUserByIdHandler {
 };
 exports.GetUserByIdHandler = GetUserByIdHandler;
 exports.GetUserByIdHandler = GetUserByIdHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IUserRepository')),
+    __metadata("design:paramtypes", [Object])
 ], GetUserByIdHandler);
 //# sourceMappingURL=getUserById.js.map

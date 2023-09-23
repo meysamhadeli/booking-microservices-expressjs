@@ -28,7 +28,6 @@ exports.GetPassengersHandler = exports.GetPassengersController = exports.GetPass
 const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
 const passengerDto_1 = require("../../dtos/passengerDto");
 const tsoa_1 = require("tsoa");
-const passengerRepository_1 = require("../../../data/repositories/passengerRepository");
 const mappings_1 = __importDefault(require("../../mappings"));
 const tsyringe_1 = require("tsyringe");
 const joi_1 = __importDefault(require("joi"));
@@ -83,11 +82,13 @@ exports.GetPassengersController = GetPassengersController = __decorate([
     (0, tsoa_1.Route)('/passenger')
 ], GetPassengersController);
 let GetPassengersHandler = class GetPassengersHandler {
+    constructor(passengerRepository) {
+        this.passengerRepository = passengerRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield getPassengersValidations.validateAsync(request);
-            const passengerRepository = new passengerRepository_1.PassengerRepository();
-            const [passengersEntity, total] = yield passengerRepository.findPassengers(request.page, request.pageSize, request.orderBy, request.order, request.searchTerm);
+            const [passengersEntity, total] = yield this.passengerRepository.findPassengers(request.page, request.pageSize, request.orderBy, request.order, request.searchTerm);
             if ((passengersEntity === null || passengersEntity === void 0 ? void 0 : passengersEntity.length) == 0)
                 return new pagedResult_1.PagedResult(null, total);
             const result = passengersEntity.map((user) => mappings_1.default.map(user, new passengerDto_1.PassengerDto()));
@@ -97,6 +98,8 @@ let GetPassengersHandler = class GetPassengersHandler {
 };
 exports.GetPassengersHandler = GetPassengersHandler;
 exports.GetPassengersHandler = GetPassengersHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IPassengerRepository')),
+    __metadata("design:paramtypes", [Object])
 ], GetPassengersHandler);
 //# sourceMappingURL=getPassengers.js.map

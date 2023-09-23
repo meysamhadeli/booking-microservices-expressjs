@@ -30,7 +30,6 @@ const passengerDto_1 = require("../../dtos/passengerDto");
 const tsoa_1 = require("tsoa");
 const joi_1 = __importDefault(require("joi"));
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
-const passengerRepository_1 = require("../../../data/repositories/passengerRepository");
 const mappings_1 = __importDefault(require("../../mappings"));
 const tsyringe_1 = require("tsyringe");
 class GetPassengerById {
@@ -71,11 +70,13 @@ exports.GetPassengerByIdController = GetPassengerByIdController = __decorate([
     (0, tsoa_1.Route)('/passenger')
 ], GetPassengerByIdController);
 let GetPassengerByIdHandler = class GetPassengerByIdHandler {
+    constructor(passengerRepository) {
+        this.passengerRepository = passengerRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield getPassengerByIdValidations.params.validateAsync(request);
-            const passengerRepository = new passengerRepository_1.PassengerRepository();
-            const passengerEntity = yield passengerRepository.findPassengerById(request.id);
+            const passengerEntity = yield this.passengerRepository.findPassengerById(request.id);
             const result = mappings_1.default.map(passengerEntity, new passengerDto_1.PassengerDto());
             return result;
         });
@@ -83,6 +84,8 @@ let GetPassengerByIdHandler = class GetPassengerByIdHandler {
 };
 exports.GetPassengerByIdHandler = GetPassengerByIdHandler;
 exports.GetPassengerByIdHandler = GetPassengerByIdHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IPassengerRepository')),
+    __metadata("design:paramtypes", [Object])
 ], GetPassengerByIdHandler);
 //# sourceMappingURL=getPassengerById.js.map

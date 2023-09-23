@@ -9,8 +9,8 @@ import Joi from 'joi';
 import { password } from 'building-blocks/utils/validation';
 import ConflictException from 'building-blocks/types/exception/conflictException';
 import { encryptPassword } from 'building-blocks/utils/encryption';
-import { UserRepository } from '../../../data/repositories/userRepository';
-import { IPublisher, Publisher } from 'building-blocks/rabbitmq/publisher';
+import { IUserRepository } from '../../../data/repositories/userRepository';
+import { IPublisher } from 'building-blocks/rabbitmq/publisher';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
 import { inject, injectable } from 'tsyringe';
 
@@ -65,19 +65,19 @@ export class CreateUserController extends Controller {
 
 @injectable()
 export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
-  constructor(@inject('IPublisher') private publisher: IPublisher) {}
+  constructor(@inject('IPublisher') private publisher: IPublisher, @inject('IUserRepository') private userRepository: IUserRepository) {
+  }
+
   async handle(request: CreateUser): Promise<UserDto> {
     await createUserValidations.validateAsync(request);
 
-    const userRepository = new UserRepository();
-
-    const existUser = await userRepository.findUserByEmail(request.email);
+    const existUser = await this.userRepository.findUserByEmail(request.email);
 
     if (existUser) {
       throw new ConflictException('Email already taken');
     }
 
-    const userEntity = await userRepository.createUser(
+    const userEntity = await this.userRepository.createUser(
       new User(
         request.email,
         request.name,

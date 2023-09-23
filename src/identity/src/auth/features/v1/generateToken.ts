@@ -1,13 +1,13 @@
 import moment from 'moment';
 import { TokenType } from '../../enums/tokenType';
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
+import { IHandler, IRequest } from 'building-blocks/mediatr-js/mediatr.js';
 import { AuthDto } from '../../dtos/authDto';
 import { Token } from '../../entities/token';
 import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 import config from 'building-blocks/config/config';
-import { AuthRepository } from '../../../data/repositories/authRepository';
-import { injectable } from 'tsyringe';
+import { IAuthRepository } from '../../../data/repositories/authRepository';
+import { inject, injectable } from 'tsyringe';
 
 export class GenerateToken implements IRequest<AuthDto> {
   userId: number;
@@ -40,6 +40,9 @@ const generateJwtToken = (
 
 @injectable()
 export class GenerateTokenHandler implements IHandler<GenerateToken, AuthDto> {
+  constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {
+  }
+
   async handle(request: GenerateToken): Promise<AuthDto> {
     await generateTokenValidations.params.validateAsync(request);
 
@@ -57,9 +60,7 @@ export class GenerateTokenHandler implements IHandler<GenerateToken, AuthDto> {
       TokenType.REFRESH
     );
 
-    const authRepository = new AuthRepository();
-
-    await authRepository.createToken(
+    await this.authRepository.createToken(
       new Token(
         refreshToken,
         refreshTokenExpires.toDate(),

@@ -31,7 +31,6 @@ const tsoa_1 = require("tsoa");
 const joi_1 = __importDefault(require("joi"));
 const mapping_1 = __importDefault(require("../../mapping"));
 const pagedResult_1 = require("building-blocks/types/pagination/pagedResult");
-const userRepository_1 = require("../../../data/repositories/userRepository");
 const tsyringe_1 = require("tsyringe");
 class GetUsers {
     constructor(request = {}) {
@@ -83,11 +82,13 @@ exports.GetUsersController = GetUsersController = __decorate([
     (0, tsoa_1.Route)('/user')
 ], GetUsersController);
 let GetUsersHandler = class GetUsersHandler {
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield getUsersValidations.validateAsync(request);
-            const userRepository = new userRepository_1.UserRepository();
-            const [usersEntity, total] = yield userRepository.findUsers(request.page, request.pageSize, request.orderBy, request.order, request.searchTerm);
+            const [usersEntity, total] = yield this.userRepository.findUsers(request.page, request.pageSize, request.orderBy, request.order, request.searchTerm);
             if ((usersEntity === null || usersEntity === void 0 ? void 0 : usersEntity.length) == 0)
                 return new pagedResult_1.PagedResult(null, total);
             const result = usersEntity.map((user) => mapping_1.default.map(user, new userDto_1.UserDto()));
@@ -97,6 +98,8 @@ let GetUsersHandler = class GetUsersHandler {
 };
 exports.GetUsersHandler = GetUsersHandler;
 exports.GetUsersHandler = GetUsersHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IUserRepository')),
+    __metadata("design:paramtypes", [Object])
 ], GetUsersHandler);
 //# sourceMappingURL=getUsers.js.map

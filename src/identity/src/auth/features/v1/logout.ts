@@ -4,8 +4,8 @@ import Joi from 'joi';
 import httpStatus from 'http-status';
 import { TokenType } from '../../enums/tokenType';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
-import { AuthRepository } from '../../../data/repositories/authRepository';
-import { injectable } from 'tsyringe';
+import { AuthRepository, IAuthRepository } from '../../../data/repositories/authRepository';
+import { inject, injectable } from 'tsyringe';
 
 export class Logout implements IRequest<number> {
   refreshToken: string;
@@ -34,17 +34,18 @@ export class LogoutController extends Controller {
 
 @injectable()
 export class LogoutHandler implements IHandler<Logout, number> {
+  constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
+
   async handle(request: Logout): Promise<number> {
     await logoutValidations.params.validateAsync(request);
 
-    const authRepository = new AuthRepository();
-    const token = await authRepository.findToken(request.refreshToken, TokenType.REFRESH);
+    const token = await this.authRepository.findToken(request.refreshToken, TokenType.REFRESH);
 
     if (!token) {
       throw new NotFoundException('Refresh Token Not found');
     }
 
-    const tokenEntity = await authRepository.removeToken(token);
+    const tokenEntity = await this.authRepository.removeToken(token);
 
     return tokenEntity?.userId;
   }

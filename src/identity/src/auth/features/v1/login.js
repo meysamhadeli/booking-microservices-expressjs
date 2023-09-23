@@ -32,7 +32,6 @@ const generateToken_1 = require("./generateToken");
 const validation_1 = require("building-blocks/utils/validation");
 const encryption_1 = require("building-blocks/utils/encryption");
 const unauthorizedException_1 = __importDefault(require("building-blocks/types/exception/unauthorizedException"));
-const userRepository_1 = require("../../../data/repositories/userRepository");
 const tsyringe_1 = require("tsyringe");
 class Login {
     constructor(request = {}) {
@@ -65,11 +64,13 @@ exports.LoginController = LoginController = __decorate([
     (0, tsoa_1.Route)('/identity')
 ], LoginController);
 let LoginHandler = class LoginHandler {
+    constructor(userRepository) {
+        this.userRepository = userRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield loginValidations.validateAsync(request);
-            const userRepository = new userRepository_1.UserRepository();
-            const user = yield userRepository.findUserByEmail(request.email);
+            const user = yield this.userRepository.findUserByEmail(request.email);
             if (!user || !(yield (0, encryption_1.isPasswordMatch)(request.password, user.password))) {
                 throw new unauthorizedException_1.default('Incorrect email or password');
             }
@@ -80,6 +81,8 @@ let LoginHandler = class LoginHandler {
 };
 exports.LoginHandler = LoginHandler;
 exports.LoginHandler = LoginHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IUserRepository')),
+    __metadata("design:paramtypes", [Object])
 ], LoginHandler);
 //# sourceMappingURL=login.js.map

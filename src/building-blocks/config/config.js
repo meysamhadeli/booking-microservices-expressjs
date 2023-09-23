@@ -12,6 +12,11 @@ const envVarsSchema = joi_1.default.object()
     NODE_ENV: joi_1.default.string().valid('production', 'development', 'test').required(),
     SERVICE_NAME: joi_1.default.string(),
     PORT: joi_1.default.number().default(3000),
+    POSTGRES_HOST: joi_1.default.string().default('localhost').description('Postgres host'),
+    POSTGRES_PORT: joi_1.default.number().default(5432).description('Postgres host'),
+    POSTGRES_USERNAME: joi_1.default.string().default('postgres').description('Postgres userName'),
+    POSTGRES_PASSWORD: joi_1.default.string().default('postgres').description('Postgres password'),
+    POSTGRES_Database: joi_1.default.string().default('default_database').description('Postgres database name'),
     JWT_SECRET: joi_1.default.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: joi_1.default.number()
         .default(30)
@@ -49,6 +54,13 @@ exports.default = {
     env: envVars.NODE_ENV,
     serviceName: envVars.SERVICE_NAME,
     port: envVars.PORT,
+    postgres: {
+        host: envVars.POSTGRES_HOST,
+        port: envVars.POSTGRES_PORT,
+        userName: envVars.POSTGRES_USERNAME,
+        password: envVars.POSTGRES_PASSWORD,
+        database: envVars.POSTGRES_Database
+    },
     jwt: {
         secret: envVars.JWT_SECRET,
         accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,

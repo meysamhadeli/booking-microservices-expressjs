@@ -5,8 +5,8 @@ import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import mapper from '../../mapping';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
-import { UserRepository } from '../../../data/repositories/userRepository';
-import { injectable } from 'tsyringe';
+import { IUserRepository, UserRepository } from '../../../data/repositories/userRepository';
+import { inject, injectable } from 'tsyringe';
 
 export class GetUserById implements IRequest<UserDto> {
   id: number;
@@ -43,12 +43,11 @@ export class GetUserByIdController extends Controller {
 
 @injectable()
 export class GetUserByIdHandler implements IHandler<GetUserById, UserDto> {
+  constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
   async handle(request: GetUserById): Promise<UserDto> {
     await getUserByIdValidations.params.validateAsync(request);
 
-    const userRepository = new UserRepository();
-
-    const usersEntity = await userRepository.findUserById(request.id);
+    const usersEntity = await this.userRepository.findUserById(request.id);
 
     const result = mapper.map<User, UserDto>(usersEntity, new UserDto());
 

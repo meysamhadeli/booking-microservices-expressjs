@@ -20,13 +20,13 @@ services:
     #######################################################
   postgres:
    container_name: postgres
-   image: postgres:13-alpine
+   image: postgres:latest
    restart: unless-stopped
    ports:
     - '5432:5432'
    environment:
-    - POSTGRES_USER=postgress
-    - POSTGRES_PASSWORD=postgress
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
    networks:
     - booking
 

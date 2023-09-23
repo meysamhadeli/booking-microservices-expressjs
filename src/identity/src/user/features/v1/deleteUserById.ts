@@ -6,8 +6,9 @@ import Joi from 'joi';
 import mapper from '../../mapping';
 import httpStatus from 'http-status';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
-import { UserRepository } from '../../../data/repositories/userRepository';
-import { injectable } from 'tsyringe';
+import { IUserRepository, UserRepository } from '../../../data/repositories/userRepository';
+import { inject, injectable } from 'tsyringe';
+import { IPublisher } from 'building-blocks/rabbitmq/publisher';
 
 export class DeleteUserById implements IRequest<UserDto> {
   id: number;
@@ -45,18 +46,17 @@ export class DeleteUserByIdController extends Controller {
 
 @injectable()
 export class DeleteUserByIdHandler implements IHandler<DeleteUserById, UserDto> {
+  constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
   async handle(request: DeleteUserById): Promise<UserDto> {
     await deleteUserValidations.params.validateAsync(request);
 
-    const userRepository = new UserRepository();
-
-    const user = await userRepository.findUserById(request.id);
+    const user = await this.userRepository.findUserById(request.id);
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    const usersEntity = await userRepository.removeUser(user);
+    const usersEntity = await this.userRepository.removeUser(user);
 
     const result = mapper.map<User, UserDto>(usersEntity, new UserDto());
 

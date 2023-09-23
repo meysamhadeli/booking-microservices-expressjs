@@ -31,7 +31,6 @@ const joi_1 = __importDefault(require("joi"));
 const http_status_1 = __importDefault(require("http-status"));
 const tokenType_1 = require("../../enums/tokenType");
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
-const authRepository_1 = require("../../../data/repositories/authRepository");
 const tsyringe_1 = require("tsyringe");
 class Logout {
     constructor(request = {}) {
@@ -65,21 +64,25 @@ exports.LogoutController = LogoutController = __decorate([
     (0, tsoa_1.Route)('/identity')
 ], LogoutController);
 let LogoutHandler = class LogoutHandler {
+    constructor(authRepository) {
+        this.authRepository = authRepository;
+    }
     handle(request) {
         return __awaiter(this, void 0, void 0, function* () {
             yield logoutValidations.params.validateAsync(request);
-            const authRepository = new authRepository_1.AuthRepository();
-            const token = yield authRepository.findToken(request.refreshToken, tokenType_1.TokenType.REFRESH);
+            const token = yield this.authRepository.findToken(request.refreshToken, tokenType_1.TokenType.REFRESH);
             if (!token) {
                 throw new notFoundException_1.default('Refresh Token Not found');
             }
-            const tokenEntity = yield authRepository.removeToken(token);
+            const tokenEntity = yield this.authRepository.removeToken(token);
             return tokenEntity === null || tokenEntity === void 0 ? void 0 : tokenEntity.userId;
         });
     }
 };
 exports.LogoutHandler = LogoutHandler;
 exports.LogoutHandler = LogoutHandler = __decorate([
-    (0, tsyringe_1.injectable)()
+    (0, tsyringe_1.injectable)(),
+    __param(0, (0, tsyringe_1.inject)('IAuthRepository')),
+    __metadata("design:paramtypes", [Object])
 ], LogoutHandler);
 //# sourceMappingURL=logout.js.map

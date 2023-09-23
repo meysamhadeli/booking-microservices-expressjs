@@ -1,36 +1,41 @@
-import { DataSource } from 'typeorm';
+import { createConnection, DataSource, DataSourceOptions } from 'typeorm';
+import config from 'building-blocks/config/config';
 import Logger from 'building-blocks/logging/logger';
-import applicationException from 'building-blocks/types/exception/applicationException';
 
-export const dataSource = new DataSource({
-  type: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  username: 'postgres',
-  password: 'postgres',
-  database: 'passenger',
-  logging: true,
-  synchronize: false, // Disable automatic table generation
-  entities: ['src/**/entities/*.js'],
-  migrations: ['src/data/migrations/*.js']
-});
+export let dataSource: DataSource = null;
 
-export const initialDataSource = async () => {
-  dataSource
-    .initialize()
-    .then(() => {
-      Logger.info('Data Source has been initialized!');
+export const initialDatabase = async (): Promise<DataSource> => {
+  const dataSourceOptions: DataSourceOptions = {
+    type: 'postgres',
+    host: config.postgres.host,
+    port: config.postgres.port,
+    username: config.postgres.userName,
+    password: config.postgres.password,
+    database: config.postgres.database,
+    entities: ['src/**/entities/*.js'],
+    migrations: ['src/**/migrations/*.js'],
+    synchronize: false,
+    logging: false
+  };
+
+  await createConnection(dataSourceOptions)
+    .then((connection) => {
+      dataSource = connection;
 
       dataSource
         .runMigrations()
-        .then(() => {
+        .then(async () => {
           Logger.info('Migrations run successfully!');
+
+          return dataSource;
         })
         .catch((err) => {
-          throw new applicationException('Error during running the Migrations!');
+          throw new Error('Error during running the Migrations!');
         });
     })
-    .catch((err) => {
-      throw new applicationException('Error during Data Source initialization:', err);
+    .catch((error) => {
+      throw new Error(`Error during Data Source initialization: ${error.toString()}`);
     });
+
+  return dataSource;
 };
