@@ -10,12 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const dataSource_1 = require("../../../../src/data/dataSource");
-const user_1 = require("../../../../src/user/entities/user");
+const initialIntegrationTestFixture_1 = require("../../../shared/initialIntegrationTestFixture");
 describe('Integration Test', () => {
+    let fixture;
+    beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
+        fixture = yield (0, initialIntegrationTestFixture_1.initialIntegrationTestFixture)();
+    }));
+    afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
+        yield fixture.postgresContainer.stop();
+        yield fixture.rabbitmqContainer.stop();
+    }));
     it('should create user and retrieve a user from the database', () => __awaiter(void 0, void 0, void 0, function* () {
-        const s = dataSource_1.dataSource.getRepository(user_1.User);
-        const usersEntity = yield s.findOneBy({ id: 1 });
+        const usersEntity = yield fixture.userRepository.findUserById(1);
         console.log('hiii');
     }));
 });

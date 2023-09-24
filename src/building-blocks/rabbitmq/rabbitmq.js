@@ -52,14 +52,19 @@ let RabbitMQConnection = class RabbitMQConnection {
         this.connection = null;
         this.channel = null;
     }
-    createConnection() {
+    createConnection(options) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!this.connection || !this.connection == undefined) {
                 try {
                     yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
-                        this.connection = yield amqp.connect(`amqp://${config_1.default.rabbitmq.host}:${config_1.default.rabbitmq.port}`, {
-                            username: config_1.default.rabbitmq.userName,
-                            password: config_1.default.rabbitmq.password
+                        var _a, _b, _c, _d;
+                        const host = (_a = options === null || options === void 0 ? void 0 : options.host) !== null && _a !== void 0 ? _a : config_1.default.rabbitmq.host;
+                        const port = (_b = options.port) !== null && _b !== void 0 ? _b : config_1.default.rabbitmq.port;
+                        const username = (_c = options === null || options === void 0 ? void 0 : options.username) !== null && _c !== void 0 ? _c : config_1.default.rabbitmq.username;
+                        const password = (_d = options === null || options === void 0 ? void 0 : options.password) !== null && _d !== void 0 ? _d : config_1.default.rabbitmq.password;
+                        this.connection = yield amqp.connect(`amqp://${host}:${port}`, {
+                            username: username,
+                            password: password
                         });
                         logger_1.default.info('RabbitMq connection created successfully');
                     }), {

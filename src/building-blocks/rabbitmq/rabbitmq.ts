@@ -2,7 +2,7 @@ import * as amqp from 'amqplib';
 import asyncRetry from 'async-retry';
 import Logger from '../logging/logger';
 import config from '../config/config';
-import { injectable, singleton } from 'tsyringe';
+import { singleton } from 'tsyringe';
 
 export interface IRabbitMQConnection {
   createConnection(): Promise<amqp.Connection>;
@@ -14,23 +14,32 @@ export interface IRabbitMQConnection {
   closeConnection(): Promise<void>;
 }
 
+export interface RabbitmqOptions {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+}
+
 @singleton()
 export class RabbitMQConnection implements IRabbitMQConnection {
   private connection: amqp.Connection | null = null;
   private channel: amqp.Channel | null = null;
 
-  async createConnection(): Promise<amqp.Connection> {
+  async createConnection(options?: RabbitmqOptions): Promise<amqp.Connection> {
     if (!this.connection || !this.connection == undefined) {
       try {
         await asyncRetry(
           async () => {
-            this.connection = await amqp.connect(
-              `amqp://${config.rabbitmq.host}:${config.rabbitmq.port}`,
-              {
-                username: config.rabbitmq.userName,
-                password: config.rabbitmq.password
-              }
-            );
+            const host = options?.host ?? config.rabbitmq.host;
+            const port = options.port ?? config.rabbitmq.port;
+            const username = options?.username ?? config.rabbitmq.username;
+            const password = options?.password ?? config.rabbitmq.password;
+
+            this.connection = await amqp.connect(`amqp://${host}:${port}`, {
+              username: username,
+              password: password
+            });
 
             Logger.info('RabbitMq connection created successfully');
           },

@@ -35,7 +35,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.startupApp = void 0;
 require("reflect-metadata");
 const express_1 = __importDefault(require("express"));
 const helmet_1 = __importDefault(require("helmet"));
@@ -61,8 +60,8 @@ const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
     const app = (0, express_1.default)();
     if (config_1.default.env !== 'test') {
         app.use(morgan_1.morganMiddleware);
-        yield (0, monitoringExtensions_1.initialMonitoring)(app);
     }
+    yield (0, monitoringExtensions_1.initialMonitoring)(app);
     const databaseConnection = yield (0, dataSource_1.initialDatabase)();
     yield (0, repositoryExtensions_1.registerRepositories)();
     app.use((0, helmet_1.default)());
@@ -95,6 +94,5 @@ const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
         }));
     }
 });
-exports.startupApp = startupApp;
-(0, exports.startupApp)();
+startupApp();
 //# sourceMappingURL=app.js.map

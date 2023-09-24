@@ -1,20 +1,22 @@
 import { createConnection, DataSource, DataSourceOptions } from 'typeorm';
 import config from 'building-blocks/config/config';
 import Logger from 'building-blocks/logging/logger';
+import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { registerRepositories } from '../extensions/repositoryExtensions';
 
 export let dataSource: DataSource = null;
 
-export const initialDatabase = async (): Promise<DataSource> => {
+export const initialDatabase = async (options?: PostgresConnectionOptions): Promise<DataSource> => {
   const dataSourceOptions: DataSourceOptions = {
     type: 'postgres',
-    host: config.postgres.host,
-    port: config.postgres.port,
-    username: config.postgres.userName,
-    password: config.postgres.password,
-    database: config.postgres.database,
+    host: options?.host ?? config.postgres.host,
+    port: options?.port ?? config.postgres.port,
+    username: options?.username ?? config.postgres.username,
+    password: options?.password ?? config.postgres.password,
+    database: options?.database ?? config.postgres.database,
+    synchronize: options?.synchronize ?? config.postgres.synchronize,
     entities: ['src/**/entities/*.js'],
     migrations: ['src/**/migrations/*.js'],
-    synchronize: false,
     logging: false
   };
 
@@ -22,20 +24,24 @@ export const initialDatabase = async (): Promise<DataSource> => {
     .then((connection) => {
       dataSource = connection;
 
-      dataSource
-        .runMigrations()
-        .then(async () => {
-          Logger.info('Migrations run successfully!');
+      if (config.env !== 'test') {
+        dataSource
+          .runMigrations()
+          .then(async () => {
+            Logger.info('Migrations run successfully!');
 
-          return dataSource;
-        })
-        .catch((err) => {
-          throw new Error('Error during running the Migrations!');
-        });
+            return dataSource;
+          })
+          .catch((err) => {
+            throw new Error('Error during running the Migrations!');
+          });
+      }
     })
     .catch((error) => {
       throw new Error(`Error during Data Source initialization: ${error.toString()}`);
     });
+
+  await registerRepositories();
 
   return dataSource;
 };

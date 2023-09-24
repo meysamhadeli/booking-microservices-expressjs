@@ -1,12 +1,23 @@
 import 'reflect-metadata';
-import { dataSource } from '../../../../src/data/dataSource';
-import { User } from '../../../../src/user/entities/user';
+import {
+  initialIntegrationTestFixture,
+  IntegrationTestFixture
+} from '../../../shared/initialIntegrationTestFixture';
 
 describe('Integration Test', () => {
-  it('should create user and retrieve a user from the database', async () => {
-    const s = dataSource.getRepository(User);
+  let fixture: IntegrationTestFixture;
 
-    const usersEntity = await s.findOneBy({ id: 1 });
+  beforeAll(async () => {
+    fixture = await initialIntegrationTestFixture();
+  });
+
+  afterAll(async () => {
+    await fixture.postgresContainer.stop();
+    await fixture.rabbitmqContainer.stop();
+  });
+
+  it('should create user and retrieve a user from the database', async () => {
+    const usersEntity = await fixture.userRepository.findUserById(1);
 
     console.log('hiii');
   });

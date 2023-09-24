@@ -14,9 +14,14 @@ const envVarsSchema = joi_1.default.object()
     PORT: joi_1.default.number().default(3000),
     POSTGRES_HOST: joi_1.default.string().default('localhost').description('Postgres host'),
     POSTGRES_PORT: joi_1.default.number().default(5432).description('Postgres host'),
-    POSTGRES_USERNAME: joi_1.default.string().default('postgres').description('Postgres userName'),
+    POSTGRES_USERNAME: joi_1.default.string().default('postgres').description('Postgres username'),
     POSTGRES_PASSWORD: joi_1.default.string().default('postgres').description('Postgres password'),
-    POSTGRES_Database: joi_1.default.string().default('default_database').description('Postgres database name'),
+    POSTGRES_Database: joi_1.default.string()
+        .default('default_database')
+        .description('Postgres database name'),
+    POSTGRES_SYNCHRONIZE: joi_1.default.boolean()
+        .default(false)
+        .description('Synchronize if true it dosent use migrations'),
     JWT_SECRET: joi_1.default.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: joi_1.default.number()
         .default(30)
@@ -57,9 +62,10 @@ exports.default = {
     postgres: {
         host: envVars.POSTGRES_HOST,
         port: envVars.POSTGRES_PORT,
-        userName: envVars.POSTGRES_USERNAME,
+        username: envVars.POSTGRES_USERNAME,
         password: envVars.POSTGRES_PASSWORD,
-        database: envVars.POSTGRES_Database
+        database: envVars.POSTGRES_Database,
+        synchronize: envVars.POSTGRES_SYNCHRONIZE
     },
     jwt: {
         secret: envVars.JWT_SECRET,
@@ -69,7 +75,7 @@ exports.default = {
     rabbitmq: {
         host: envVars.RABBITMQ_Host,
         port: envVars.RABBITMQ_PORT,
-        userName: envVars.RABBITMQ_USERNAME,
+        username: envVars.RABBITMQ_USERNAME,
         password: envVars.RABBITMQ_PASSWORD
     },
     retry: {

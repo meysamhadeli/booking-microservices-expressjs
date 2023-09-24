@@ -13,9 +13,9 @@ exports.initialRabbitmq = void 0;
 const tsyringe_1 = require("tsyringe");
 const rabbitmq_1 = require("building-blocks/rabbitmq/rabbitmq");
 const publisher_1 = require("building-blocks/rabbitmq/publisher");
-const initialRabbitmq = () => __awaiter(void 0, void 0, void 0, function* () {
+const initialRabbitmq = (options) => __awaiter(void 0, void 0, void 0, function* () {
     const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_1.RabbitMQConnection);
-    yield rabbitMQConnection.createConnection();
+    yield rabbitMQConnection.createConnection(options);
     tsyringe_1.container.register('IPublisher', publisher_1.Publisher);
     return rabbitMQConnection;
 });

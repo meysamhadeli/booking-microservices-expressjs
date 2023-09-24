@@ -19,15 +19,16 @@ import { initialMonitoring } from './extensions/monitoringExtensions';
 import { collectDefaultMetrics } from 'prom-client';
 import { registerRepositories } from './extensions/repositoryExtensions';
 
-export const startupApp = async () => {
+const startupApp = async () => {
   collectDefaultMetrics();
 
   const app = express();
 
   if (config.env !== 'test') {
     app.use(morganMiddleware);
-    await initialMonitoring(app);
   }
+
+  await initialMonitoring(app);
 
   const databaseConnection = await initialDatabase();
 
