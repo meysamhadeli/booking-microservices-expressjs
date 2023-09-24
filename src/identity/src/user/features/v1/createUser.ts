@@ -10,9 +10,9 @@ import { password } from 'building-blocks/utils/validation';
 import ConflictException from 'building-blocks/types/exception/conflictException';
 import { encryptPassword } from 'building-blocks/utils/encryption';
 import { IUserRepository } from '../../../data/repositories/userRepository';
-import { IPublisher } from 'building-blocks/rabbitmq/publisher';
-import { UserCreated } from 'building-blocks/contracts/identityContract';
 import { inject, injectable } from 'tsyringe';
+import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
+import { UserCreated } from 'building-blocks/contracts/identityContract';
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;
@@ -65,8 +65,10 @@ export class CreateUserController extends Controller {
 
 @injectable()
 export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
-  constructor(@inject('IPublisher') private publisher: IPublisher, @inject('IUserRepository') private userRepository: IUserRepository) {
-  }
+  constructor(
+    @inject('IPublisher') private publisher: IPublisher,
+    @inject('IUserRepository') private userRepository: IUserRepository
+  ) {}
 
   async handle(request: CreateUser): Promise<UserDto> {
     await createUserValidations.validateAsync(request);

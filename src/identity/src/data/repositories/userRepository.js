@@ -11,10 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
 const user_1 = require("../../user/entities/user");
-const dataSource_1 = require("../dataSource");
+const tsyringe_1 = require("tsyringe");
+const dbContext_1 = require("building-blocks/typeorm/dbContext");
 class UserRepository {
     constructor() {
-        this.ormRepository = dataSource_1.dataSource.getRepository(user_1.User);
+        this.ormRepository = tsyringe_1.container.resolve(dbContext_1.DbContext).connection.getRepository(user_1.User);
     }
     createUser(user) {
         return __awaiter(this, void 0, void 0, function* () {

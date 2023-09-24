@@ -8,7 +8,6 @@ import httpStatus from 'http-status';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
 import { IUserRepository, UserRepository } from '../../../data/repositories/userRepository';
 import { inject, injectable } from 'tsyringe';
-import { IPublisher } from 'building-blocks/rabbitmq/publisher';
 
 export class DeleteUserById implements IRequest<UserDto> {
   id: number;

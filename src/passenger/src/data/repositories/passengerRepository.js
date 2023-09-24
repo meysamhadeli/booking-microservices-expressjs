@@ -11,10 +11,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PassengerRepository = void 0;
 const passenger_1 = require("../../passenger/entities/passenger");
-const dataSource_1 = require("../dataSource");
+const dbContext_1 = require("building-blocks/typeorm/dbContext");
+const tsyringe_1 = require("tsyringe");
 class PassengerRepository {
     constructor() {
-        this.ormRepository = dataSource_1.dataSource.getRepository(passenger_1.Passenger);
+        this.ormRepository = tsyringe_1.container.resolve(dbContext_1.DbContext).connection.getRepository(passenger_1.Passenger);
     }
     createPassenger(passenger) {
         return __awaiter(this, void 0, void 0, function* () {

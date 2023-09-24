@@ -1,6 +1,7 @@
 import { User } from '../../user/entities/user';
-import { dataSource } from '../dataSource';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { container } from 'tsyringe';
+import { DbContext } from 'building-blocks/typeorm/dbContext';
 
 export interface IUserRepository {
   createUser(user: User): Promise<User>;
@@ -30,7 +31,7 @@ export class UserRepository implements IUserRepository {
   private ormRepository: Repository<User>;
 
   constructor() {
-    this.ormRepository = dataSource.getRepository(User);
+    this.ormRepository = container.resolve(DbContext).connection.getRepository(User);
   }
 
   async createUser(user: User): Promise<User> {

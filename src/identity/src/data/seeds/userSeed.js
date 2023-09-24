@@ -12,19 +12,24 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.seedUser = void 0;
+exports.UserSeed = void 0;
+const tsyringe_1 = require("tsyringe");
 const userRepository_1 = require("../repositories/userRepository");
 const user_1 = require("../../user/entities/user");
-const role_1 = require("../../user/enums/role");
 const encryption_1 = require("building-blocks/utils/encryption");
+const role_1 = require("../../user/enums/role");
 const logger_1 = __importDefault(require("building-blocks/logging/logger"));
-const seedUser = () => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const userRepository = new userRepository_1.UserRepository();
-    if (((_a = (yield userRepository.getAllUsers())) === null || _a === void 0 ? void 0 : _a.length) == 0) {
-        yield userRepository.createUser(new user_1.User('dev@dev.com', 'developer', yield (0, encryption_1.encryptPassword)('Admin@1234'), false, role_1.Role.ADMIN, '12345678'));
-        logger_1.default.info('Seed users run successfully!');
+class UserSeed {
+    seedData() {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const userRepository = tsyringe_1.container.resolve(userRepository_1.UserRepository);
+            if (((_a = (yield userRepository.getAllUsers())) === null || _a === void 0 ? void 0 : _a.length) == 0) {
+                yield userRepository.createUser(new user_1.User('dev@dev.com', 'developer', yield (0, encryption_1.encryptPassword)('Admin@1234'), false, role_1.Role.ADMIN, '12345678'));
+                logger_1.default.info('Seed users run successfully!');
+            }
+        });
     }
-});
-exports.seedUser = seedUser;
-//# sourceMappingURL=seedUser.js.map
+}
+exports.UserSeed = UserSeed;
+//# sourceMappingURL=userSeed.js.map

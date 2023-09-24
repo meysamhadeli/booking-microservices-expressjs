@@ -1,6 +1,8 @@
 import { Passenger } from '../../passenger/entities/passenger';
 import { dataSource } from '../dataSource';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { DbContext } from 'building-blocks/typeorm/dbContext';
+import { container } from 'tsyringe';
 
 export interface IPassengerRepository {
   createPassenger(passenger: Passenger): Promise<Passenger>;
@@ -20,7 +22,7 @@ export class PassengerRepository implements IPassengerRepository {
   private ormRepository: Repository<Passenger>;
 
   constructor() {
-    this.ormRepository = dataSource.getRepository(Passenger);
+    this.ormRepository = container.resolve(DbContext).connection.getRepository(Passenger);
   }
 
   async createPassenger(passenger: Passenger): Promise<Passenger> {

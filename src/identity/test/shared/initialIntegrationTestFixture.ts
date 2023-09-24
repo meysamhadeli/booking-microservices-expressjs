@@ -1,19 +1,18 @@
 import { postgresContainerStart } from 'building-blocks/test/container/postgres/postgresContainer';
-import { initialDatabase } from '../../src/data/dataSource';
 import passport from 'passport';
 import { RegisterRoutes } from '../../src/routes/routes';
 import { errorHandler } from 'building-blocks/middlewares/errorHandler';
-import { initialRabbitmq } from '../../src/extensions/rabbitmqExtensions';
 import { registerMediatrHandlers } from '../../src/extensions/mediatrExtensions';
 import { rabbitMqContainerStart } from 'building-blocks/test/container/rabbitmq/rabbitmqContainer';
 import { DataSource } from 'typeorm';
-import { RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq';
+import { Consumer, IConsumer, IPublisher, Publisher, RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq';
 import { StartedTestContainer } from 'testcontainers';
 import { container } from 'tsyringe';
 import { IUserRepository, UserRepository } from '../../src/data/repositories/userRepository';
 import { AuthRepository, IAuthRepository } from '../../src/data/repositories/authRepository';
-import express from 'express';
-import config from 'building-blocks/config/config';
+import express, { Express } from 'express';
+import { initialRabbitmq } from '../../src/extensions/rabbitmqExtensions';
+import { initialDbContext } from '../../src/data/dbContext';
 
 export class IntegrationTestFixture {
   databaseConnection: DataSource;
@@ -22,6 +21,9 @@ export class IntegrationTestFixture {
   authRepository: IAuthRepository;
   postgresContainer: StartedTestContainer;
   rabbitmqContainer: StartedTestContainer;
+  consumer: IConsumer;
+  publisher: IPublisher;
+  app: Express;
 }
 
 export const initialIntegrationTestFixture = async (): Promise<IntegrationTestFixture> => {
@@ -33,19 +35,19 @@ export const initialIntegrationTestFixture = async (): Promise<IntegrationTestFi
   const [rabbitOptions, rabbitContainer] = await rabbitMqContainerStart();
   integrationFixture.rabbitmqContainer = rabbitContainer;
 
-  const app = express();
+  integrationFixture.app = express();
 
-  integrationFixture.databaseConnection = await initialDatabase(pgOptions);
+  integrationFixture.databaseConnection = await initialDbContext(pgOptions);
 
-  app.use(express.json());
+  integrationFixture.app.use(express.json());
 
-  app.use(express.urlencoded({ extended: true }));
+  integrationFixture.app.use(express.urlencoded({ extended: true }));
 
-  app.use(passport.initialize());
+  integrationFixture.app.use(passport.initialize());
 
-  RegisterRoutes(app);
+  RegisterRoutes(integrationFixture.app);
 
-  app.use(errorHandler);
+  integrationFixture.app.use(errorHandler);
 
   integrationFixture.rabbitMQConnection = await initialRabbitmq(rabbitOptions);
 
@@ -53,6 +55,8 @@ export const initialIntegrationTestFixture = async (): Promise<IntegrationTestFi
 
   integrationFixture.userRepository = container.resolve(UserRepository);
   integrationFixture.authRepository = container.resolve(AuthRepository);
+  integrationFixture.publisher = container.resolve(Publisher);
+  integrationFixture.consumer = container.resolve(Consumer);
 
   return integrationFixture;
 };

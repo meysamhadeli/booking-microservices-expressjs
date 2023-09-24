@@ -11,6 +11,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const initialIntegrationTestFixture_1 = require("../../../shared/initialIntegrationTestFixture");
+const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
+const createUser_1 = require("../../../../src/user/features/v1/createUser");
+const role_1 = require("../../../../src/user/enums/role");
+const identityContract_1 = require("building-blocks/contracts/identityContract");
 describe('Integration Test', () => {
     let fixture;
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
@@ -21,8 +25,19 @@ describe('Integration Test', () => {
         yield fixture.rabbitmqContainer.stop();
     }));
     it('should create user and retrieve a user from the database', () => __awaiter(void 0, void 0, void 0, function* () {
-        const usersEntity = yield fixture.userRepository.findUserById(1);
-        console.log('hiii');
+        const result = yield mediatr_js_1.mediatrJs.send(new createUser_1.CreateUser({
+            email: 'test@test.com',
+            password: 'Admin@1234',
+            name: 'test',
+            role: role_1.Role.USER,
+            passportNumber: '123456789'
+        }));
+        const isPublished = yield fixture.publisher.isPublished(new identityContract_1.UserCreated());
+        expect(isPublished).toBe(true);
+        const isConsumed = yield fixture.consumer.isConsumed(new identityContract_1.UserCreated());
+        expect(isConsumed).toBe(true);
+        const user = fixture.userRepository.findUserById(result.id);
+        expect(user).not.toBeNull();
     }));
 });
 //# sourceMappingURL=createUser.test.js.map

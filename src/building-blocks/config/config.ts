@@ -19,6 +19,12 @@ const envVarsSchema = Joi.object()
     POSTGRES_SYNCHRONIZE: Joi.boolean()
       .default(false)
       .description('Synchronize if true it dosent use migrations'),
+    POSTGRES_ENTITIES: Joi.string()
+      .description('Postgres entities'),
+    POSTGRES_MIGRATIONS: Joi.string()
+      .description('Postgres migrations'),
+    POSTGRES_LOGGING: Joi.boolean().default(false)
+      .description('Postgres logging'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number()
       .default(30)
@@ -65,7 +71,10 @@ export default {
     username: envVars.POSTGRES_USERNAME,
     password: envVars.POSTGRES_PASSWORD,
     database: envVars.POSTGRES_Database,
-    synchronize: envVars.POSTGRES_SYNCHRONIZE
+    synchronize: envVars.POSTGRES_SYNCHRONIZE,
+    entities: envVars.POSTGRES_ENTITIES,
+    migrations: envVars.POSTGRES_MIGRATIONS,
+    logging: envVars.POSTGRES_LOGGING
   },
   jwt: {
     secret: envVars.JWT_SECRET,

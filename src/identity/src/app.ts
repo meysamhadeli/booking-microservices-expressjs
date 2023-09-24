@@ -7,7 +7,6 @@ import passport from 'passport';
 import { morganMiddleware } from 'building-blocks/logging/morgan';
 import { RegisterRoutes } from './routes/routes';
 import * as swaggerUi from 'swagger-ui-express';
-import { initialDatabase } from './data/dataSource';
 import Logger from 'building-blocks/logging/logger';
 import logger from 'building-blocks/logging/logger';
 import config from 'building-blocks/config/config';
@@ -17,7 +16,8 @@ import { registerMediatrHandlers } from './extensions/mediatrExtensions';
 import { initialOtel } from './extensions/otelExtensions';
 import { initialMonitoring } from './extensions/monitoringExtensions';
 import { collectDefaultMetrics } from 'prom-client';
-import { registerRepositories } from './extensions/repositoryExtensions';
+import { postgresOptions, rabbitmqOptions } from './configurations/configuratinOptions';
+import { initialDbContext } from './data/dbContext';
 
 const startupApp = async () => {
   collectDefaultMetrics();
@@ -30,9 +30,7 @@ const startupApp = async () => {
 
   await initialMonitoring(app);
 
-  const databaseConnection = await initialDatabase();
-
-  await registerRepositories();
+  const databaseConnection = await initialDbContext(postgresOptions);
 
   app.use(helmet());
 
@@ -57,7 +55,7 @@ const startupApp = async () => {
     logger.info(`Listening to port ${config.port}`);
   });
 
-  const rabbitmq = await initialRabbitmq();
+  const rabbitmq = await initialRabbitmq(rabbitmqOptions);
 
   await registerMediatrHandlers();
 
@@ -71,8 +69,8 @@ const startupApp = async () => {
     }
 
     process.on('SIGTERM', async () => {
-      await rabbitmq.closeConnection();
       await databaseConnection.destroy();
+      await rabbitmq.closeConnection();
     });
   }
 };

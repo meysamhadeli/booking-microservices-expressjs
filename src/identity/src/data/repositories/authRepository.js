@@ -10,11 +10,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthRepository = void 0;
-const dataSource_1 = require("../dataSource");
 const token_1 = require("../../auth/entities/token");
+const tsyringe_1 = require("tsyringe");
+const dbContext_1 = require("building-blocks/typeorm/dbContext");
 class AuthRepository {
     constructor() {
-        this.ormRepository = dataSource_1.dataSource.getRepository(token_1.Token);
+        this.ormRepository = tsyringe_1.container.resolve(dbContext_1.DbContext).connection.getRepository(token_1.Token);
     }
     createToken(token) {
         return __awaiter(this, void 0, void 0, function* () {

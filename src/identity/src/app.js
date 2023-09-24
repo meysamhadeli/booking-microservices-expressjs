@@ -44,7 +44,6 @@ const passport_1 = __importDefault(require("passport"));
 const morgan_1 = require("building-blocks/logging/morgan");
 const routes_1 = require("./routes/routes");
 const swaggerUi = __importStar(require("swagger-ui-express"));
-const dataSource_1 = require("./data/dataSource");
 const logger_1 = __importDefault(require("building-blocks/logging/logger"));
 const logger_2 = __importDefault(require("building-blocks/logging/logger"));
 const config_1 = __importDefault(require("building-blocks/config/config"));
@@ -54,7 +53,8 @@ const mediatrExtensions_1 = require("./extensions/mediatrExtensions");
 const otelExtensions_1 = require("./extensions/otelExtensions");
 const monitoringExtensions_1 = require("./extensions/monitoringExtensions");
 const prom_client_1 = require("prom-client");
-const repositoryExtensions_1 = require("./extensions/repositoryExtensions");
+const configuratinOptions_1 = require("./configurations/configuratinOptions");
+const dbContext_1 = require("./data/dbContext");
 const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, prom_client_1.collectDefaultMetrics)();
     const app = (0, express_1.default)();
@@ -62,8 +62,7 @@ const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
         app.use(morgan_1.morganMiddleware);
     }
     yield (0, monitoringExtensions_1.initialMonitoring)(app);
-    const databaseConnection = yield (0, dataSource_1.initialDatabase)();
-    yield (0, repositoryExtensions_1.registerRepositories)();
+    const databaseConnection = yield (0, dbContext_1.initialDbContext)(configuratinOptions_1.postgresOptions);
     app.use((0, helmet_1.default)());
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true }));
@@ -77,7 +76,7 @@ const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
     app.listen(config_1.default.port, () => {
         logger_2.default.info(`Listening to port ${config_1.default.port}`);
     });
-    const rabbitmq = yield (0, rabbitmqExtensions_1.initialRabbitmq)();
+    const rabbitmq = yield (0, rabbitmqExtensions_1.initialRabbitmq)(configuratinOptions_1.rabbitmqOptions);
     yield (0, mediatrExtensions_1.registerMediatrHandlers)();
     if (config_1.default.env !== 'test') {
         try {
@@ -89,8 +88,8 @@ const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
             logger_1.default.error('Unable to read swagger.json', err);
         }
         process.on('SIGTERM', () => __awaiter(void 0, void 0, void 0, function* () {
-            yield rabbitmq.closeConnection();
             yield databaseConnection.destroy();
+            yield rabbitmq.closeConnection();
         }));
     }
 });

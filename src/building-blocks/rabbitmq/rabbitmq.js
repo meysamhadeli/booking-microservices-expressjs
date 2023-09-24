@@ -41,30 +41,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RabbitMQConnection = void 0;
+exports.Consumer = exports.Publisher = exports.RabbitMQConnection = void 0;
 const amqp = __importStar(require("amqplib"));
 const async_retry_1 = __importDefault(require("async-retry"));
 const logger_1 = __importDefault(require("../logging/logger"));
 const config_1 = __importDefault(require("../config/config"));
 const tsyringe_1 = require("tsyringe");
+const otel_1 = require("../openTelemetry/otel");
+const reflection_1 = require("../utils/reflection");
+const serialization_1 = require("../utils/serialization");
+const date_fns_1 = require("date-fns");
+const lodash_1 = require("lodash");
+const time_1 = require("../utils/time");
+const uuid_1 = require("uuid");
+let connection = null;
+let channel = null;
+const publishedMessages = [];
+const consumedMessages = [];
 let RabbitMQConnection = class RabbitMQConnection {
-    constructor() {
-        this.connection = null;
-        this.channel = null;
-    }
     createConnection(options) {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!this.connection || !this.connection == undefined) {
+            if (!connection || !connection == undefined) {
                 try {
                     yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
-                        var _a, _b, _c, _d;
-                        const host = (_a = options === null || options === void 0 ? void 0 : options.host) !== null && _a !== void 0 ? _a : config_1.default.rabbitmq.host;
-                        const port = (_b = options.port) !== null && _b !== void 0 ? _b : config_1.default.rabbitmq.port;
-                        const username = (_c = options === null || options === void 0 ? void 0 : options.username) !== null && _c !== void 0 ? _c : config_1.default.rabbitmq.username;
-                        const password = (_d = options === null || options === void 0 ? void 0 : options.password) !== null && _d !== void 0 ? _d : config_1.default.rabbitmq.password;
-                        this.connection = yield amqp.connect(`amqp://${host}:${port}`, {
-                            username: username,
-                            password: password
+                        connection = yield amqp.connect(`amqp://${options.host}:${options.port}`, {
+                            username: options.username,
+                            password: options.password
                         });
                         logger_1.default.info('RabbitMq connection created successfully');
                     }), {
@@ -75,21 +77,21 @@ let RabbitMQConnection = class RabbitMQConnection {
                     });
                 }
                 catch (error) {
-                    logger_1.default.error('RabbitMq connection failed!');
+                    throw new Error('Rabbitmq connection is failed!');
                 }
             }
-            return this.connection;
+            return connection;
         });
     }
     getChannel() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!this.connection) {
-                    yield this.createConnection();
+                if (!connection) {
+                    throw new Error('Rabbitmq connection is failed!');
                 }
-                if ((this.connection && !this.channel) || !this.channel) {
+                if ((connection && !channel) || !channel) {
                     yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
-                        this.channel = yield this.connection.createChannel();
+                        channel = yield connection.createChannel();
                         logger_1.default.info('Channel Created successfully');
                     }), {
                         retries: config_1.default.retry.count,
@@ -98,7 +100,7 @@ let RabbitMQConnection = class RabbitMQConnection {
                         maxTimeout: config_1.default.retry.maxTimeout
                     });
                 }
-                return this.channel;
+                return channel;
             }
             catch (error) {
                 logger_1.default.error('Failed to get channel!');
@@ -108,8 +110,8 @@ let RabbitMQConnection = class RabbitMQConnection {
     closeChanel() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (this.channel) {
-                    yield this.channel.close();
+                if (channel) {
+                    yield channel.close();
                     logger_1.default.info('Channel closed successfully');
                 }
             }
@@ -121,8 +123,8 @@ let RabbitMQConnection = class RabbitMQConnection {
     closeConnection() {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (this.connection) {
-                    yield this.connection.close();
+                if (connection) {
+                    yield connection.close();
                     logger_1.default.info('Connection closed successfully');
                 }
             }
@@ -136,4 +138,139 @@ exports.RabbitMQConnection = RabbitMQConnection;
 exports.RabbitMQConnection = RabbitMQConnection = __decorate([
     (0, tsyringe_1.singleton)()
 ], RabbitMQConnection);
+let Publisher = class Publisher {
+    publishMessage(message) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const rabbitMQConnection = tsyringe_1.container.resolve(RabbitMQConnection);
+            const openTelemetryTracer = tsyringe_1.container.resolve(otel_1.OpenTelemetryTracer);
+            const tracer = yield openTelemetryTracer.createTracer('rabbitmq-publisher');
+            try {
+                yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+                    const channel = yield rabbitMQConnection.getChannel();
+                    const exchangeName = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(message));
+                    const routingKey = exchangeName;
+                    const serializedMessage = (0, serialization_1.serializeObject)(message);
+                    // Start a new span for this RabbitMQ operation
+                    const span = tracer.startSpan(`publish_message_${exchangeName}`);
+                    yield channel.assertExchange(exchangeName, 'topic', { durable: false });
+                    // Create custom message properties
+                    const messageProperties = {
+                        messageId: (0, uuid_1.v4)().toString(),
+                        timestamp: (0, date_fns_1.getUnixTime)(new Date()),
+                        contentType: 'application/json',
+                        exchange: exchangeName,
+                        routingKey: routingKey,
+                        type: 'topic'
+                    };
+                    channel.publish(exchangeName, routingKey, Buffer.from(serializedMessage), {
+                        headers: messageProperties
+                    });
+                    logger_1.default.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
+                    publishedMessages.push(exchangeName);
+                    // Set attributes on the span
+                    span.setAttributes(messageProperties);
+                    // Ensure the span ends when this operation is complete
+                    span.end();
+                }), {
+                    retries: config_1.default.retry.count,
+                    factor: config_1.default.retry.factor,
+                    minTimeout: config_1.default.retry.minTimeout,
+                    maxTimeout: config_1.default.retry.maxTimeout
+                });
+            }
+            catch (error) {
+                logger_1.default.error(error);
+                yield rabbitMQConnection.closeChanel();
+            }
+        });
+    }
+    isPublished(message) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const messageType = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(message));
+            const isPublished = publishedMessages.includes(messageType);
+            return Promise.resolve(isPublished);
+        });
+    }
+};
+exports.Publisher = Publisher;
+exports.Publisher = Publisher = __decorate([
+    (0, tsyringe_1.injectable)()
+], Publisher);
+let Consumer = class Consumer {
+    consumeMessage(type, handler) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const rabbitMQConnection = tsyringe_1.container.resolve(RabbitMQConnection);
+            const openTelemetryTracer = tsyringe_1.container.resolve(otel_1.OpenTelemetryTracer);
+            const tracer = yield openTelemetryTracer.createTracer('rabbitmq-consumer');
+            try {
+                yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+                    const channel = yield rabbitMQConnection.getChannel();
+                    const exchangeName = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(type));
+                    // Declare the exchange as 'topic' to enable topic-based routing
+                    yield channel.assertExchange(exchangeName, 'topic', { durable: false });
+                    // Define a unique queue name for this subscriber
+                    const queueName = `${exchangeName}_queue`;
+                    const bindingKey = exchangeName;
+                    // Create a queue and bind it to the exchange with the specified binding key
+                    yield channel.assertQueue(queueName, { exclusive: true });
+                    yield channel.bindQueue(queueName, exchangeName, bindingKey);
+                    logger_1.default.info(`Waiting for messages with binding key "${bindingKey}". To exit, press CTRL+C`);
+                    // Consume messages from the queue
+                    yield channel.consume(queueName, (message) => {
+                        var _a;
+                        if (message !== null) {
+                            // Start a new span for this RabbitMQ operation
+                            const span = tracer.startSpan(`receive_message_${exchangeName}`);
+                            const messageContent = (_a = message === null || message === void 0 ? void 0 : message.content) === null || _a === void 0 ? void 0 : _a.toString();
+                            const headers = message.properties.headers || {};
+                            handler(queueName, (0, serialization_1.deserializeObject)(messageContent));
+                            logger_1.default.info(`Message: ${messageContent} delivered to queue: ${queueName}`);
+                            channel.ack(message); // Acknowledge the message
+                            consumedMessages.push(exchangeName);
+                            // Set attributes on the span
+                            span.setAttributes(headers);
+                            // End the message handling span
+                            span.end();
+                        }
+                    }, { noAck: false } // Ensure that we acknowledge messages
+                    );
+                }), {
+                    retries: config_1.default.retry.count,
+                    factor: config_1.default.retry.factor,
+                    minTimeout: config_1.default.retry.minTimeout,
+                    maxTimeout: config_1.default.retry.maxTimeout
+                });
+            }
+            catch (error) {
+                logger_1.default.error(error);
+                yield rabbitMQConnection.closeChanel();
+            }
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+        });
+    }
+    isConsumed(message) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const timeoutTime = 20000; // 20 seconds in milliseconds
+            const startTime = Date.now();
+            let timeOutExpired = false;
+            let isConsumed = false;
+            while (true) {
+                if (timeOutExpired) {
+                    return false;
+                }
+                if (isConsumed) {
+                    return true;
+                }
+                yield (0, time_1.sleep)(2000);
+                const typeName = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(message));
+                isConsumed = consumedMessages.includes(typeName);
+                timeOutExpired = Date.now() - startTime > timeoutTime;
+            }
+        });
+    }
+};
+exports.Consumer = Consumer;
+exports.Consumer = Consumer = __decorate([
+    (0, tsyringe_1.injectable)()
+], Consumer);
 //# sourceMappingURL=rabbitmq.js.map

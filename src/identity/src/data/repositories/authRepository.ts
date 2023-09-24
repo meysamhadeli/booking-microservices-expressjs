@@ -1,7 +1,8 @@
-import { dataSource } from '../dataSource';
 import { Token } from '../../auth/entities/token';
 import { TokenType } from '../../auth/enums/tokenType';
 import { Repository } from 'typeorm';
+import { container } from 'tsyringe';
+import { DbContext } from 'building-blocks/typeorm/dbContext';
 
 export interface IAuthRepository {
   createToken(token: Token): Promise<void>;
@@ -22,7 +23,7 @@ export class AuthRepository implements IAuthRepository {
   private ormRepository: Repository<Token>;
 
   constructor() {
-    this.ormRepository = dataSource.getRepository(Token);
+    this.ormRepository = container.resolve(DbContext).connection.getRepository(Token);
   }
 
   async createToken(token: Token): Promise<void> {

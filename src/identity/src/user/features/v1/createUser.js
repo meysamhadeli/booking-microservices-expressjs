@@ -36,8 +36,8 @@ const joi_1 = __importDefault(require("joi"));
 const validation_1 = require("building-blocks/utils/validation");
 const conflictException_1 = __importDefault(require("building-blocks/types/exception/conflictException"));
 const encryption_1 = require("building-blocks/utils/encryption");
-const identityContract_1 = require("building-blocks/contracts/identityContract");
 const tsyringe_1 = require("tsyringe");
+const identityContract_1 = require("building-blocks/contracts/identityContract");
 class CreateUser {
     constructor(request = {}) {
         Object.assign(this, request);
