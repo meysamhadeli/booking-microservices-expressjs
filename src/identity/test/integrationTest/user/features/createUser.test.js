@@ -12,10 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const initialIntegrationTestFixture_1 = require("../../../shared/initialIntegrationTestFixture");
 const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
-const createUser_1 = require("../../../../src/user/features/v1/createUser");
+const createUser_1 = require("../../../../src/user/features/v1/createUser/createUser");
 const role_1 = require("../../../../src/user/enums/role");
 const identityContract_1 = require("building-blocks/contracts/identityContract");
-describe('Integration Test', () => {
+describe('integration test for create user', () => {
     let fixture;
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         fixture = yield (0, initialIntegrationTestFixture_1.initialIntegrationTestFixture)();

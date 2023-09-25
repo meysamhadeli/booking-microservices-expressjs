@@ -3,12 +3,12 @@ import {
   initialIntegrationTestFixture,
   IntegrationTestFixture
 } from '../../../shared/initialIntegrationTestFixture';
-import { CreateUser, CreateUserRequestDto } from '../../../../src/user/features/v1/createUser';
+import { CreateUser, CreateUserRequestDto } from '../../../../src/user/features/v1/createUser/createUser';
 import { Role } from '../../../../src/user/enums/role';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
 const request = require('supertest');
 
-describe('End To End Test', () => {
+describe('end-to-end test for create user', () => {
   let fixture: IntegrationTestFixture;
 
   beforeAll(async () => {

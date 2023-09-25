@@ -7,7 +7,7 @@ import {
   RabbitMQConnection, RabbitmqOptions
 } from 'building-blocks/rabbitmq/rabbitmq';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
-import { createUserConsumerHandler } from '../user/consumers/createUser';
+import { createUserConsumerHandler } from '../user/features/v1/createUser/createUserRead';
 
 export const initialRabbitmq = async (options: RabbitmqOptions): Promise<RabbitMQConnection> => {
   const rabbitMQConnection = container.resolve(RabbitMQConnection);

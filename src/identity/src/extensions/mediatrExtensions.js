@@ -2,17 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerMediatrHandlers = void 0;
 const tsyringe_1 = require("tsyringe");
-const createUser_1 = require("../user/features/v1/createUser");
+const createUser_1 = require("../user/features/v1/createUser/createUser");
 const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
-const deleteUserById_1 = require("../user/features/v1/deleteUserById");
-const getUserById_1 = require("../user/features/v1/getUserById");
-const getUsers_1 = require("../user/features/v1/getUsers");
-const updateUser_1 = require("../user/features/v1/updateUser");
-const generateToken_1 = require("../auth/features/v1/generateToken");
-const validateToken_1 = require("../auth/features/v1/validateToken");
-const login_1 = require("../auth/features/v1/login");
-const logout_1 = require("../auth/features/v1/logout");
-const refreshToken_1 = require("../auth/features/v1/refreshToken");
+const deleteUserById_1 = require("../user/features/v1/deleteUserById/deleteUserById");
+const getUserById_1 = require("../user/features/v1/getUserById/getUserById");
+const getUsers_1 = require("../user/features/v1/getUsers/getUsers");
+const updateUser_1 = require("../user/features/v1/updateUser/updateUser");
+const generateToken_1 = require("../auth/features/v1/generateToken/generateToken");
+const validateToken_1 = require("../auth/features/v1/validateToken/validateToken");
+const login_1 = require("../auth/features/v1/login/login");
+const logout_1 = require("../auth/features/v1/logout/logout");
+const refreshToken_1 = require("../auth/features/v1/refreshToken/refreshToken");
 const registerMediatrHandlers = () => {
     mediatr_js_1.mediatrJs.registerHandler(createUser_1.CreateUser, tsyringe_1.container.resolve(createUser_1.CreateUserHandler));
     mediatr_js_1.mediatrJs.registerHandler(deleteUserById_1.DeleteUserById, tsyringe_1.container.resolve(deleteUserById_1.DeleteUserByIdHandler));

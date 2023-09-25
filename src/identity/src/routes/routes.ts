@@ -3,21 +3,21 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { LoginController } from './../auth/features/v1/login';
+import { LoginController } from '../auth/features/v1/login/login';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { LogoutController } from './../auth/features/v1/logout';
+import { LogoutController } from '../auth/features/v1/logout/logout';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { RefreshTokenController } from './../auth/features/v1/refreshToken';
+import { RefreshTokenController } from '../auth/features/v1/refreshToken/refreshToken';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { CreateUserController } from './../user/features/v1/createUser';
+import { CreateUserController } from '../user/features/v1/createUser/createUser';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { DeleteUserByIdController } from './../user/features/v1/deleteUserById';
+import { DeleteUserByIdController } from '../user/features/v1/deleteUserById/deleteUserById';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { GetUserByIdController } from './../user/features/v1/getUserById';
+import { GetUserByIdController } from '../user/features/v1/getUserById/getUserById';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { GetUsersController } from './../user/features/v1/getUsers';
+import { GetUsersController } from '../user/features/v1/getUsers/getUsers';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { UpdateUserController } from './../user/features/v1/updateUser';
+import { UpdateUserController } from '../user/features/v1/updateUser/updateUser';
 import { expressAuthentication } from './../configurations/authentication';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');

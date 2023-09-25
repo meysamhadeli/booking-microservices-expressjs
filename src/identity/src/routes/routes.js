@@ -15,21 +15,21 @@ exports.RegisterRoutes = void 0;
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const runtime_1 = require("@tsoa/runtime");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const login_1 = require("./../auth/features/v1/login");
+const login_1 = require("../auth/features/v1/login/login");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const logout_1 = require("./../auth/features/v1/logout");
+const logout_1 = require("../auth/features/v1/logout/logout");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const refreshToken_1 = require("./../auth/features/v1/refreshToken");
+const refreshToken_1 = require("../auth/features/v1/refreshToken/refreshToken");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const createUser_1 = require("./../user/features/v1/createUser");
+const createUser_1 = require("../user/features/v1/createUser/createUser");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const deleteUserById_1 = require("./../user/features/v1/deleteUserById");
+const deleteUserById_1 = require("../user/features/v1/deleteUserById/deleteUserById");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const getUserById_1 = require("./../user/features/v1/getUserById");
+const getUserById_1 = require("../user/features/v1/getUserById/getUserById");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const getUsers_1 = require("./../user/features/v1/getUsers");
+const getUsers_1 = require("../user/features/v1/getUsers/getUsers");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const updateUser_1 = require("./../user/features/v1/updateUser");
+const updateUser_1 = require("../user/features/v1/updateUser/updateUser");
 const authentication_1 = require("./../configurations/authentication");
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');

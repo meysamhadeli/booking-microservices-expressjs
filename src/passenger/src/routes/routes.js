@@ -15,9 +15,9 @@ exports.RegisterRoutes = void 0;
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const runtime_1 = require("@tsoa/runtime");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const getPassengerById_1 = require("./../passenger/features/v1/getPassengerById");
+const getPassengerById_1 = require("../passenger/features/v1/getPassengerById/getPassengerById");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const getPassengers_1 = require("./../passenger/features/v1/getPassengers");
+const getPassengers_1 = require("../passenger/features/v1/getPassengers/getPassengers");
 const authentication_1 = require("./../configurations/authentication");
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');

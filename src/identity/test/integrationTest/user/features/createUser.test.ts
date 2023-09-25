@@ -5,11 +5,11 @@ import {
 } from '../../../shared/initialIntegrationTestFixture';
 import { mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { UserDto } from '../../../../src/user/dtos/userDto';
-import { CreateUser } from '../../../../src/user/features/v1/createUser';
+import { CreateUser } from '../../../../src/user/features/v1/createUser/createUser';
 import { Role } from '../../../../src/user/enums/role';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
 
-describe('Integration Test', () => {
+describe('integration test for create user', () => {
   let fixture: IntegrationTestFixture;
 
   beforeAll(async () => {

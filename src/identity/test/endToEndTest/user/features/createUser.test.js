@@ -13,7 +13,7 @@ require("reflect-metadata");
 const initialIntegrationTestFixture_1 = require("../../../shared/initialIntegrationTestFixture");
 const role_1 = require("../../../../src/user/enums/role");
 const request = require('supertest');
-describe('End To End Test', () => {
+describe('end-to-end test for create user', () => {
     let fixture;
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         fixture = yield (0, initialIntegrationTestFixture_1.initialIntegrationTestFixture)();
