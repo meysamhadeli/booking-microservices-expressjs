@@ -4,7 +4,7 @@
   "description": "identity service for authentication and authorization",
   "main": "src/app.ts",
   "scripts": {
-    "dev": "tsc && nodemon src/app.ts",
+    "dev": "tsc -p tsconfig.json && NODE_ENV=development nodemon src/app.ts",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

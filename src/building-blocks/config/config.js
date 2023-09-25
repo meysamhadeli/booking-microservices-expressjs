@@ -6,7 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const path_1 = __importDefault(require("path"));
 const joi_1 = __importDefault(require("joi"));
-dotenv_1.default.config({ path: path_1.default.join(process.cwd(), '.env') });
+// Determine the environment from NODE_ENV; default to 'development' if not set
+const nodeEnv = process.env.NODE_ENV || 'development';
+// Load the appropriate .env file based on the environment
+dotenv_1.default.config({ path: path_1.default.join(process.cwd(), `.env.${nodeEnv}`) });
 const envVarsSchema = joi_1.default.object()
     .keys({
     NODE_ENV: joi_1.default.string().valid('production', 'development', 'test').required(),
@@ -22,12 +25,9 @@ const envVarsSchema = joi_1.default.object()
     POSTGRES_SYNCHRONIZE: joi_1.default.boolean()
         .default(false)
         .description('Synchronize if true it dosent use migrations'),
-    POSTGRES_ENTITIES: joi_1.default.string()
-        .description('Postgres entities'),
-    POSTGRES_MIGRATIONS: joi_1.default.string()
-        .description('Postgres migrations'),
-    POSTGRES_LOGGING: joi_1.default.boolean().default(false)
-        .description('Postgres logging'),
+    POSTGRES_ENTITIES: joi_1.default.string().description('Postgres entities'),
+    POSTGRES_MIGRATIONS: joi_1.default.string().description('Postgres migrations'),
+    POSTGRES_LOGGING: joi_1.default.boolean().default(false).description('Postgres logging'),
     JWT_SECRET: joi_1.default.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: joi_1.default.number()
         .default(30)

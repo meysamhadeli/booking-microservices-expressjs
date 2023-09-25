@@ -22,7 +22,7 @@ describe('End To End Test', () => {
         yield fixture.postgresContainer.stop();
         yield fixture.rabbitmqContainer.stop();
     }));
-    it('should create user and retrieve a user from the database', () => __awaiter(void 0, void 0, void 0, function* () {
+    it('should create user and retrieve 201 status code', () => __awaiter(void 0, void 0, void 0, function* () {
         const createUserRequestDto = {
             email: 'test@test.com',
             password: 'Admin@1234',

@@ -2,7 +2,11 @@ import dotenv from 'dotenv';
 import path from 'path';
 import Joi from 'joi';
 
-dotenv.config({ path: path.join(process.cwd(), '.env') });
+// Determine the environment from NODE_ENV; default to 'development' if not set
+const nodeEnv = process.env.NODE_ENV || 'development';
+
+// Load the appropriate .env file based on the environment
+dotenv.config({ path: path.join(process.cwd(), `.env.${nodeEnv}`) });
 
 const envVarsSchema = Joi.object()
   .keys({
@@ -19,12 +23,9 @@ const envVarsSchema = Joi.object()
     POSTGRES_SYNCHRONIZE: Joi.boolean()
       .default(false)
       .description('Synchronize if true it dosent use migrations'),
-    POSTGRES_ENTITIES: Joi.string()
-      .description('Postgres entities'),
-    POSTGRES_MIGRATIONS: Joi.string()
-      .description('Postgres migrations'),
-    POSTGRES_LOGGING: Joi.boolean().default(false)
-      .description('Postgres logging'),
+    POSTGRES_ENTITIES: Joi.string().description('Postgres entities'),
+    POSTGRES_MIGRATIONS: Joi.string().description('Postgres migrations'),
+    POSTGRES_LOGGING: Joi.boolean().default(false).description('Postgres logging'),
     JWT_SECRET: Joi.string().required().description('JWT secret key'),
     JWT_ACCESS_EXPIRATION_MINUTES: Joi.number()
       .default(30)

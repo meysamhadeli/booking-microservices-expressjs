@@ -5,7 +5,13 @@ import { errorHandler } from 'building-blocks/middlewares/errorHandler';
 import { registerMediatrHandlers } from '../../src/extensions/mediatrExtensions';
 import { rabbitMqContainerStart } from 'building-blocks/test/container/rabbitmq/rabbitmqContainer';
 import { DataSource } from 'typeorm';
-import { Consumer, IConsumer, IPublisher, Publisher, RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq';
+import {
+  Consumer,
+  IConsumer,
+  IPublisher,
+  Publisher,
+  RabbitMQConnection
+} from 'building-blocks/rabbitmq/rabbitmq';
 import { StartedTestContainer } from 'testcontainers';
 import { container } from 'tsyringe';
 import { IUserRepository, UserRepository } from '../../src/data/repositories/userRepository';
