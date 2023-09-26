@@ -376,6 +376,11 @@
   resolved "https://registry.npmjs.org/@eslint/js/-/js-8.49.0.tgz"
   integrity sha512-1S8uAY/MTJqVx0SC4epBq+N2yhuwtNwLbJYNZyhL2pO1ZVKn5HFXav5T41Ryzy9K9V7ZId2JB2oy/W4aCd9/2w==
 
+"@faker-js/faker@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.npmjs.org/@faker-js/faker/-/faker-8.1.0.tgz"
+  integrity sha512-38DT60rumHfBYynif3lmtxMqMqmsOQIxQgEuPZxCk2yUYN0eqWpTACgxi0VpidvsJB8CRxCpvP7B3anK85FjtQ==
+
 "@hapi/hoek@^9.0.0":
   version "9.3.0"
   resolved "https://registry.npmjs.org/@hapi/hoek/-/hoek-9.3.0.tgz"
@@ -4094,11 +4099,6 @@ lodash.union@^4.6.0:
   resolved "https://registry.npmjs.org/lodash.union/-/lodash.union-4.6.0.tgz"
   integrity sha512-c4pB2CdGrGdjMKYLA+XiRDO7Y0PRQbm/Gzg8qMj+QH+pFVAoTp5sBpO0odL3FjoPCGjK96p6qsP+yQoiLoOBcw==
 
-lodash@^4.17.5:
-  version "4.17.21"
-  resolved "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
-  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
-
 log-update@^5.0.1:
   version "5.0.1"
   resolved "https://registry.npmjs.org/log-update/-/log-update-5.0.1.tgz"
@@ -5690,13 +5690,6 @@ ts-mapper@^1.2.4:
   version "1.2.4"
   resolved "https://registry.npmjs.org/ts-mapper/-/ts-mapper-1.2.4.tgz"
   integrity sha512-jSc77wS5BDkQxmz21XyO9v//o3JVteWJ0gXTHEDmulJyhbZ3H6Z6+JVos2l+Ufwg63TTjHJVV2anCUQ6q4dskQ==
-
-ts-mockito@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.npmjs.org/ts-mockito/-/ts-mockito-2.6.1.tgz"
-  integrity sha512-qU9m/oEBQrKq5hwfbJ7MgmVN5Gu6lFnIGWvpxSjrqq6YYEVv+RwVFWySbZMBgazsWqv6ctAyVBpo9TmAxnOEKw==
-  dependencies:
-    lodash "^4.17.5"
 
 ts-node@^10.7.0, ts-node@^10.9.1, ts-node@>=9.0.0:
   version "10.9.1"

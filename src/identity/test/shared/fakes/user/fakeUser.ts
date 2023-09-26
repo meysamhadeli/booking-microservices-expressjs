@@ -1,0 +1,15 @@
+import { User } from '../../../../src/user/entities/user';
+import { faker } from '@faker-js/faker';
+import { Role } from '../../../../src/user/enums/role';
+
+export const fakeUser: User = {
+  id: 1,
+  name: faker.person.fullName(),
+  role: Role.USER,
+  password: 'Admin@1234',
+  email: faker.internet.email(),
+  passportNumber: faker.string.numeric(),
+  isEmailVerified: false,
+  createdAt: faker.date.anytime(),
+  tokens: []
+};

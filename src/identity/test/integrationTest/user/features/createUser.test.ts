@@ -2,12 +2,11 @@ import 'reflect-metadata';
 import {
   initialIntegrationTestFixture,
   IntegrationTestFixture
-} from '../../../shared/initialIntegrationTestFixture';
+} from '../../../shared/fixtures/initialIntegrationTestFixture';
 import { mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { UserDto } from '../../../../src/user/dtos/userDto';
-import { CreateUser } from '../../../../src/user/features/v1/createUser/createUser';
-import { Role } from '../../../../src/user/enums/role';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
+import { fakeCreateUser } from '../../../shared/fakes/user/fakeCreateUser';
 
 describe('integration test for create user', () => {
   let fixture: IntegrationTestFixture;
@@ -22,15 +21,7 @@ describe('integration test for create user', () => {
   });
 
   it('should create user and retrieve a user from the database', async () => {
-    const result = await mediatrJs.send<UserDto>(
-      new CreateUser({
-        email: 'test@test.com',
-        password: 'Admin@1234',
-        name: 'test',
-        role: Role.USER,
-        passportNumber: '123456789'
-      })
-    );
+    const result = await mediatrJs.send<UserDto>(fakeCreateUser);
 
     const isPublished = await fixture.publisher.isPublished(new UserCreated());
     expect(isPublished).toBe(true);

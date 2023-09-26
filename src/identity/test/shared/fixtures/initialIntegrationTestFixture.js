@@ -15,17 +15,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialIntegrationTestFixture = exports.IntegrationTestFixture = void 0;
 const postgresContainer_1 = require("building-blocks/test/container/postgres/postgresContainer");
 const passport_1 = __importDefault(require("passport"));
-const routes_1 = require("../../src/routes/routes");
+const routes_1 = require("../../../src/routes/routes");
 const errorHandler_1 = require("building-blocks/middlewares/errorHandler");
-const mediatrExtensions_1 = require("../../src/extensions/mediatrExtensions");
+const mediatrExtensions_1 = require("../../../src/extensions/mediatrExtensions");
 const rabbitmqContainer_1 = require("building-blocks/test/container/rabbitmq/rabbitmqContainer");
 const rabbitmq_1 = require("building-blocks/rabbitmq/rabbitmq");
 const tsyringe_1 = require("tsyringe");
-const userRepository_1 = require("../../src/data/repositories/userRepository");
-const authRepository_1 = require("../../src/data/repositories/authRepository");
+const userRepository_1 = require("../../../src/data/repositories/userRepository");
+const authRepository_1 = require("../../../src/data/repositories/authRepository");
 const express_1 = __importDefault(require("express"));
-const rabbitmqExtensions_1 = require("../../src/extensions/rabbitmqExtensions");
-const dbContext_1 = require("../../src/data/dbContext");
+const rabbitmqExtensions_1 = require("../../../src/extensions/rabbitmqExtensions");
+const dbContext_1 = require("../../../src/data/dbContext");
 class IntegrationTestFixture {
 }
 exports.IntegrationTestFixture = IntegrationTestFixture;

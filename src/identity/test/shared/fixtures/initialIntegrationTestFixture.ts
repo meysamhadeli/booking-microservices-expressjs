@@ -1,8 +1,8 @@
 import { postgresContainerStart } from 'building-blocks/test/container/postgres/postgresContainer';
 import passport from 'passport';
-import { RegisterRoutes } from '../../src/routes/routes';
+import { RegisterRoutes } from '../../../src/routes/routes';
 import { errorHandler } from 'building-blocks/middlewares/errorHandler';
-import { registerMediatrHandlers } from '../../src/extensions/mediatrExtensions';
+import { registerMediatrHandlers } from '../../../src/extensions/mediatrExtensions';
 import { rabbitMqContainerStart } from 'building-blocks/test/container/rabbitmq/rabbitmqContainer';
 import { DataSource } from 'typeorm';
 import {
@@ -14,11 +14,11 @@ import {
 } from 'building-blocks/rabbitmq/rabbitmq';
 import { StartedTestContainer } from 'testcontainers';
 import { container } from 'tsyringe';
-import { IUserRepository, UserRepository } from '../../src/data/repositories/userRepository';
-import { AuthRepository, IAuthRepository } from '../../src/data/repositories/authRepository';
+import { IUserRepository, UserRepository } from '../../../src/data/repositories/userRepository';
+import { AuthRepository, IAuthRepository } from '../../../src/data/repositories/authRepository';
 import express, { Express } from 'express';
-import { initialRabbitmq } from '../../src/extensions/rabbitmqExtensions';
-import { initialDbContext } from '../../src/data/dbContext';
+import { initialRabbitmq } from '../../../src/extensions/rabbitmqExtensions';
+import { initialDbContext } from '../../../src/data/dbContext';
 
 export class IntegrationTestFixture {
   databaseConnection: DataSource;
