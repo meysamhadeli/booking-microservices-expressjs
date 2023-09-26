@@ -13,13 +13,10 @@ exports.Passenger = void 0;
 const typeorm_1 = require("typeorm");
 const passengerType_1 = require("../enums/passengerType");
 let Passenger = class Passenger {
-    constructor(name, passportNumber, age, passengerType, createdAt, updatedAt) {
-        this.name = name;
-        this.passportNumber = passportNumber;
-        this.age = age;
-        this.passengerType = passengerType;
-        this.createdAt = createdAt !== null && createdAt !== void 0 ? createdAt : new Date();
-        this.updatedAt = updatedAt;
+    constructor(partial) {
+        var _a;
+        Object.assign(this, partial);
+        this.createdAt = (_a = partial === null || partial === void 0 ? void 0 : partial.createdAt) !== null && _a !== void 0 ? _a : new Date();
     }
 };
 exports.Passenger = Passenger;
@@ -58,7 +55,6 @@ __decorate([
 ], Passenger.prototype, "updatedAt", void 0);
 exports.Passenger = Passenger = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [String, String, Number, Number, Date,
-        Date])
+    __metadata("design:paramtypes", [Object])
 ], Passenger);
 //# sourceMappingURL=passenger.js.map

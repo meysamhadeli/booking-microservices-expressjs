@@ -21,7 +21,12 @@ const createUserConsumerHandler = (queue, message) => __awaiter(void 0, void 0, 
     if (message == null || message == undefined)
         return;
     const passengerRepository = new passengerRepository_1.PassengerRepository();
-    const passenger = yield passengerRepository.createPassenger(new passenger_1.Passenger(message.name, message.passportNumber, 20, passengerType_1.PassengerType.MALE));
+    const passenger = yield passengerRepository.createPassenger(new passenger_1.Passenger({
+        name: message.name,
+        passportNumber: message.passportNumber,
+        age: 20,
+        passengerType: passengerType_1.PassengerType.MALE
+    }));
     logger_1.default.info(`Passenger with name: ${passenger === null || passenger === void 0 ? void 0 : passenger.name} created.`);
 });
 exports.createUserConsumerHandler = createUserConsumerHandler;
