@@ -80,14 +80,14 @@ export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
     }
 
     const userEntity = await this.userRepository.createUser(
-      new User(
-        request.email,
-        request.name,
-        await encryptPassword(request.password),
-        false,
-        request.role,
-        request.passportNumber
-      )
+      new User({
+        email: request.email,
+        name: request.name,
+        password: await encryptPassword(request.password),
+        role: request.role,
+        passportNumber: request.passportNumber,
+        isEmailVerified: false
+      })
     );
 
     await this.publisher.publishMessage(

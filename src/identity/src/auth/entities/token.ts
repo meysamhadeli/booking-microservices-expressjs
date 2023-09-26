@@ -28,21 +28,8 @@ export class Token {
   @Column()
   userId: number;
 
-  constructor(
-    token: string,
-    expires: Date,
-    type: TokenType,
-    blacklisted: boolean,
-    userId: number,
-    createdAt?: Date,
-    user?: User
-  ) {
-    this.token = token;
-    this.expires = expires;
-    this.type = type;
-    this.blacklisted = blacklisted;
-    this.userId = userId;
-    this.createdAt = createdAt ?? new Date();
-    this.user = user;
+  constructor(partial?: Partial<Token>) {
+    Object.assign(this, partial);
+    this.createdAt = partial?.createdAt ?? new Date();
   }
 }

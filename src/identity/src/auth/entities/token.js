@@ -14,14 +14,10 @@ const typeorm_1 = require("typeorm");
 const tokenType_1 = require("../enums/tokenType");
 const user_1 = require("../../user/entities/user");
 let Token = class Token {
-    constructor(token, expires, type, blacklisted, userId, createdAt, user) {
-        this.token = token;
-        this.expires = expires;
-        this.type = type;
-        this.blacklisted = blacklisted;
-        this.userId = userId;
-        this.createdAt = createdAt !== null && createdAt !== void 0 ? createdAt : new Date();
-        this.user = user;
+    constructor(partial) {
+        var _a;
+        Object.assign(this, partial);
+        this.createdAt = (_a = partial === null || partial === void 0 ? void 0 : partial.createdAt) !== null && _a !== void 0 ? _a : new Date();
     }
 };
 exports.Token = Token;
@@ -59,7 +55,6 @@ __decorate([
 ], Token.prototype, "userId", void 0);
 exports.Token = Token = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [String, Date, Number, Boolean, Number, Date,
-        user_1.User])
+    __metadata("design:paramtypes", [Object])
 ], Token);
 //# sourceMappingURL=token.js.map

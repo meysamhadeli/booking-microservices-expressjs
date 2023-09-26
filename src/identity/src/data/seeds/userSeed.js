@@ -25,7 +25,14 @@ class UserSeed {
         return __awaiter(this, void 0, void 0, function* () {
             const userRepository = tsyringe_1.container.resolve(userRepository_1.UserRepository);
             if (((_a = (yield userRepository.getAllUsers())) === null || _a === void 0 ? void 0 : _a.length) == 0) {
-                yield userRepository.createUser(new user_1.User('dev@dev.com', 'developer', yield (0, encryption_1.encryptPassword)('Admin@1234'), false, role_1.Role.ADMIN, '12345678'));
+                yield userRepository.createUser(new user_1.User({
+                    email: 'dev@dev.com',
+                    name: 'developer',
+                    password: yield (0, encryption_1.encryptPassword)('Admin@1234'),
+                    isEmailVerified: false,
+                    role: role_1.Role.ADMIN,
+                    passportNumber: '12345678'
+                }));
                 logger_1.default.info('Seed users run successfully!');
             }
         });

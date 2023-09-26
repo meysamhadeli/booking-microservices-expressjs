@@ -64,7 +64,13 @@ let GenerateTokenHandler = class GenerateTokenHandler {
             const accessToken = generateJwtToken(request.userId, accessTokenExpires.unix(), tokenType_1.TokenType.ACCESS);
             const refreshTokenExpires = (0, moment_1.default)().add(config_1.default.jwt.refreshExpirationDays, 'days');
             const refreshToken = generateJwtToken(request.userId, refreshTokenExpires.unix(), tokenType_1.TokenType.REFRESH);
-            yield this.authRepository.createToken(new token_1.Token(refreshToken, refreshTokenExpires.toDate(), tokenType_1.TokenType.REFRESH, false, request.userId));
+            yield this.authRepository.createToken(new token_1.Token({
+                token: refreshToken,
+                expires: refreshTokenExpires.toDate(),
+                type: tokenType_1.TokenType.REFRESH,
+                blacklisted: false,
+                userId: request.userId
+            }));
             const result = {
                 access: {
                     token: accessToken,

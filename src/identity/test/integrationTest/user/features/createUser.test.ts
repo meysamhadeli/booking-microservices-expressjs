@@ -6,7 +6,7 @@ import {
 import { mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { UserDto } from '../../../../src/user/dtos/userDto';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
-import { fakeCreateUser } from '../../../shared/fakes/user/fakeCreateUser';
+import { FakeCreateUser } from '../../../shared/fakes/user/fakeCreateUser';
 
 describe('integration test for create user', () => {
   let fixture: IntegrationTestFixture;
@@ -21,7 +21,7 @@ describe('integration test for create user', () => {
   });
 
   it('should create user and retrieve a user from the database', async () => {
-    const result = await mediatrJs.send<UserDto>(fakeCreateUser);
+    const result = await mediatrJs.send<UserDto>(FakeCreateUser.generate());
 
     const isPublished = await fixture.publisher.isPublished(new UserCreated());
     expect(isPublished).toBe(true);

@@ -91,7 +91,17 @@ let UpdateUserHandler = class UpdateUserHandler {
             if (!existUser) {
                 throw new notFoundException_1.default('User not found');
             }
-            const userEntity = yield this.userRepository.updateUser(new user_1.User(request.email, request.name, yield (0, encryption_1.encryptPassword)(request.password), existUser.isEmailVerified, request.role, request.passportNumber, existUser.createdAt, existUser.tokens, new Date()));
+            const userEntity = yield this.userRepository.updateUser(new user_1.User({
+                email: request.email,
+                name: request.name,
+                password: yield (0, encryption_1.encryptPassword)(request.password),
+                role: request.role,
+                passportNumber: request.passportNumber,
+                isEmailVerified: existUser.isEmailVerified,
+                tokens: existUser.tokens,
+                createdAt: existUser.createdAt,
+                updatedAt: new Date()
+            }));
             const result = mapping_1.default.map(userEntity, new userDto_1.UserDto());
             return result;
         });

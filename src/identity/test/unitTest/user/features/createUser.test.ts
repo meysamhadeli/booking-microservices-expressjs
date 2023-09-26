@@ -2,54 +2,54 @@ import { CreateUserHandler } from '../../../../src/user/features/v1/createUser/c
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import { UserDto } from '../../../../src/user/dtos/userDto';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
-import { fakeCreateUser } from '../../../shared/fakes/user/fakeCreateUser';
-import { fakeUser } from '../../../shared/fakes/user/fakeUser';
 import { faker } from '@faker-js/faker';
+import { FakeUser } from '../../../shared/fakes/user/fakeUser';
+import { User } from '../../../../src/user/entities/user';
+import { FakeCreateUser } from '../../../shared/fakes/user/fakeCreateUser';
+import * as TypeMoq from 'typemoq';
+import { IUserRepository } from '../../../../src/data/repositories/userRepository';
 
 describe('unit test for create user', () => {
   let createUserHandler: CreateUserHandler;
 
-  //todo: use a better approach for remove unnecessary mock here
-  const mockUserRepository = {
-    createUser: jest.fn().mockReturnValue(Promise.resolve(fakeUser)),
-    updateUser: jest.fn(),
-    findUsers: jest.fn(),
-    findUserByName: jest.fn(),
-    findUserByEmail: jest.fn().mockReturnValue(Promise.resolve(undefined)),
-    findUserById: jest.fn(),
-    getAllUsers: jest.fn(),
-    removeUser: jest.fn()
-  };
+  const fakeUser: User = FakeUser.generate();
 
-  const mockPublisher: IPublisher = {
-    publishMessage: jest.fn(),
-    isPublished: jest.fn()
-  };
+  const mockUserRepository: TypeMoq.IMock<IUserRepository> = TypeMoq.Mock.ofType<IUserRepository>();
+  const mockPublisher: TypeMoq.IMock<IPublisher> = TypeMoq.Mock.ofType<IPublisher>();
 
   beforeEach(() => {
-    createUserHandler = new CreateUserHandler(mockPublisher, mockUserRepository);
+    createUserHandler = new CreateUserHandler(mockPublisher.object, mockUserRepository.object);
   });
 
   it('should create a user and retrieve a valid data', async () => {
     const email = faker.internet.email();
 
+    mockUserRepository
+      .setup((x) => x.findUserByEmail(TypeMoq.It.isAnyString()))
+      .returns(() => null);
+
     const userCreated = new UserCreated(fakeUser.id, fakeUser.name, fakeUser.passportNumber);
 
-    // Mock userRepository's behavior when finding a user by email
-    await mockUserRepository.findUserByEmail(email);
-
     // Mock userRepository's behavior when creating a user
-    await mockUserRepository.createUser(fakeUser);
+    mockUserRepository
+      .setup((x) => x.createUser(TypeMoq.It.isAnyObject(User)))
+      .returns(() => Promise.resolve(fakeUser));
 
     // Mock publisher's behavior when publishing a user created
-    await mockPublisher.publishMessage(userCreated);
+    mockPublisher.setup((x) => x.publishMessage(userCreated)).returns(() => Promise.resolve());
 
-    const result: UserDto = await createUserHandler.handle(fakeCreateUser);
+    const result: UserDto = await createUserHandler.handle(FakeCreateUser.generate(fakeUser));
 
-    // Assertions based on your expected behavior
-    expect(mockUserRepository.findUserByEmail).toHaveBeenCalledWith(email);
-    expect(mockUserRepository.createUser).toHaveBeenCalledWith(fakeUser);
-    expect(mockPublisher.publishMessage).toHaveBeenCalledWith(userCreated);
+    // Verify that the publishMessage method was called exactly once
+    mockUserRepository.verify(
+      (x) => x.findUserByEmail(TypeMoq.It.isAnyString()),
+      TypeMoq.Times.once()
+    );
+    mockPublisher.verify((x) => x.publishMessage(userCreated), TypeMoq.Times.once());
+    mockUserRepository.verify(
+      (x) => x.createUser(TypeMoq.It.isAnyObject(User)),
+      TypeMoq.Times.once()
+    );
     expect(result).not.toBeNull();
   });
 });

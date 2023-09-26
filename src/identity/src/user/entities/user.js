@@ -14,16 +14,10 @@ const typeorm_1 = require("typeorm");
 const token_1 = require("../../auth/entities/token");
 const role_1 = require("../enums/role");
 let User = class User {
-    constructor(email, name, password, isEmailVerified, role, passportNumber, createdAt, tokens, updatedAt) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.isEmailVerified = isEmailVerified;
-        this.role = role;
-        this.passportNumber = passportNumber;
-        this.createdAt = createdAt !== null && createdAt !== void 0 ? createdAt : new Date();
-        this.tokens = tokens;
-        this.updatedAt = updatedAt;
+    constructor(partial) {
+        var _a;
+        Object.assign(this, partial);
+        this.createdAt = (_a = partial === null || partial === void 0 ? void 0 : partial.createdAt) !== null && _a !== void 0 ? _a : new Date();
     }
 };
 exports.User = User;
@@ -74,6 +68,6 @@ __decorate([
 ], User.prototype, "tokens", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [String, String, String, Boolean, Number, String, Date, Array, Date])
+    __metadata("design:paramtypes", [Object])
 ], User);
 //# sourceMappingURL=user.js.map

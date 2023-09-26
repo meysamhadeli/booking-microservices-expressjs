@@ -3,7 +3,9 @@ import {
   initialIntegrationTestFixture,
   IntegrationTestFixture
 } from '../../../shared/fixtures/initialIntegrationTestFixture';
-import { fakeCreateUserRequestDto } from '../../../shared/fakes/user/fakeCreateUserRequestDto';
+import {
+  FakeCreateUserRequestDto
+} from '../../../shared/fakes/user/fakeCreateUserRequestDto';
 const request = require('supertest');
 
 describe('end-to-end test for create user', () => {
@@ -22,7 +24,7 @@ describe('end-to-end test for create user', () => {
 
     const createUserResponse = await request(fixture.app)
       .post('/user/v1/create')
-      .send(fakeCreateUserRequestDto)
+      .send(FakeCreateUserRequestDto.generate())
       .expect(201);
   });
 });

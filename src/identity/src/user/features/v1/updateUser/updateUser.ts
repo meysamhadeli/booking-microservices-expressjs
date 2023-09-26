@@ -79,17 +79,17 @@ export class UpdateUserHandler implements IHandler<UpdateUser, UserDto> {
     }
 
     const userEntity = await this.userRepository.updateUser(
-      new User(
-        request.email,
-        request.name,
-        await encryptPassword(request.password),
-        existUser.isEmailVerified,
-        request.role,
-        request.passportNumber,
-        existUser.createdAt,
-        existUser.tokens,
-        new Date()
-      )
+      new User({
+        email: request.email,
+        name: request.name,
+        password: await encryptPassword(request.password),
+        role: request.role,
+        passportNumber: request.passportNumber,
+        isEmailVerified: existUser.isEmailVerified,
+        tokens: existUser.tokens,
+        createdAt: existUser.createdAt,
+        updatedAt: new Date()
+      })
     );
 
     const result = mapper.map<User, UserDto>(userEntity, new UserDto());

@@ -91,7 +91,14 @@ let CreateUserHandler = class CreateUserHandler {
             if (existUser) {
                 throw new conflictException_1.default('Email already taken');
             }
-            const userEntity = yield this.userRepository.createUser(new user_1.User(request.email, request.name, yield (0, encryption_1.encryptPassword)(request.password), false, request.role, request.passportNumber));
+            const userEntity = yield this.userRepository.createUser(new user_1.User({
+                email: request.email,
+                name: request.name,
+                password: yield (0, encryption_1.encryptPassword)(request.password),
+                role: request.role,
+                passportNumber: request.passportNumber,
+                isEmailVerified: false
+            }));
             yield this.publisher.publishMessage(new identityContract_1.UserCreated(userEntity.id, userEntity.name, userEntity.passportNumber));
             const result = mapping_1.default.map(userEntity, new userDto_1.UserDto());
             return result;

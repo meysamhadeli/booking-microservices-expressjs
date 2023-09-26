@@ -10,8 +10,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const initialIntegrationTestFixture_1 = require("../../../shared/initialIntegrationTestFixture");
-const role_1 = require("../../../../src/user/enums/role");
+const initialIntegrationTestFixture_1 = require("../../../shared/fixtures/initialIntegrationTestFixture");
+const fakeCreateUserRequestDto_1 = require("../../../shared/fakes/user/fakeCreateUserRequestDto");
 const request = require('supertest');
 describe('end-to-end test for create user', () => {
     let fixture;
@@ -23,16 +23,9 @@ describe('end-to-end test for create user', () => {
         yield fixture.rabbitmqContainer.stop();
     }));
     it('should create user and retrieve 201 status code', () => __awaiter(void 0, void 0, void 0, function* () {
-        const createUserRequestDto = {
-            email: 'test@test.com',
-            password: 'Admin@1234',
-            name: 'test',
-            role: role_1.Role.USER,
-            passportNumber: '123456789'
-        };
         const createUserResponse = yield request(fixture.app)
             .post('/user/v1/create')
-            .send(createUserRequestDto)
+            .send(fakeCreateUserRequestDto_1.FakeCreateUserRequestDto.generate())
             .expect(201);
     }));
 });

@@ -40,8 +40,7 @@ const generateJwtToken = (
 
 @injectable()
 export class GenerateTokenHandler implements IHandler<GenerateToken, AuthDto> {
-  constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {
-  }
+  constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
   async handle(request: GenerateToken): Promise<AuthDto> {
     await generateTokenValidations.params.validateAsync(request);
@@ -61,13 +60,13 @@ export class GenerateTokenHandler implements IHandler<GenerateToken, AuthDto> {
     );
 
     await this.authRepository.createToken(
-      new Token(
-        refreshToken,
-        refreshTokenExpires.toDate(),
-        TokenType.REFRESH,
-        false,
-        request.userId
-      )
+      new Token({
+        token: refreshToken,
+        expires: refreshTokenExpires.toDate(),
+        type: TokenType.REFRESH,
+        blacklisted: false,
+        userId: request.userId
+      })
     );
 
     const result = {

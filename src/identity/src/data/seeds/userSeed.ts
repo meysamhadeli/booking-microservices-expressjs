@@ -11,15 +11,15 @@ export class UserSeed implements IDataSeeder {
     const userRepository = container.resolve(UserRepository);
     if ((await userRepository.getAllUsers())?.length == 0) {
       await userRepository.createUser(
-        new User(
-          'dev@dev.com',
-          'developer',
-          await encryptPassword('Admin@1234'),
-          false,
-          Role.ADMIN,
-          '12345678'
-        )
-      );
+        new User({
+            email: 'dev@dev.com',
+            name: 'developer',
+            password: await encryptPassword('Admin@1234'),
+            isEmailVerified: false,
+            role: Role.ADMIN,
+            passportNumber: '12345678'
+          }
+        ));
       Logger.info('Seed users run successfully!');
     }
   }

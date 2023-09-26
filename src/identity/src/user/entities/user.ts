@@ -38,25 +38,8 @@ export class User {
   @OneToMany(() => Token, (token) => token.user)
   tokens: Token[];
 
-  constructor(
-    email: string,
-    name: string,
-    password: string,
-    isEmailVerified: boolean,
-    role: Role,
-    passportNumber: string,
-    createdAt?: Date,
-    tokens?: Token[],
-    updatedAt?: Date
-  ) {
-    this.email = email;
-    this.name = name;
-    this.password = password;
-    this.isEmailVerified = isEmailVerified;
-    this.role = role;
-    this.passportNumber = passportNumber;
-    this.createdAt = createdAt ?? new Date();
-    this.tokens = tokens;
-    this.updatedAt = updatedAt;
+  constructor(partial?: Partial<User>) {
+    Object.assign(this, partial);
+    this.createdAt = partial?.createdAt ?? new Date();
   }
 }
