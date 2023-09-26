@@ -6,8 +6,6 @@ import cors from 'cors';
 import passport from 'passport';
 import { morganMiddleware } from 'building-blocks/logging/morgan';
 import { RegisterRoutes } from './routes/routes';
-import * as swaggerUi from 'swagger-ui-express';
-import Logger from 'building-blocks/logging/logger';
 import logger from 'building-blocks/logging/logger';
 import config from 'building-blocks/config/config';
 import { errorHandler } from 'building-blocks/middlewares/errorHandler';
@@ -18,6 +16,7 @@ import { initialMonitoring } from './extensions/monitoringExtensions';
 import { collectDefaultMetrics } from 'prom-client';
 import { postgresOptions, rabbitmqOptions } from './configurations/configuratinOptions';
 import { initialDbContext } from './data/dbContext';
+import { initialSwagger } from 'building-blocks/swagger/swagger';
 
 const startupApp = async () => {
   collectDefaultMetrics();
@@ -60,13 +59,7 @@ const startupApp = async () => {
   await registerMediatrHandlers();
 
   if (config.env !== 'test') {
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const swaggerDocument = require('./docs/swagger.json');
-      app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    } catch (err) {
-      Logger.error('Unable to read swagger.json', err);
-    }
+    await initialSwagger(app);
 
     process.on('SIGTERM', async () => {
       await databaseConnection.destroy();

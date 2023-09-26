@@ -8,3 +8,5 @@ export const getTypeName = <T>(instance: T): string => {
     return typeof instance;
   }
 };
+
+export const isEmptyObject = (obj: Record<string, any>): boolean => Object.keys(obj).length === 0;
