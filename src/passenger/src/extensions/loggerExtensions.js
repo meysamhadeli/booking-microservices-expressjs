@@ -9,16 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUserConsumerHandler = void 0;
+exports.initialLogger = void 0;
 const logger_1 = require("building-blocks/logging/logger");
-const serialization_1 = require("building-blocks/utils/serialization");
 const tsyringe_1 = require("tsyringe");
-const createUserConsumerHandler = (queue, message) => __awaiter(void 0, void 0, void 0, function* () {
+const initialLogger = () => __awaiter(void 0, void 0, void 0, function* () {
     const logger = tsyringe_1.container.resolve(logger_1.Logger);
-    if (message == null || message == undefined)
-        return;
-    //todo: add some functionality for save write model to read database like mongo
-    logger.info(`We received message: ${(0, serialization_1.serializeObject)(message)} in user consumers`);
+    tsyringe_1.container.registerSingleton('ILogger', logger_1.Logger);
+    return logger;
 });
-exports.createUserConsumerHandler = createUserConsumerHandler;
-//# sourceMappingURL=createUserRead.js.map
+exports.initialLogger = initialLogger;
+//# sourceMappingURL=loggerExtensions.js.map

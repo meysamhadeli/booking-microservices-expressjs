@@ -38,17 +38,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialSwagger = void 0;
 const path_1 = __importDefault(require("path"));
 const reflection_1 = require("../utils/reflection");
-const logger_1 = __importDefault(require("../logging/logger"));
 const swaggerUi = __importStar(require("swagger-ui-express"));
 const initialSwagger = (app) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // Define the path to your single Swagger JSON file
         const swaggerFilePath = path_1.default.join(process.cwd(), 'src/docs', 'swagger.json');
-        // Load the Swagger JSON document
         const swaggerDocument = require(swaggerFilePath);
-        // Check if securityDefinitions exists in the Swagger document
         if ((0, reflection_1.isEmptyObject)(swaggerDocument.components.securitySchemes)) {
-            // If it doesn't exist, add your security scheme here
             swaggerDocument.components.securitySchemes = {
                 jwt: {
                     type: 'http',
@@ -61,7 +56,7 @@ const initialSwagger = (app) => __awaiter(void 0, void 0, void 0, function* () {
         return swaggerDocument;
     }
     catch (error) {
-        logger_1.default.error(error);
+        throw new Error(error);
     }
 });
 exports.initialSwagger = initialSwagger;

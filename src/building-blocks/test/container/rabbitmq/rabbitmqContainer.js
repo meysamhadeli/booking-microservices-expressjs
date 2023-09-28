@@ -8,20 +8,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.rabbitMqContainerStart = void 0;
 require("reflect-metadata");
 const testcontainers_1 = require("testcontainers");
-const logger_1 = __importDefault(require("../../../logging/logger"));
+const tsyringe_1 = require("tsyringe");
+const logger_1 = require("../../../logging/logger");
 const rabbitMqContainerStart = () => __awaiter(void 0, void 0, void 0, function* () {
+    const logger = tsyringe_1.container.resolve(logger_1.Logger);
     const defaultRabbitmqOptions = yield getDefaultRabbitmqTestContainers();
     const rabbitmqContainerStarted = yield getContainerStarted(defaultRabbitmqOptions);
     const containerPort = rabbitmqContainerStarted.getMappedPort(defaultRabbitmqOptions.port);
     const rabbitmqOptions = Object.assign(Object.assign({}, defaultRabbitmqOptions), { port: containerPort });
-    logger_1.default.info(`Test rabbitmq with port ${rabbitmqOptions.port} established`);
+    logger.info(`Test rabbitmq with port ${rabbitmqOptions.port} established`);
     return [rabbitmqOptions, rabbitmqContainerStarted];
 });
 exports.rabbitMqContainerStart = rabbitMqContainerStart;

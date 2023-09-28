@@ -13,16 +13,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialMonitoring = void 0;
-const logger_1 = __importDefault(require("building-blocks/logging/logger"));
 const config_1 = __importDefault(require("building-blocks/config/config"));
 const metricsMiddleware_1 = require("building-blocks/middlewares/metricsMiddleware");
 const metrics_1 = require("building-blocks/openTelemetry/metrics");
+const tsyringe_1 = require("tsyringe");
+const logger_1 = require("building-blocks/logging/logger");
 const initialMonitoring = (app) => __awaiter(void 0, void 0, void 0, function* () {
+    const logger = tsyringe_1.container.resolve(logger_1.Logger);
     app.get('/metrics', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             res.set('Content-Type', metrics_1.register.contentType);
             res.end(yield metrics_1.register.metrics());
-            logger_1.default.info(`Metrics started on http://localhost:${config_1.default.port}/metrics`);
+            logger.info(`Metrics started on http://localhost:${config_1.default.port}/metrics`);
         }
         catch (err) {
             res.status(500).end(err);

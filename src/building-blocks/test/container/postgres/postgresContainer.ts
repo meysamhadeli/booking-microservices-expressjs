@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
-import Logger from '../../../logging/logger';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { container } from 'tsyringe';
+import { Logger } from '../../../logging/logger';
 
 interface PostgresContainerOptions {
   imageName: string;
@@ -14,7 +15,11 @@ interface PostgresContainerOptions {
   synchronize: boolean;
 }
 
-export const postgresContainerStart = async (): Promise<[PostgresConnectionOptions, StartedTestContainer]> => {
+export const postgresContainerStart = async (): Promise<
+  [PostgresConnectionOptions, StartedTestContainer]
+> => {
+  const logger = container.resolve(Logger);
+
   const defaultPostgresOptions = await getDefaultPostgresTestContainers();
 
   const pgContainerStarted = await getContainerStarted(defaultPostgresOptions);
@@ -27,7 +32,7 @@ export const postgresContainerStart = async (): Promise<[PostgresConnectionOptio
     port: containerPort
   };
 
-  Logger.info(`Test postgres with port ${postgresConnectionOption.port} established`);
+  logger.info(`Test postgres with port ${postgresConnectionOption.port} established`);
 
   return [postgresConnectionOption, pgContainerStarted];
 };

@@ -1,8 +1,8 @@
 import { Connection, createConnection, DataSourceOptions } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import config from '../config/config';
-import Logger from '../logging/logger';
-import { singleton } from 'tsyringe';
+import { Logger } from '../logging/logger';
+import { container, injectable } from 'tsyringe';
 
 let connection: Connection = null;
 
@@ -18,8 +18,10 @@ export interface IDataSeeder {
   seedData(): Promise<void>;
 }
 
-@singleton()
+@injectable()
 export class DbContext implements IDbContext {
+  logger = container.resolve(Logger);
+
   async initialize(options: PostgresConnectionOptions): Promise<Connection> {
     const dataSourceOptions: DataSourceOptions = {
       type: options.type,
@@ -39,7 +41,7 @@ export class DbContext implements IDbContext {
 
       if (config.env !== 'test') {
         await connection.runMigrations(); // Fixed this line
-        Logger.info('Migrations run successfully!');
+        this.logger.info('Migrations run successfully!');
       }
       return connection;
     } catch (error) {

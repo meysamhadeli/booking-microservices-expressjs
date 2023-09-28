@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.requestDurationHistogram = exports.errorCounter = exports.requestCounter = exports.register = void 0;
 const client = require('prom-client');
 exports.register = new client.Registry();
-// Create and register custom metrics
 exports.requestCounter = new client.Counter({
     name: 'express_request_total',
     help: 'Total number of HTTP requests handled by the Express app',

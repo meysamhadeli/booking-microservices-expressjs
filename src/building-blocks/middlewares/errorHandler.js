@@ -9,12 +9,14 @@ const joi_1 = require("joi");
 const http_problem_details_1 = require("http-problem-details");
 const applicationException_1 = __importDefault(require("../types/exception/applicationException"));
 const applicationException_2 = __importDefault(require("../types/exception/applicationException"));
-const logger_1 = __importDefault(require("../logging/logger"));
 const unauthorizedException_1 = __importDefault(require("../types/exception/unauthorizedException"));
 const forbiddenException_1 = __importDefault(require("../types/exception/forbiddenException"));
 const notFoundException_1 = __importDefault(require("../types/exception/notFoundException"));
 const conflictException_1 = __importDefault(require("../types/exception/conflictException"));
+const tsyringe_1 = require("tsyringe");
+const logger_1 = require("../logging/logger");
 const errorHandler = (err, req, res, next) => {
+    const logger = tsyringe_1.container.resolve(logger_1.Logger);
     if (err instanceof applicationException_1.default) {
         res.status(http_status_1.default.BAD_REQUEST).json(new http_problem_details_1.ProblemDocument({
             type: applicationException_2.default.name,
@@ -22,7 +24,7 @@ const errorHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger_1.default.error(err);
+        logger.error(err);
         return next;
     }
     if (err instanceof unauthorizedException_1.default) {
@@ -32,7 +34,7 @@ const errorHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger_1.default.error(err);
+        logger.error(err);
         return next;
     }
     if (err instanceof forbiddenException_1.default) {
@@ -42,7 +44,7 @@ const errorHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger_1.default.error(err);
+        logger.error(err);
         return next;
     }
     if (err instanceof notFoundException_1.default) {
@@ -52,7 +54,7 @@ const errorHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger_1.default.error(err);
+        logger.error(err);
         return next;
     }
     if (err instanceof conflictException_1.default) {
@@ -62,7 +64,7 @@ const errorHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger_1.default.error(err);
+        logger.error(err);
         return next;
     }
     if (err instanceof joi_1.ValidationError) {
@@ -72,17 +74,16 @@ const errorHandler = (err, req, res, next) => {
             detail: err.stack,
             status: http_status_1.default.BAD_REQUEST
         }));
-        logger_1.default.error(err);
+        logger.error(err);
         return next;
     }
-    logger_1.default.error(err);
     res.status(http_status_1.default.INTERNAL_SERVER_ERROR).json(new http_problem_details_1.ProblemDocument({
         type: 'INTERNAL_SERVER_ERROR',
         title: err.message,
         detail: err.stack,
         status: err.statusCode || 500
     }));
-    logger_1.default.error(err);
+    logger.error(err);
     return next;
 };
 exports.errorHandler = errorHandler;

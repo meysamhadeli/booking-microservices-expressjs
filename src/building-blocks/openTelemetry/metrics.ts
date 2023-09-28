@@ -1,7 +1,6 @@
 const client = require('prom-client');
 export const register = new client.Registry();
 
-// Create and register custom metrics
 export const requestCounter = new client.Counter({
   name: 'express_request_total',
   help: 'Total number of HTTP requests handled by the Express app',

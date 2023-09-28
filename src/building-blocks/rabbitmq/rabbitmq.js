@@ -44,7 +44,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Consumer = exports.Publisher = exports.RabbitMQConnection = void 0;
 const amqp = __importStar(require("amqplib"));
 const async_retry_1 = __importDefault(require("async-retry"));
-const logger_1 = __importDefault(require("../logging/logger"));
 const config_1 = __importDefault(require("../config/config"));
 const tsyringe_1 = require("tsyringe");
 const otel_1 = require("../openTelemetry/otel");
@@ -54,11 +53,15 @@ const date_fns_1 = require("date-fns");
 const lodash_1 = require("lodash");
 const time_1 = require("../utils/time");
 const uuid_1 = require("uuid");
+const logger_1 = require("../logging/logger");
 let connection = null;
 let channel = null;
 const publishedMessages = [];
 const consumedMessages = [];
 let RabbitMQConnection = class RabbitMQConnection {
+    constructor() {
+        this.logger = tsyringe_1.container.resolve(logger_1.Logger);
+    }
     createConnection(options) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!connection || !connection == undefined) {
@@ -68,7 +71,7 @@ let RabbitMQConnection = class RabbitMQConnection {
                             username: options.username,
                             password: options.password
                         });
-                        logger_1.default.info('RabbitMq connection created successfully');
+                        this.logger.info('RabbitMq connection created successfully');
                     }), {
                         retries: config_1.default.retry.count,
                         factor: config_1.default.retry.factor,
@@ -92,7 +95,7 @@ let RabbitMQConnection = class RabbitMQConnection {
                 if ((connection && !channel) || !channel) {
                     yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
                         channel = yield connection.createChannel();
-                        logger_1.default.info('Channel Created successfully');
+                        this.logger.info('Channel Created successfully');
                     }), {
                         retries: config_1.default.retry.count,
                         factor: config_1.default.retry.factor,
@@ -103,7 +106,7 @@ let RabbitMQConnection = class RabbitMQConnection {
                 return channel;
             }
             catch (error) {
-                logger_1.default.error('Failed to get channel!');
+                this.logger.error('Failed to get channel!');
             }
         });
     }
@@ -112,11 +115,11 @@ let RabbitMQConnection = class RabbitMQConnection {
             try {
                 if (channel) {
                     yield channel.close();
-                    logger_1.default.info('Channel closed successfully');
+                    this.logger.info('Channel closed successfully');
                 }
             }
             catch (error) {
-                logger_1.default.error('Channel close failed!');
+                this.logger.error('Channel close failed!');
             }
         });
     }
@@ -125,20 +128,23 @@ let RabbitMQConnection = class RabbitMQConnection {
             try {
                 if (connection) {
                     yield connection.close();
-                    logger_1.default.info('Connection closed successfully');
+                    this.logger.info('Connection closed successfully');
                 }
             }
             catch (error) {
-                logger_1.default.error('Connection close failed!');
+                this.logger.error('Connection close failed!');
             }
         });
     }
 };
 exports.RabbitMQConnection = RabbitMQConnection;
 exports.RabbitMQConnection = RabbitMQConnection = __decorate([
-    (0, tsyringe_1.singleton)()
+    (0, tsyringe_1.injectable)()
 ], RabbitMQConnection);
 let Publisher = class Publisher {
+    constructor() {
+        this.logger = tsyringe_1.container.resolve(logger_1.Logger);
+    }
     publishMessage(message) {
         return __awaiter(this, void 0, void 0, function* () {
             const rabbitMQConnection = tsyringe_1.container.resolve(RabbitMQConnection);
@@ -165,7 +171,7 @@ let Publisher = class Publisher {
                     channel.publish(exchangeName, routingKey, Buffer.from(serializedMessage), {
                         headers: messageProperties
                     });
-                    logger_1.default.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
+                    this.logger.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
                     publishedMessages.push(exchangeName);
                     // Set attributes on the span
                     span.setAttributes(messageProperties);
@@ -179,7 +185,7 @@ let Publisher = class Publisher {
                 });
             }
             catch (error) {
-                logger_1.default.error(error);
+                this.logger.error(error);
                 yield rabbitMQConnection.closeChanel();
             }
         });
@@ -197,6 +203,9 @@ exports.Publisher = Publisher = __decorate([
     (0, tsyringe_1.injectable)()
 ], Publisher);
 let Consumer = class Consumer {
+    constructor() {
+        this.logger = tsyringe_1.container.resolve(logger_1.Logger);
+    }
     consumeMessage(type, handler) {
         return __awaiter(this, void 0, void 0, function* () {
             const rabbitMQConnection = tsyringe_1.container.resolve(RabbitMQConnection);
@@ -214,7 +223,7 @@ let Consumer = class Consumer {
                     // Create a queue and bind it to the exchange with the specified binding key
                     yield channel.assertQueue(queueName, { exclusive: true });
                     yield channel.bindQueue(queueName, exchangeName, bindingKey);
-                    logger_1.default.info(`Waiting for messages with binding key "${bindingKey}". To exit, press CTRL+C`);
+                    this.logger.info(`Waiting for messages with binding key "${bindingKey}". To exit, press CTRL+C`);
                     // Consume messages from the queue
                     yield channel.consume(queueName, (message) => {
                         var _a;
@@ -224,7 +233,7 @@ let Consumer = class Consumer {
                             const messageContent = (_a = message === null || message === void 0 ? void 0 : message.content) === null || _a === void 0 ? void 0 : _a.toString();
                             const headers = message.properties.headers || {};
                             handler(queueName, (0, serialization_1.deserializeObject)(messageContent));
-                            logger_1.default.info(`Message: ${messageContent} delivered to queue: ${queueName}`);
+                            this.logger.info(`Message: ${messageContent} delivered to queue: ${queueName}`);
                             channel.ack(message); // Acknowledge the message
                             consumedMessages.push(exchangeName);
                             // Set attributes on the span
@@ -242,7 +251,7 @@ let Consumer = class Consumer {
                 });
             }
             catch (error) {
-                logger_1.default.error(error);
+                this.logger.error(error);
                 yield rabbitMQConnection.closeChanel();
             }
             const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

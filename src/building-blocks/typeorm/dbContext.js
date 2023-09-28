@@ -21,10 +21,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.DbContext = void 0;
 const typeorm_1 = require("typeorm");
 const config_1 = __importDefault(require("../config/config"));
-const logger_1 = __importDefault(require("../logging/logger"));
+const logger_1 = require("../logging/logger");
 const tsyringe_1 = require("tsyringe");
 let connection = null;
 let DbContext = class DbContext {
+    constructor() {
+        this.logger = tsyringe_1.container.resolve(logger_1.Logger);
+    }
     initialize(options) {
         return __awaiter(this, void 0, void 0, function* () {
             const dataSourceOptions = {
@@ -43,7 +46,7 @@ let DbContext = class DbContext {
                 connection = yield (0, typeorm_1.createConnection)(dataSourceOptions);
                 if (config_1.default.env !== 'test') {
                     yield connection.runMigrations(); // Fixed this line
-                    logger_1.default.info('Migrations run successfully!');
+                    this.logger.info('Migrations run successfully!');
                 }
                 return connection;
             }
@@ -63,6 +66,6 @@ let DbContext = class DbContext {
 };
 exports.DbContext = DbContext;
 exports.DbContext = DbContext = __decorate([
-    (0, tsyringe_1.singleton)()
+    (0, tsyringe_1.injectable)()
 ], DbContext);
 //# sourceMappingURL=dbContext.js.map

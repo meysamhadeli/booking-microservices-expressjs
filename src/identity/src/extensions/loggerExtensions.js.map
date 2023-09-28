@@ -1,0 +1,1 @@
+{"version":3,"file":"loggerExtensions.js","sourceRoot":"","sources":["loggerExtensions.ts"],"names":[],"mappings":";;;;;;;;;;;;AAAA,2DAAiE;AACjE,uCAAqC;AAE9B,MAAM,aAAa,GAAG,GAA0B,EAAE;IACvD,MAAM,MAAM,GAAG,oBAAS,CAAC,OAAO,CAAC,eAAM,CAAC,CAAC;IAEzC,oBAAS,CAAC,iBAAiB,CAAU,SAAS,EAAE,eAAM,CAAC,CAAC;IAExD,OAAO,MAAM,CAAC;AAChB,CAAC,CAAA,CAAC;AANW,QAAA,aAAa,iBAMxB"}

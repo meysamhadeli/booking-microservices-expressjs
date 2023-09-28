@@ -1,5 +1,5 @@
 import { BatchSpanProcessor, Tracer } from '@opentelemetry/sdk-trace-node';
-import { singleton } from 'tsyringe';
+import { injectable, singleton } from 'tsyringe';
 import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
 import config from '../config/config';
 import { ZipkinExporter } from '@opentelemetry/exporter-zipkin';
@@ -17,7 +17,7 @@ export interface IOpenTelemetryTracer {
   createTracer(tracerName: string): Promise<Tracer>;
 }
 
-@singleton()
+@injectable()
 export class OpenTelemetryTracer implements IOpenTelemetryTracer {
   async createTracer(tracerName: string): Promise<Tracer> {
     const provider = new NodeTracerProvider({

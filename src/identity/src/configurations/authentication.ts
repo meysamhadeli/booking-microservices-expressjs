@@ -2,8 +2,9 @@ import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 import config from 'building-blocks/config/config';
 import UnauthorizedException from 'building-blocks/types/exception/unauthorizedException';
+import { generateFakeJwt } from 'building-blocks/utils/encryption';
 
-export function expressAuthentication(
+export async function expressAuthentication(
   request: express.Request,
   securityName: string,
   scopes?: string[]
@@ -19,11 +20,7 @@ export function expressAuthentication(
     let token = request.body.token || request.query.token || request.headers['x-access-token'];
 
     if (config.env == 'test') {
-      const fakeUser = {
-        userId: 'testUser',
-        scopes: ['read', 'write']
-      };
-      token = jwt.sign(fakeUser, config.jwt.secret, { expiresIn: '1h' });
+      token = await generateFakeJwt();
       request.headers.authorization = 'Bearer' + ' ' + token;
     }
 

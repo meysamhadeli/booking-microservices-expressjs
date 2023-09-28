@@ -20,7 +20,6 @@ const cors_1 = __importDefault(require("cors"));
 const passport_1 = __importDefault(require("passport"));
 const morgan_1 = require("building-blocks/logging/morgan");
 const routes_1 = require("./routes/routes");
-const logger_1 = __importDefault(require("building-blocks/logging/logger"));
 const config_1 = __importDefault(require("building-blocks/config/config"));
 const errorHandler_1 = require("building-blocks/middlewares/errorHandler");
 const rabbitmqExtensions_1 = require("./extensions/rabbitmqExtensions");
@@ -31,9 +30,11 @@ const prom_client_1 = require("prom-client");
 const configuratinOptions_1 = require("./configurations/configuratinOptions");
 const dbContext_1 = require("./data/dbContext");
 const swagger_1 = require("building-blocks/swagger/swagger");
+const loggerExtensions_1 = require("./extensions/loggerExtensions");
 const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, prom_client_1.collectDefaultMetrics)();
     const app = (0, express_1.default)();
+    const logger = yield (0, loggerExtensions_1.initialLogger)();
     if (config_1.default.env !== 'test') {
         app.use(morgan_1.morganMiddleware);
     }
@@ -50,7 +51,7 @@ const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, routes_1.RegisterRoutes)(app);
     app.use(errorHandler_1.errorHandler);
     app.listen(config_1.default.port, () => {
-        logger_1.default.info(`Listening to port ${config_1.default.port}`);
+        logger.info(`Listening to port ${config_1.default.port}`);
     });
     const rabbitmq = yield (0, rabbitmqExtensions_1.initialRabbitmq)(configuratinOptions_1.rabbitmqOptions);
     yield (0, mediatrExtensions_1.registerMediatrHandlers)();

@@ -1,8 +1,7 @@
 import * as amqp from 'amqplib';
 import asyncRetry from 'async-retry';
-import Logger from '../logging/logger';
 import config from '../config/config';
-import { container, injectable, singleton } from 'tsyringe';
+import { container, inject, injectable, singleton } from 'tsyringe';
 import { OpenTelemetryTracer } from '../openTelemetry/otel';
 import { getTypeName } from '../utils/reflection';
 import { deserializeObject, serializeObject } from '../utils/serialization';
@@ -10,6 +9,7 @@ import { getUnixTime } from 'date-fns';
 import { snakeCase } from 'lodash';
 import { sleep } from '../utils/time';
 import { v4 as uuidv4 } from 'uuid';
+import { ILogger, Logger } from '../logging/logger';
 
 let connection: amqp.Connection = null;
 let channel: amqp.Channel = null;
@@ -45,8 +45,9 @@ export interface IConsumer {
   isConsumed<T>(message: T): Promise<boolean>;
 }
 
-@singleton()
+@injectable()
 export class RabbitMQConnection implements IRabbitMQConnection {
+  logger = container.resolve(Logger);
   async createConnection(options: RabbitmqOptions): Promise<amqp.Connection> {
     if (!connection || !connection == undefined) {
       try {
@@ -57,7 +58,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
               password: options.password
             });
 
-            Logger.info('RabbitMq connection created successfully');
+            this.logger.info('RabbitMq connection created successfully');
           },
           {
             retries: config.retry.count,
@@ -83,7 +84,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
         await asyncRetry(
           async () => {
             channel = await connection.createChannel();
-            Logger.info('Channel Created successfully');
+            this.logger.info('Channel Created successfully');
           },
           {
             retries: config.retry.count,
@@ -95,7 +96,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
       }
       return channel;
     } catch (error) {
-      Logger.error('Failed to get channel!');
+      this.logger.error('Failed to get channel!');
     }
   }
 
@@ -103,10 +104,10 @@ export class RabbitMQConnection implements IRabbitMQConnection {
     try {
       if (channel) {
         await channel.close();
-        Logger.info('Channel closed successfully');
+        this.logger.info('Channel closed successfully');
       }
     } catch (error) {
-      Logger.error('Channel close failed!');
+      this.logger.error('Channel close failed!');
     }
   }
 
@@ -114,16 +115,18 @@ export class RabbitMQConnection implements IRabbitMQConnection {
     try {
       if (connection) {
         await connection.close();
-        Logger.info('Connection closed successfully');
+        this.logger.info('Connection closed successfully');
       }
     } catch (error) {
-      Logger.error('Connection close failed!');
+      this.logger.error('Connection close failed!');
     }
   }
 }
 
 @injectable()
 export class Publisher implements IPublisher {
+  logger = container.resolve(Logger);
+
   async publishMessage<T>(message: T) {
     const rabbitMQConnection = container.resolve(RabbitMQConnection);
     const openTelemetryTracer = container.resolve(OpenTelemetryTracer);
@@ -157,7 +160,7 @@ export class Publisher implements IPublisher {
             headers: messageProperties
           });
 
-          Logger.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
+          this.logger.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
 
           publishedMessages.push(exchangeName);
 
@@ -175,7 +178,7 @@ export class Publisher implements IPublisher {
         }
       );
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       await rabbitMQConnection.closeChanel();
     }
   }
@@ -191,6 +194,8 @@ export class Publisher implements IPublisher {
 
 @injectable()
 export class Consumer implements IConsumer {
+  logger = container.resolve(Logger);
+
   async consumeMessage<T>(type: T, handler: handlerFunc<T>): Promise<void> {
     const rabbitMQConnection = container.resolve(RabbitMQConnection);
     const openTelemetryTracer = container.resolve(OpenTelemetryTracer);
@@ -215,7 +220,7 @@ export class Consumer implements IConsumer {
 
           await channel.bindQueue(queueName, exchangeName, bindingKey);
 
-          Logger.info(
+          this.logger.info(
             `Waiting for messages with binding key "${bindingKey}". To exit, press CTRL+C`
           );
 
@@ -231,7 +236,7 @@ export class Consumer implements IConsumer {
                 const headers = message.properties.headers || {};
 
                 handler(queueName, deserializeObject<T>(messageContent));
-                Logger.info(`Message: ${messageContent} delivered to queue: ${queueName}`);
+                this.logger.info(`Message: ${messageContent} delivered to queue: ${queueName}`);
                 channel.ack(message); // Acknowledge the message
 
                 consumedMessages.push(exchangeName);
@@ -253,7 +258,7 @@ export class Consumer implements IConsumer {
         }
       );
     } catch (error) {
-      Logger.error(error);
+      this.logger.error(error);
       await rabbitMQConnection.closeChanel();
     }
 

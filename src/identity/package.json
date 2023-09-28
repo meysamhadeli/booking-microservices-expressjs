@@ -12,27 +12,6 @@
     "prettier:fix": "prettier --write **/*.ts",
     "generate:swagger": "tsoa routes && tsoa spec"
   },
-  "keywords": [
-    "node",
-    "node.js",
-    "typescript",
-    "microservices",
-    "express",
-    "rest",
-    "api",
-    "typeorm",
-    "postgresql",
-    "es6",
-    "es7",
-    "es8",
-    "es9",
-    "docker",
-    "passport",
-    "joi",
-    "eslint",
-    "prettier",
-    "booking"
-  ],
   "author": "Meysam Hadeli",
   "license": "MIT",
   "devDependencies": {

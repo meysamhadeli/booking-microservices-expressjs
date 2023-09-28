@@ -64,6 +64,6 @@ let OpenTelemetryTracer = class OpenTelemetryTracer {
 };
 exports.OpenTelemetryTracer = OpenTelemetryTracer;
 exports.OpenTelemetryTracer = OpenTelemetryTracer = __decorate([
-    (0, tsyringe_1.singleton)()
+    (0, tsyringe_1.injectable)()
 ], OpenTelemetryTracer);
 //# sourceMappingURL=otel.js.map

@@ -2,9 +2,12 @@ import { PassengerRepository } from '../../data/repositories/passengerRepository
 import { UserCreated } from 'building-blocks/contracts/identityContract';
 import { Passenger } from '../../passenger/entities/passenger';
 import { PassengerType } from '../../passenger/enums/passengerType';
-import logger from 'building-blocks/logging/logger';
+import { container } from 'tsyringe';
+import { Logger } from 'building-blocks/logging/logger';
 
 export const createUserConsumerHandler = async (queue: string, message: UserCreated) => {
+  const logger = container.resolve(Logger);
+
   if (message == null || message == undefined) return;
 
   const passengerRepository = new PassengerRepository();

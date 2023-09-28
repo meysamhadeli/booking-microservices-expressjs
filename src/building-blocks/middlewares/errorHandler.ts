@@ -4,13 +4,16 @@ import { ValidationError } from 'joi';
 import { ProblemDocument } from 'http-problem-details';
 import ApplicationException from '../types/exception/applicationException';
 import applicationException from '../types/exception/applicationException';
-import Logger from '../logging/logger';
 import UnauthorizedException from '../types/exception/unauthorizedException';
 import ForbiddenException from '../types/exception/forbiddenException';
 import NotFoundException from '../types/exception/notFoundException';
 import ConflictException from '../types/exception/conflictException';
+import { container } from 'tsyringe';
+import { Logger } from '../logging/logger';
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  const logger = container.resolve(Logger);
+
   if (err instanceof ApplicationException) {
     res.status(httpStatus.BAD_REQUEST).json(
       new ProblemDocument({
@@ -21,7 +24,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    Logger.error(err);
+    logger.error(err);
 
     return next;
   }
@@ -36,7 +39,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    Logger.error(err);
+    logger.error(err);
 
     return next;
   }
@@ -51,7 +54,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    Logger.error(err);
+    logger.error(err);
 
     return next;
   }
@@ -66,7 +69,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    Logger.error(err);
+    logger.error(err);
 
     return next;
   }
@@ -81,7 +84,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    Logger.error(err);
+    logger.error(err);
 
     return next;
   }
@@ -96,12 +99,10 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    Logger.error(err);
+    logger.error(err);
 
     return next;
   }
-
-  Logger.error(err);
 
   res.status(httpStatus.INTERNAL_SERVER_ERROR).json(
     new ProblemDocument({
@@ -112,7 +113,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     })
   );
 
-  Logger.error(err);
+  logger.error(err);
 
   return next;
 };

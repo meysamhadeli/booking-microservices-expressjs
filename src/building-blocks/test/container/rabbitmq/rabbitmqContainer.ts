@@ -1,7 +1,8 @@
 import 'reflect-metadata';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
-import Logger from '../../../logging/logger';
 import { RabbitmqOptions } from '../../../rabbitmq/rabbitmq';
+import { container } from 'tsyringe';
+import { Logger } from '../../../logging/logger';
 
 interface RabbitmqContainerOptions {
   host: string;
@@ -14,6 +15,8 @@ interface RabbitmqContainerOptions {
 export const rabbitMqContainerStart = async (): Promise<
   [RabbitmqOptions, StartedTestContainer]
 > => {
+  const logger = container.resolve(Logger);
+
   const defaultRabbitmqOptions = await getDefaultRabbitmqTestContainers();
 
   const rabbitmqContainerStarted = await getContainerStarted(defaultRabbitmqOptions);
@@ -25,7 +28,7 @@ export const rabbitMqContainerStart = async (): Promise<
     port: containerPort
   };
 
-  Logger.info(`Test rabbitmq with port ${rabbitmqOptions.port} established`);
+  logger.info(`Test rabbitmq with port ${rabbitmqOptions.port} established`);
 
   return [rabbitmqOptions, rabbitmqContainerStarted];
 };

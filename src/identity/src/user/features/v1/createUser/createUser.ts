@@ -13,6 +13,8 @@ import { IUserRepository } from '../../../../data/repositories/userRepository';
 import { inject, injectable } from 'tsyringe';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
+import { ILogger } from 'building-blocks/logging/logger';
+import { loggers } from 'winston';
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;

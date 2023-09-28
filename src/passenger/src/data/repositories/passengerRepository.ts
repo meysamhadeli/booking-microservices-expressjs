@@ -1,5 +1,4 @@
 import { Passenger } from '../../passenger/entities/passenger';
-import { dataSource } from '../dataSource';
 import { Repository, SelectQueryBuilder } from 'typeorm';
 import { DbContext } from 'building-blocks/typeorm/dbContext';
 import { container } from 'tsyringe';

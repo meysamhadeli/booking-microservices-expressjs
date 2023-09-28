@@ -6,7 +6,6 @@ import cors from 'cors';
 import passport from 'passport';
 import { morganMiddleware } from 'building-blocks/logging/morgan';
 import { RegisterRoutes } from './routes/routes';
-import logger from 'building-blocks/logging/logger';
 import config from 'building-blocks/config/config';
 import { errorHandler } from 'building-blocks/middlewares/errorHandler';
 import { initialRabbitmq } from './extensions/rabbitmqExtensions';
@@ -17,11 +16,14 @@ import { collectDefaultMetrics } from 'prom-client';
 import { postgresOptions, rabbitmqOptions } from './configurations/configuratinOptions';
 import { initialDbContext } from './data/dbContext';
 import { initialSwagger } from 'building-blocks/swagger/swagger';
+import { initialLogger } from './extensions/loggerExtensions';
 
 const startupApp = async () => {
   collectDefaultMetrics();
 
   const app = express();
+
+  const logger = await initialLogger();
 
   if (config.env !== 'test') {
     app.use(morganMiddleware);
