@@ -26,7 +26,7 @@ export interface RabbitmqOptions {
 }
 
 export interface IRabbitMQConnection {
-  createConnection(options: RabbitmqOptions): Promise<amqp.Connection>;
+  createConnection(): Promise<amqp.Connection>;
 
   getChannel(): Promise<amqp.Channel>;
 
@@ -48,14 +48,17 @@ export interface IConsumer {
 @injectable()
 export class RabbitMQConnection implements IRabbitMQConnection {
   logger = container.resolve(Logger);
-  async createConnection(options: RabbitmqOptions): Promise<amqp.Connection> {
+  async createConnection(options?: RabbitmqOptions): Promise<amqp.Connection> {
     if (!connection || !connection == undefined) {
       try {
+        const host = options?.host ?? config.rabbitmq.host;
+        const port = options?.port ?? config.rabbitmq.port;
+
         await asyncRetry(
           async () => {
-            connection = await amqp.connect(`amqp://${options.host}:${options.port}`, {
-              username: options.username,
-              password: options.password
+            connection = await amqp.connect(`amqp://${host}:${port}`, {
+              username: options?.username ?? config.rabbitmq.username,
+              password: options?.password ?? config.rabbitmq.password
             });
 
             this.logger.info('RabbitMq connection created successfully');

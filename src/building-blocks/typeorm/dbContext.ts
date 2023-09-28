@@ -7,7 +7,7 @@ import { container, injectable } from 'tsyringe';
 let connection: Connection = null;
 
 export interface IDbContext {
-  initialize(options: PostgresConnectionOptions): Promise<Connection>;
+  initialize(options?: PostgresConnectionOptions): Promise<Connection>;
 
   closeConnection(): Promise<void>;
 
@@ -22,18 +22,18 @@ export interface IDataSeeder {
 export class DbContext implements IDbContext {
   logger = container.resolve(Logger);
 
-  async initialize(options: PostgresConnectionOptions): Promise<Connection> {
+  async initialize(options?: PostgresConnectionOptions): Promise<Connection> {
     const dataSourceOptions: DataSourceOptions = {
-      type: options.type,
-      host: options.host,
-      port: options.port,
-      username: options.username,
-      password: options.password,
-      database: options.database,
-      synchronize: options?.synchronize,
-      entities: ['src/**/entities/*.js'],
-      migrations: ['src/**/migrations/*.js'],
-      logging: false
+      type: options?.type ?? 'postgres',
+      host: options?.host ?? config.postgres.host,
+      port: options?.port ?? config.postgres.port,
+      username: options?.username ?? config.postgres.username,
+      password: options?.password ?? config.postgres.password,
+      database: options?.database ?? config.postgres.database,
+      synchronize: options?.synchronize ?? config.postgres.synchronize,
+      entities: [options?.entities ?? config.postgres.entities],
+      migrations: [options?.migrations ?? config.postgres.migrations],
+      logging: options?.logging ?? false
     };
 
     try {

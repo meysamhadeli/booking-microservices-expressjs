@@ -29,18 +29,19 @@ let DbContext = class DbContext {
         this.logger = tsyringe_1.container.resolve(logger_1.Logger);
     }
     initialize(options) {
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         return __awaiter(this, void 0, void 0, function* () {
             const dataSourceOptions = {
-                type: options.type,
-                host: options.host,
-                port: options.port,
-                username: options.username,
-                password: options.password,
-                database: options.database,
-                synchronize: options === null || options === void 0 ? void 0 : options.synchronize,
-                entities: ['src/**/entities/*.js'],
-                migrations: ['src/**/migrations/*.js'],
-                logging: false
+                type: (_a = options === null || options === void 0 ? void 0 : options.type) !== null && _a !== void 0 ? _a : 'postgres',
+                host: (_b = options === null || options === void 0 ? void 0 : options.host) !== null && _b !== void 0 ? _b : config_1.default.postgres.host,
+                port: (_c = options === null || options === void 0 ? void 0 : options.port) !== null && _c !== void 0 ? _c : config_1.default.postgres.port,
+                username: (_d = options === null || options === void 0 ? void 0 : options.username) !== null && _d !== void 0 ? _d : config_1.default.postgres.username,
+                password: (_e = options === null || options === void 0 ? void 0 : options.password) !== null && _e !== void 0 ? _e : config_1.default.postgres.password,
+                database: (_f = options === null || options === void 0 ? void 0 : options.database) !== null && _f !== void 0 ? _f : config_1.default.postgres.database,
+                synchronize: (_g = options === null || options === void 0 ? void 0 : options.synchronize) !== null && _g !== void 0 ? _g : config_1.default.postgres.synchronize,
+                entities: [(_h = options === null || options === void 0 ? void 0 : options.entities) !== null && _h !== void 0 ? _h : config_1.default.postgres.entities],
+                migrations: [(_j = options === null || options === void 0 ? void 0 : options.migrations) !== null && _j !== void 0 ? _j : config_1.default.postgres.migrations],
+                logging: (_k = options === null || options === void 0 ? void 0 : options.logging) !== null && _k !== void 0 ? _k : false
             };
             try {
                 connection = yield (0, typeorm_1.createConnection)(dataSourceOptions);

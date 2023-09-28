@@ -3,9 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.rabbitmqOptions = exports.postgresOptions = void 0;
+exports.postgresOptions = void 0;
 const config_1 = __importDefault(require("building-blocks/config/config"));
-exports.postgresOptions = {
+const typeorm_1 = require("typeorm");
+// use this file for running migration
+exports.postgresOptions = new typeorm_1.DataSource({
     type: 'postgres',
     host: config_1.default.postgres.host,
     port: config_1.default.postgres.port,
@@ -16,11 +18,5 @@ exports.postgresOptions = {
     entities: [config_1.default.postgres.entities],
     migrations: [config_1.default.postgres.migrations],
     logging: config_1.default.postgres.logging
-};
-exports.rabbitmqOptions = {
-    host: config_1.default.rabbitmq.host,
-    port: config_1.default.rabbitmq.port,
-    username: config_1.default.rabbitmq.username,
-    password: config_1.default.rabbitmq.password
-};
-//# sourceMappingURL=configuratinOptions.js.map
+});
+//# sourceMappingURL=postgresOptions.js.map

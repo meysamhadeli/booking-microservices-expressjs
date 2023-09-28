@@ -63,13 +63,17 @@ let RabbitMQConnection = class RabbitMQConnection {
         this.logger = tsyringe_1.container.resolve(logger_1.Logger);
     }
     createConnection(options) {
+        var _a, _b;
         return __awaiter(this, void 0, void 0, function* () {
             if (!connection || !connection == undefined) {
                 try {
+                    const host = (_a = options === null || options === void 0 ? void 0 : options.host) !== null && _a !== void 0 ? _a : config_1.default.rabbitmq.host;
+                    const port = (_b = options === null || options === void 0 ? void 0 : options.port) !== null && _b !== void 0 ? _b : config_1.default.rabbitmq.port;
                     yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
-                        connection = yield amqp.connect(`amqp://${options.host}:${options.port}`, {
-                            username: options.username,
-                            password: options.password
+                        var _c, _d;
+                        connection = yield amqp.connect(`amqp://${host}:${port}`, {
+                            username: (_c = options === null || options === void 0 ? void 0 : options.username) !== null && _c !== void 0 ? _c : config_1.default.rabbitmq.username,
+                            password: (_d = options === null || options === void 0 ? void 0 : options.password) !== null && _d !== void 0 ? _d : config_1.default.rabbitmq.password
                         });
                         this.logger.info('RabbitMq connection created successfully');
                     }), {
@@ -92,17 +96,15 @@ let RabbitMQConnection = class RabbitMQConnection {
                 if (!connection) {
                     throw new Error('Rabbitmq connection is failed!');
                 }
-                if ((connection && !channel) || !channel) {
-                    yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
-                        channel = yield connection.createChannel();
-                        this.logger.info('Channel Created successfully');
-                    }), {
-                        retries: config_1.default.retry.count,
-                        factor: config_1.default.retry.factor,
-                        minTimeout: config_1.default.retry.minTimeout,
-                        maxTimeout: config_1.default.retry.maxTimeout
-                    });
-                }
+                yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+                    channel = yield connection.createChannel();
+                    this.logger.info('Channel Created successfully');
+                }), {
+                    retries: config_1.default.retry.count,
+                    factor: config_1.default.retry.factor,
+                    minTimeout: config_1.default.retry.minTimeout,
+                    maxTimeout: config_1.default.retry.maxTimeout
+                });
                 return channel;
             }
             catch (error) {

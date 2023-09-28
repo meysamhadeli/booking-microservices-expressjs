@@ -5,9 +5,7 @@ export class UserCreated implements IEvent {
   name: string;
   passportNumber: string;
 
-  constructor(id?: number, name?: string, passportNumber?: string) {
-    this.id = id ?? 0;
-    this.name = name ?? '';
-    this.passportNumber = passportNumber ?? '';
+  constructor(partial?: Partial<UserCreated>) {
+    Object.assign(this, partial);
   }
 }

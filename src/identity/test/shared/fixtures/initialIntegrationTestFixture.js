@@ -43,11 +43,11 @@ const initialIntegrationTestFixture = () => __awaiter(void 0, void 0, void 0, fu
     (0, routes_1.RegisterRoutes)(integrationFixture.app);
     integrationFixture.app.use(errorHandler_1.errorHandler);
     integrationFixture.rabbitMQConnection = yield (0, rabbitmqExtensions_1.initialRabbitmq)(rabbitOptions);
-    yield (0, mediatrExtensions_1.registerMediatrHandlers)();
     integrationFixture.userRepository = tsyringe_1.container.resolve(userRepository_1.UserRepository);
     integrationFixture.authRepository = tsyringe_1.container.resolve(authRepository_1.AuthRepository);
     integrationFixture.publisher = tsyringe_1.container.resolve(rabbitmq_1.Publisher);
     integrationFixture.consumer = tsyringe_1.container.resolve(rabbitmq_1.Consumer);
+    yield (0, mediatrExtensions_1.registerMediatrHandlers)();
     return integrationFixture;
 });
 exports.initialIntegrationTestFixture = initialIntegrationTestFixture;

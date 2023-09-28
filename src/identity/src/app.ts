@@ -13,7 +13,6 @@ import { registerMediatrHandlers } from './extensions/mediatrExtensions';
 import { initialOtel } from './extensions/otelExtensions';
 import { initialMonitoring } from './extensions/monitoringExtensions';
 import { collectDefaultMetrics } from 'prom-client';
-import { postgresOptions, rabbitmqOptions } from './configurations/configuratinOptions';
 import { initialDbContext } from './data/dbContext';
 import { initialSwagger } from 'building-blocks/swagger/swagger';
 import { initialLogger } from './extensions/loggerExtensions';
@@ -25,13 +24,11 @@ const startupApp = async () => {
 
   const logger = await initialLogger();
 
-  if (config.env !== 'test') {
-    app.use(morganMiddleware);
-  }
+  app.use(morganMiddleware);
 
   await initialMonitoring(app);
 
-  const databaseConnection = await initialDbContext(postgresOptions);
+  const databaseConnection = await initialDbContext();
 
   app.use(helmet());
 
@@ -56,18 +53,18 @@ const startupApp = async () => {
     logger.info(`Listening to port ${config.port}`);
   });
 
-  const rabbitmq = await initialRabbitmq(rabbitmqOptions);
+  const rabbitmq = await initialRabbitmq();
 
   await registerMediatrHandlers();
 
-  if (config.env !== 'test') {
+  if (config.env == 'development') {
     await initialSwagger(app);
-
-    process.on('SIGTERM', async () => {
-      await databaseConnection.destroy();
-      await rabbitmq.closeConnection();
-    });
   }
+
+  process.on('SIGTERM', async () => {
+    await databaseConnection.destroy();
+    await rabbitmq.closeConnection();
+  });
 };
 
 startupApp();

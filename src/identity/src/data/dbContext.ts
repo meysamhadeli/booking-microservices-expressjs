@@ -5,7 +5,9 @@ import { Connection } from 'typeorm';
 import { UserSeed } from './seeds/userSeed';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-export const initialDbContext = async (options: PostgresConnectionOptions): Promise<Connection> => {
+export const initialDbContext = async (
+  options?: PostgresConnectionOptions
+): Promise<Connection> => {
   container.register<IDbContext>('IDbContext', DbContext);
 
   const dbContext = container.resolve(DbContext);

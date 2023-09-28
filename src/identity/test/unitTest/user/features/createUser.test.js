@@ -52,7 +52,11 @@ describe('unit test for create user', () => {
         mockUserRepository
             .setup((x) => x.findUserByEmail(TypeMoq.It.isAnyString()))
             .returns(() => null);
-        const userCreated = new identityContract_1.UserCreated(fakeUser.id, fakeUser.name, fakeUser.passportNumber);
+        const userCreated = new identityContract_1.UserCreated({
+            name: fakeUser.name,
+            passportNumber: fakeUser.passportNumber,
+            id: fakeUser.id
+        });
         // Mock userRepository's behavior when creating a user
         mockUserRepository
             .setup((x) => x.createUser(TypeMoq.It.isAnyObject(user_1.User)))

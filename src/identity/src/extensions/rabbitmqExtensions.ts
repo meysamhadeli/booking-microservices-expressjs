@@ -9,7 +9,7 @@ import {
 import { UserCreated } from 'building-blocks/contracts/identityContract';
 import { createUserConsumerHandler } from '../user/features/v1/createUser/createUserRead';
 
-export const initialRabbitmq = async (options: RabbitmqOptions): Promise<RabbitMQConnection> => {
+export const initialRabbitmq = async (options?: RabbitmqOptions): Promise<RabbitMQConnection> => {
   const rabbitMQConnection = container.resolve(RabbitMQConnection);
   await rabbitMQConnection.createConnection(options);
 

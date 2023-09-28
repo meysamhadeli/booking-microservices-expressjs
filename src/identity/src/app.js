@@ -27,7 +27,6 @@ const mediatrExtensions_1 = require("./extensions/mediatrExtensions");
 const otelExtensions_1 = require("./extensions/otelExtensions");
 const monitoringExtensions_1 = require("./extensions/monitoringExtensions");
 const prom_client_1 = require("prom-client");
-const configuratinOptions_1 = require("./configurations/configuratinOptions");
 const dbContext_1 = require("./data/dbContext");
 const swagger_1 = require("building-blocks/swagger/swagger");
 const loggerExtensions_1 = require("./extensions/loggerExtensions");
@@ -35,11 +34,9 @@ const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, prom_client_1.collectDefaultMetrics)();
     const app = (0, express_1.default)();
     const logger = yield (0, loggerExtensions_1.initialLogger)();
-    if (config_1.default.env !== 'test') {
-        app.use(morgan_1.morganMiddleware);
-    }
+    app.use(morgan_1.morganMiddleware);
     yield (0, monitoringExtensions_1.initialMonitoring)(app);
-    const databaseConnection = yield (0, dbContext_1.initialDbContext)(configuratinOptions_1.postgresOptions);
+    const databaseConnection = yield (0, dbContext_1.initialDbContext)();
     app.use((0, helmet_1.default)());
     app.use(express_1.default.json());
     app.use(express_1.default.urlencoded({ extended: true }));
@@ -53,15 +50,15 @@ const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
     app.listen(config_1.default.port, () => {
         logger.info(`Listening to port ${config_1.default.port}`);
     });
-    const rabbitmq = yield (0, rabbitmqExtensions_1.initialRabbitmq)(configuratinOptions_1.rabbitmqOptions);
+    const rabbitmq = yield (0, rabbitmqExtensions_1.initialRabbitmq)();
     yield (0, mediatrExtensions_1.registerMediatrHandlers)();
-    if (config_1.default.env !== 'test') {
+    if (config_1.default.env == 'development') {
         yield (0, swagger_1.initialSwagger)(app);
-        process.on('SIGTERM', () => __awaiter(void 0, void 0, void 0, function* () {
-            yield databaseConnection.destroy();
-            yield rabbitmq.closeConnection();
-        }));
     }
+    process.on('SIGTERM', () => __awaiter(void 0, void 0, void 0, function* () {
+        yield databaseConnection.destroy();
+        yield rabbitmq.closeConnection();
+    }));
 });
 startupApp();
 //# sourceMappingURL=app.js.map

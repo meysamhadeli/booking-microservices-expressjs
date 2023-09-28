@@ -57,12 +57,12 @@ export const initialIntegrationTestFixture = async (): Promise<IntegrationTestFi
 
   integrationFixture.rabbitMQConnection = await initialRabbitmq(rabbitOptions);
 
-  await registerMediatrHandlers();
-
   integrationFixture.userRepository = container.resolve(UserRepository);
   integrationFixture.authRepository = container.resolve(AuthRepository);
   integrationFixture.publisher = container.resolve(Publisher);
   integrationFixture.consumer = container.resolve(Consumer);
+
+  await registerMediatrHandlers();
 
   return integrationFixture;
 };

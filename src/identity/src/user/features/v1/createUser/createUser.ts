@@ -93,7 +93,11 @@ export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
     );
 
     await this.publisher.publishMessage(
-      new UserCreated(userEntity.id, userEntity.name, userEntity.passportNumber)
+      new UserCreated({
+        name: userEntity.name,
+        passportNumber: userEntity.passportNumber,
+        id: userEntity.id
+      })
     );
 
     const result = mapper.map<User, UserDto>(userEntity, new UserDto());
