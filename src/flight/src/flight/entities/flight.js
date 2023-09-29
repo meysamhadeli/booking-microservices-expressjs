@@ -32,12 +32,8 @@ __decorate([
 ], Flight.prototype, "flightNumber", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Flight.prototype, "address", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Flight.prototype, "code", void 0);
+    __metadata("design:type", Number)
+], Flight.prototype, "price", void 0);
 __decorate([
     (0, typeorm_1.Column)({
         type: 'enum',
@@ -70,10 +66,6 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], Flight.prototype, "arriveAirportId", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], Flight.prototype, "airportId", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)

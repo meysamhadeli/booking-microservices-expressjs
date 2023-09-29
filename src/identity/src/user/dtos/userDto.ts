@@ -9,4 +9,8 @@ export class UserDto {
   passportNumber: string;
   createdAt: Date;
   updatedAt?: Date;
+
+  constructor(request: Partial<UserDto> = {}) {
+    Object.assign(this, request);
+  }
 }

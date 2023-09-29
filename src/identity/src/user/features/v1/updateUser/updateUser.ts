@@ -24,12 +24,16 @@ export class UpdateUser implements IRequest<UserDto> {
   }
 }
 
-export interface UpdateUserRequestDto {
+export class UpdateUserRequestDto {
   email: string;
   password: string;
   name: string;
   role: Role;
   passportNumber: string;
+
+  constructor(request: Partial<UpdateUserRequestDto> = {}) {
+    Object.assign(this, request);
+  }
 }
 
 const updateUserValidations = Joi.object({

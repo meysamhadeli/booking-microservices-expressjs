@@ -24,7 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateUserHandler = exports.CreateUserController = exports.CreateUser = void 0;
+exports.CreateUserHandler = exports.CreateUserController = exports.CreateUserRequestDto = exports.CreateUser = void 0;
 const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
 const role_1 = require("../../../enums/role");
 const user_1 = require("../../../entities/user");
@@ -44,6 +44,12 @@ class CreateUser {
     }
 }
 exports.CreateUser = CreateUser;
+class CreateUserRequestDto {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.CreateUserRequestDto = CreateUserRequestDto;
 const createUserValidations = joi_1.default.object({
     email: joi_1.default.string().required().email(),
     password: joi_1.default.string().required().custom(validation_1.password),
@@ -73,7 +79,7 @@ __decorate([
     (0, tsoa_1.SuccessResponse)('201', 'CREATED'),
     __param(0, (0, tsoa_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [CreateUserRequestDto]),
     __metadata("design:returntype", Promise)
 ], CreateUserController.prototype, "createUser", null);
 exports.CreateUserController = CreateUserController = __decorate([

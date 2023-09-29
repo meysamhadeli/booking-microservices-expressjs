@@ -24,7 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateUserHandler = exports.UpdateUserController = exports.UpdateUser = void 0;
+exports.UpdateUserHandler = exports.UpdateUserController = exports.UpdateUserRequestDto = exports.UpdateUser = void 0;
 const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
 const role_1 = require("../../../enums/role");
 const user_1 = require("../../../entities/user");
@@ -43,6 +43,12 @@ class UpdateUser {
     }
 }
 exports.UpdateUser = UpdateUser;
+class UpdateUserRequestDto {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.UpdateUserRequestDto = UpdateUserRequestDto;
 const updateUserValidations = joi_1.default.object({
     email: joi_1.default.string().required().email(),
     password: joi_1.default.string().required().custom(validation_1.password),
@@ -74,7 +80,7 @@ __decorate([
     __param(0, (0, tsoa_1.Query)()),
     __param(1, (0, tsoa_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:paramtypes", [Number, UpdateUserRequestDto]),
     __metadata("design:returntype", Promise)
 ], UpdateUserController.prototype, "updateUser", null);
 exports.UpdateUserController = UpdateUserController = __decorate([

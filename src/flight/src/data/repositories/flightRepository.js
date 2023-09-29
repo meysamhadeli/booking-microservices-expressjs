@@ -1,95 +1,39 @@
-// import { Repository, SelectQueryBuilder } from 'typeorm';
-// import { container } from 'tsyringe';
-// import { DbContext } from 'building-blocks/typeorm/dbContext';
-// import { Flight } from '../../flight/entities/flight';
-//
-// export interface IFlightRepository {
-//   // createUser(user: User): Promise<User>;
-//   //
-//   // updateUser(user: User): Promise<User>;
-//   //
-//   // findUsers(
-//   //   page: number,
-//   //   pageSize: number,
-//   //   orderBy: string,
-//   //   order: 'ASC' | 'DESC',
-//   //   searchTerm?: string
-//   // ): Promise<[User[], number]>;
-//   //
-//   // findUserByName(name: string): Promise<User>;
-//   //
-//   // findUserByEmail(email: string): Promise<User>;
-//   //
-//   // findUserById(id: number): Promise<User>;
-//   //
-//   // getAllUsers(): Promise<User[]>;
-//   //
-//   // removeUser(user: User): Promise<User>;
-// }
-//
-// export class FlightRepository implements IFlightRepository {
-//   private ormRepository: Repository<Flight>;
-//
-//   constructor() {
-//     this.ormRepository = container.resolve(DbContext).connection.getRepository(Flight);
-//   }
-//
-//   // async createUser(user: User): Promise<User> {
-//   //   return await this.ormRepository.save(user);
-//   // }
-//   //
-//   // async updateUser(user: User): Promise<User> {
-//   //   return await this.ormRepository.save(user);
-//   // }
-//   //
-//   // async findUsers(
-//   //   page: number,
-//   //   pageSize: number,
-//   //   orderBy: string,
-//   //   order: 'ASC' | 'DESC',
-//   //   searchTerm?: string
-//   // ): Promise<[User[], number]> {
-//   //   const skip = (page - 1) * pageSize;
-//   //   const take = pageSize;
-//   //
-//   //   const queryBuilder: SelectQueryBuilder<User> = this.ormRepository
-//   //     .createQueryBuilder('user')
-//   //     .orderBy(`user.${orderBy}`, order)
-//   //     .skip(skip)
-//   //     .take(take);
-//   //
-//   //   // Apply filter criteria to the query
-//   //   if (searchTerm) {
-//   //     queryBuilder.andWhere('user.name LIKE :name', { name: `%${searchTerm}%` });
-//   //   }
-//   //
-//   //   return await queryBuilder.getManyAndCount();
-//   // }
-//   //
-//   // async findUserByEmail(email: string): Promise<User> {
-//   //   return await this.ormRepository.findOneBy({
-//   //     email: email
-//   //   });
-//   // }
-//   //
-//   // async findUserById(id: number): Promise<User> {
-//   //   return await this.ormRepository.findOneBy({
-//   //     id: id
-//   //   });
-//   // }
-//   //
-//   // async findUserByName(name: string): Promise<User> {
-//   //   return await this.ormRepository.findOneBy({
-//   //     name: name
-//   //   });
-//   // }
-//   //
-//   // async removeUser(user: User): Promise<User> {
-//   //   return await this.ormRepository.remove(user);
-//   // }
-//   //
-//   // async getAllUsers(): Promise<User[]> {
-//   //   return await this.ormRepository.find();
-//   // }
-// }
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FlightRepository = void 0;
+const tsyringe_1 = require("tsyringe");
+const dbContext_1 = require("building-blocks/typeorm/dbContext");
+const flight_1 = require("../../flight/entities/flight");
+class FlightRepository {
+    constructor() {
+        this.ormRepository = tsyringe_1.container.resolve(dbContext_1.DbContext).connection.getRepository(flight_1.Flight);
+    }
+    createFlight(flight) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.ormRepository.save(flight);
+        });
+    }
+    findFlightByNumber(flightNumber) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.ormRepository.findOneBy({
+                flightNumber: flightNumber
+            });
+        });
+    }
+    getAll() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.ormRepository.find();
+        });
+    }
+}
+exports.FlightRepository = FlightRepository;
 //# sourceMappingURL=flightRepository.js.map

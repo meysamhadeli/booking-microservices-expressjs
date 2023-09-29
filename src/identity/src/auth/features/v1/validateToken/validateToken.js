@@ -37,11 +37,6 @@ class ValidateToken {
     }
 }
 exports.ValidateToken = ValidateToken;
-const generateTokenValidations = {
-    params: joi_1.default.object().keys({
-        userId: joi_1.default.number().integer().required()
-    })
-};
 const validateTokenValidations = joi_1.default.object({
     token: joi_1.default.string().required(),
     type: joi_1.default.string().required().valid(tokenType_1.TokenType.ACCESS, tokenType_1.TokenType.REFRESH)

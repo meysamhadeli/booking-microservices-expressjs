@@ -12,10 +12,7 @@ export class Flight {
   flightNumber: string;
 
   @Column()
-  address: string;
-
-  @Column()
-  code: string;
+  price: number;
 
   @Column({
     type: 'enum',
@@ -41,9 +38,6 @@ export class Flight {
 
   @Column()
   arriveAirportId: number;
-
-  @Column()
-  airportId: number;
 
   @Column()
   durationMinutes: number;

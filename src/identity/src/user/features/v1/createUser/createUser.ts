@@ -13,8 +13,6 @@ import { IUserRepository } from '../../../../data/repositories/userRepository';
 import { inject, injectable } from 'tsyringe';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
-import { ILogger } from 'building-blocks/logging/logger';
-import { loggers } from 'winston';
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;
@@ -28,12 +26,16 @@ export class CreateUser implements IRequest<UserDto> {
   }
 }
 
-export interface CreateUserRequestDto {
+export class CreateUserRequestDto {
   email: string;
   password: string;
   name: string;
   role: Role;
   passportNumber: string;
+
+  constructor(request: Partial<CreateUserRequestDto> = {}) {
+    Object.assign(this, request);
+  }
 }
 
 const createUserValidations = Joi.object({

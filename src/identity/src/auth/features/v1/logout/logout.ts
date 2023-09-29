@@ -4,7 +4,7 @@ import Joi from 'joi';
 import httpStatus from 'http-status';
 import { TokenType } from '../../../enums/tokenType';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
-import { AuthRepository, IAuthRepository } from '../../../../data/repositories/authRepository';
+import { IAuthRepository } from '../../../../data/repositories/authRepository';
 import { inject, injectable } from 'tsyringe';
 
 export class Logout implements IRequest<number> {

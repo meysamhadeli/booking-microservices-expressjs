@@ -24,7 +24,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginHandler = exports.LoginController = exports.Login = void 0;
+exports.LoginHandler = exports.LoginController = exports.LoginRequestDto = exports.Login = void 0;
 const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
 const tsoa_1 = require("tsoa");
 const joi_1 = __importDefault(require("joi"));
@@ -39,6 +39,12 @@ class Login {
     }
 }
 exports.Login = Login;
+class LoginRequestDto {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.LoginRequestDto = LoginRequestDto;
 const loginValidations = joi_1.default.object({
     email: joi_1.default.string().email().required(),
     password: joi_1.default.string().required().custom(validation_1.password)
@@ -57,7 +63,7 @@ __decorate([
     (0, tsoa_1.SuccessResponse)('200', 'OK'),
     __param(0, (0, tsoa_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [LoginRequestDto]),
     __metadata("design:returntype", Promise)
 ], LoginController.prototype, "login", null);
 exports.LoginController = LoginController = __decorate([

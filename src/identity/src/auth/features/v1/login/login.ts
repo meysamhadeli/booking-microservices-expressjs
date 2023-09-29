@@ -19,9 +19,13 @@ export class Login implements IRequest<AuthDto> {
   }
 }
 
-export interface LoginRequestDto {
+export class LoginRequestDto {
   email: string;
   password: string;
+
+  constructor(request: Partial<LoginRequestDto> = {}) {
+    Object.assign(this, request);
+  }
 }
 
 const loginValidations = Joi.object({

@@ -17,12 +17,6 @@ export class ValidateToken implements IRequest<Token> {
   }
 }
 
-const generateTokenValidations = {
-  params: Joi.object().keys({
-    userId: Joi.number().integer().required()
-  })
-};
-
 const validateTokenValidations = Joi.object({
   token: Joi.string().required(),
   type: Joi.string().required().valid(TokenType.ACCESS, TokenType.REFRESH)
@@ -30,9 +24,7 @@ const validateTokenValidations = Joi.object({
 
 @injectable()
 export class ValidateTokenHandler implements IHandler<ValidateToken, Token> {
-
-  constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {
-  }
+  constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
   async handle(request: ValidateToken): Promise<Token> {
     await validateTokenValidations.validateAsync(request);

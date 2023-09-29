@@ -1,0 +1,408 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"AircraftDto": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"model": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"manufacturingYear": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"model",
+					"name",
+					"manufacturingYear",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateAircraftRequestDto": {
+				"properties": {
+					"model": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"manufacturingYear": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"model",
+					"name",
+					"manufacturingYear"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AirportDto": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"code": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"code",
+					"name",
+					"address",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateAirportRequestDto": {
+				"properties": {
+					"code": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"code",
+					"name",
+					"address"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FlightStatus": {
+				"enum": [
+					0,
+					1,
+					2,
+					3,
+					4
+				],
+				"type": "number"
+			},
+			"FlightDto": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"flightNumber": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"flightStatus": {
+						"$ref": "#/components/schemas/FlightStatus"
+					},
+					"flightDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"departureDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"departureAirportId": {
+						"type": "number",
+						"format": "double"
+					},
+					"aircraftId": {
+						"type": "number",
+						"format": "double"
+					},
+					"arriveDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"arriveAirportId": {
+						"type": "number",
+						"format": "double"
+					},
+					"durationMinutes": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"flightNumber",
+					"price",
+					"flightStatus",
+					"flightDate",
+					"departureDate",
+					"departureAirportId",
+					"aircraftId",
+					"arriveDate",
+					"arriveAirportId",
+					"durationMinutes",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateFlightRequestDto": {
+				"properties": {
+					"flightNumber": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"flightStatus": {
+						"$ref": "#/components/schemas/FlightStatus"
+					},
+					"flightDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"departureDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"departureAirportId": {
+						"type": "number",
+						"format": "double"
+					},
+					"aircraftId": {
+						"type": "number",
+						"format": "double"
+					},
+					"arriveDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"arriveAirportId": {
+						"type": "number",
+						"format": "double"
+					},
+					"durationMinutes": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"flightNumber",
+					"price",
+					"flightStatus",
+					"flightDate",
+					"departureDate",
+					"departureAirportId",
+					"aircraftId",
+					"arriveDate",
+					"arriveAirportId",
+					"durationMinutes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "flight",
+		"version": "1.0.0",
+		"description": "flight service",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {
+			"name": "Meysam Hadeli"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/aircraft/v1/create": {
+			"post": {
+				"operationId": "CreateAircraft",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AircraftDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateAircraftRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/airport/v1/create": {
+			"post": {
+				"operationId": "CreateAirport",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AirportDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateAirportRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/flight/v1/create": {
+			"post": {
+				"operationId": "CreateFlight",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FlightDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateFlightRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/flight/v1/get-by-number": {
+			"get": {
+				"operationId": "GetFlightByNumber",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FlightDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "flightNumber",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
