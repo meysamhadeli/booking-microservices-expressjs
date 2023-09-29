@@ -96,15 +96,17 @@ let RabbitMQConnection = class RabbitMQConnection {
                 if (!connection) {
                     throw new Error('Rabbitmq connection is failed!');
                 }
-                yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
-                    channel = yield connection.createChannel();
-                    this.logger.info('Channel Created successfully');
-                }), {
-                    retries: config_1.default.retry.count,
-                    factor: config_1.default.retry.factor,
-                    minTimeout: config_1.default.retry.minTimeout,
-                    maxTimeout: config_1.default.retry.maxTimeout
-                });
+                if ((connection && !channel) || !channel) {
+                    yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
+                        channel = yield connection.createChannel();
+                        this.logger.info('Channel Created successfully');
+                    }), {
+                        retries: config_1.default.retry.count,
+                        factor: config_1.default.retry.factor,
+                        minTimeout: config_1.default.retry.minTimeout,
+                        maxTimeout: config_1.default.retry.maxTimeout
+                    });
+                }
                 return channel;
             }
             catch (error) {
@@ -156,28 +158,22 @@ let Publisher = class Publisher {
                 yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
                     const channel = yield rabbitMQConnection.getChannel();
                     const exchangeName = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(message));
-                    const routingKey = exchangeName;
                     const serializedMessage = (0, serialization_1.serializeObject)(message);
-                    // Start a new span for this RabbitMQ operation
                     const span = tracer.startSpan(`publish_message_${exchangeName}`);
-                    yield channel.assertExchange(exchangeName, 'topic', { durable: false });
-                    // Create custom message properties
+                    yield channel.assertExchange(exchangeName, 'fanout', { durable: false });
                     const messageProperties = {
                         messageId: (0, uuid_1.v4)().toString(),
                         timestamp: (0, date_fns_1.getUnixTime)(new Date()),
                         contentType: 'application/json',
                         exchange: exchangeName,
-                        routingKey: routingKey,
-                        type: 'topic'
+                        type: 'fanout'
                     };
-                    channel.publish(exchangeName, routingKey, Buffer.from(serializedMessage), {
+                    channel.publish(exchangeName, '', Buffer.from(serializedMessage), {
                         headers: messageProperties
                     });
-                    this.logger.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
+                    this.logger.info(`Message: ${serializedMessage} sent with exchange name "${exchangeName}"`);
                     publishedMessages.push(exchangeName);
-                    // Set attributes on the span
                     span.setAttributes(messageProperties);
-                    // Ensure the span ends when this operation is complete
                     span.end();
                 }), {
                     retries: config_1.default.retry.count,
@@ -194,8 +190,8 @@ let Publisher = class Publisher {
     }
     isPublished(message) {
         return __awaiter(this, void 0, void 0, function* () {
-            const messageType = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(message));
-            const isPublished = publishedMessages.includes(messageType);
+            const exchangeName = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(message));
+            const isPublished = publishedMessages.includes(exchangeName);
             return Promise.resolve(isPublished);
         });
     }
@@ -217,30 +213,21 @@ let Consumer = class Consumer {
                 yield (0, async_retry_1.default)(() => __awaiter(this, void 0, void 0, function* () {
                     const channel = yield rabbitMQConnection.getChannel();
                     const exchangeName = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(type));
-                    // Declare the exchange as 'topic' to enable topic-based routing
-                    yield channel.assertExchange(exchangeName, 'topic', { durable: false });
-                    // Define a unique queue name for this subscriber
-                    const queueName = `${exchangeName}_queue`;
-                    const bindingKey = exchangeName;
-                    // Create a queue and bind it to the exchange with the specified binding key
-                    yield channel.assertQueue(queueName, { exclusive: true });
-                    yield channel.bindQueue(queueName, exchangeName, bindingKey);
-                    this.logger.info(`Waiting for messages with binding key "${bindingKey}". To exit, press CTRL+C`);
-                    // Consume messages from the queue
-                    yield channel.consume(queueName, (message) => {
+                    yield channel.assertExchange(exchangeName, 'fanout', { durable: false });
+                    const q = yield channel.assertQueue('', { exclusive: true });
+                    yield channel.bindQueue(q.queue, exchangeName, '');
+                    this.logger.info(`Waiting for messages with exchange name "${exchangeName}". To exit, press CTRL+C`);
+                    yield channel.consume(q.queue, (message) => {
                         var _a;
                         if (message !== null) {
-                            // Start a new span for this RabbitMQ operation
                             const span = tracer.startSpan(`receive_message_${exchangeName}`);
                             const messageContent = (_a = message === null || message === void 0 ? void 0 : message.content) === null || _a === void 0 ? void 0 : _a.toString();
                             const headers = message.properties.headers || {};
-                            handler(queueName, (0, serialization_1.deserializeObject)(messageContent));
-                            this.logger.info(`Message: ${messageContent} delivered to queue: ${queueName}`);
-                            channel.ack(message); // Acknowledge the message
+                            handler(q.queue, (0, serialization_1.deserializeObject)(messageContent));
+                            this.logger.info(`Message: ${messageContent} delivered to queue: ${q.queue} with exchange name ${exchangeName}`);
+                            channel.ack(message);
                             consumedMessages.push(exchangeName);
-                            // Set attributes on the span
                             span.setAttributes(headers);
-                            // End the message handling span
                             span.end();
                         }
                     }, { noAck: false } // Ensure that we acknowledge messages
@@ -273,8 +260,8 @@ let Consumer = class Consumer {
                     return true;
                 }
                 yield (0, time_1.sleep)(2000);
-                const typeName = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(message));
-                isConsumed = consumedMessages.includes(typeName);
+                const exchangeName = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(message));
+                isConsumed = consumedMessages.includes(exchangeName);
                 timeOutExpired = Date.now() - startTime > timeoutTime;
             }
         });

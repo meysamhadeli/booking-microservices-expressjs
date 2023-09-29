@@ -9,7 +9,7 @@ import { getUnixTime } from 'date-fns';
 import { snakeCase } from 'lodash';
 import { sleep } from '../utils/time';
 import { v4 as uuidv4 } from 'uuid';
-import { ILogger, Logger } from '../logging/logger';
+import { Logger } from '../logging/logger';
 
 let connection: amqp.Connection = null;
 let channel: amqp.Channel = null;
@@ -141,36 +141,32 @@ export class Publisher implements IPublisher {
           const channel = await rabbitMQConnection.getChannel();
 
           const exchangeName = snakeCase(getTypeName(message));
-          const routingKey = exchangeName;
           const serializedMessage = serializeObject(message);
 
-          // Start a new span for this RabbitMQ operation
           const span = tracer.startSpan(`publish_message_${exchangeName}`);
 
-          await channel.assertExchange(exchangeName, 'topic', { durable: false });
+          await channel.assertExchange(exchangeName, 'fanout', { durable: false });
 
-          // Create custom message properties
           const messageProperties = {
             messageId: uuidv4().toString(),
             timestamp: getUnixTime(new Date()),
             contentType: 'application/json',
             exchange: exchangeName,
-            routingKey: routingKey,
-            type: 'topic'
+            type: 'fanout'
           };
 
-          channel.publish(exchangeName, routingKey, Buffer.from(serializedMessage), {
+          channel.publish(exchangeName, '', Buffer.from(serializedMessage), {
             headers: messageProperties
           });
 
-          this.logger.info(`Message: ${serializedMessage} sent with routing key "${routingKey}"`);
+          this.logger.info(
+            `Message: ${serializedMessage} sent with exchange name "${exchangeName}"`
+          );
 
           publishedMessages.push(exchangeName);
 
-          // Set attributes on the span
           span.setAttributes(messageProperties);
 
-          // Ensure the span ends when this operation is complete
           span.end();
         },
         {
@@ -187,9 +183,9 @@ export class Publisher implements IPublisher {
   }
 
   async isPublished<T>(message: T): Promise<boolean> {
-    const messageType = snakeCase(getTypeName(message));
+    const exchangeName = snakeCase(getTypeName(message));
 
-    const isPublished = publishedMessages.includes(messageType);
+    const isPublished = publishedMessages.includes(exchangeName);
 
     return Promise.resolve(isPublished);
   }
@@ -211,42 +207,34 @@ export class Consumer implements IConsumer {
 
           const exchangeName = snakeCase(getTypeName(type));
 
-          // Declare the exchange as 'topic' to enable topic-based routing
-          await channel.assertExchange(exchangeName, 'topic', { durable: false });
+          await channel.assertExchange(exchangeName, 'fanout', { durable: false });
 
-          // Define a unique queue name for this subscriber
-          const queueName = `${exchangeName}_queue`;
-          const bindingKey = exchangeName;
+          const q = await channel.assertQueue('', { exclusive: true });
 
-          // Create a queue and bind it to the exchange with the specified binding key
-          await channel.assertQueue(queueName, { exclusive: true });
-
-          await channel.bindQueue(queueName, exchangeName, bindingKey);
+          await channel.bindQueue(q.queue, exchangeName, '');
 
           this.logger.info(
-            `Waiting for messages with binding key "${bindingKey}". To exit, press CTRL+C`
+            `Waiting for messages with exchange name "${exchangeName}". To exit, press CTRL+C`
           );
 
-          // Consume messages from the queue
           await channel.consume(
-            queueName,
+            q.queue,
             (message) => {
               if (message !== null) {
-                // Start a new span for this RabbitMQ operation
                 const span = tracer.startSpan(`receive_message_${exchangeName}`);
 
                 const messageContent = message?.content?.toString();
                 const headers = message.properties.headers || {};
 
-                handler(queueName, deserializeObject<T>(messageContent));
-                this.logger.info(`Message: ${messageContent} delivered to queue: ${queueName}`);
-                channel.ack(message); // Acknowledge the message
+                handler(q.queue, deserializeObject<T>(messageContent));
+                this.logger.info(
+                  `Message: ${messageContent} delivered to queue: ${q.queue} with exchange name ${exchangeName}`
+                );
+                channel.ack(message);
 
                 consumedMessages.push(exchangeName);
 
-                // Set attributes on the span
                 span.setAttributes(headers);
-                // End the message handling span
                 span.end();
               }
             },
@@ -285,9 +273,9 @@ export class Consumer implements IConsumer {
 
       await sleep(2000);
 
-      const typeName = snakeCase(getTypeName(message));
+      const exchangeName = snakeCase(getTypeName(message));
 
-      isConsumed = consumedMessages.includes(typeName);
+      isConsumed = consumedMessages.includes(exchangeName);
 
       timeOutExpired = Date.now() - startTime > timeoutTime;
     }

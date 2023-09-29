@@ -39,6 +39,7 @@ const envVarsSchema = joi_1.default.object()
     RABBITMQ_PORT: joi_1.default.number().default(5672).description('Rabbitmq port'),
     RABBITMQ_USERNAME: joi_1.default.string().default('guest').description('Rabbitmq username'),
     RABBITMQ_PASSWORD: joi_1.default.string().default('guest').description('Rabbitmq password'),
+    RABBITMQ_EXCHANGE: joi_1.default.string().description('Rabbitmq exchange'),
     RETRY_COUNT: joi_1.default.number().default(3).description('Number of retries'),
     RETRY_FACTOR: joi_1.default.number().default(2).description('Exponential backoff factor'),
     RETRY_MIN_TIMEOUT: joi_1.default.number()
@@ -85,7 +86,8 @@ exports.default = {
         host: envVars.RABBITMQ_Host,
         port: envVars.RABBITMQ_PORT,
         username: envVars.RABBITMQ_USERNAME,
-        password: envVars.RABBITMQ_PASSWORD
+        password: envVars.RABBITMQ_PASSWORD,
+        exchange: envVars.RABBITMQ_EXCHANGE
     },
     retry: {
         count: envVars.RETRY_COUNT,
