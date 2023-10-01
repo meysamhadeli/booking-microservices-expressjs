@@ -18,8 +18,8 @@ export class AircraftRepository implements IAircraftRepository {
     this.ormRepository = container.resolve(DbContext).connection.getRepository(Aircraft);
   }
 
-  async createAircraft(user: Aircraft): Promise<Aircraft> {
-    return await this.ormRepository.save(user);
+  async createAircraft(aircraft: Aircraft): Promise<Aircraft> {
+    return await this.ormRepository.save(aircraft);
   }
 
   async findAircraftByName(name: string): Promise<Aircraft> {

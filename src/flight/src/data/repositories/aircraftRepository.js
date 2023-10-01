@@ -17,9 +17,9 @@ class AircraftRepository {
     constructor() {
         this.ormRepository = tsyringe_1.container.resolve(dbContext_1.DbContext).connection.getRepository(aircraft_1.Aircraft);
     }
-    createAircraft(user) {
+    createAircraft(aircraft) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.ormRepository.save(user);
+            return yield this.ormRepository.save(aircraft);
         });
     }
     findAircraftByName(name) {

@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const flightStatus_1 = require("../enums/flightStatus");
 const airport_1 = require("../../airport/entities/airport");
 const aircraft_1 = require("../../aircraft/entities/aircraft");
+const seat_1 = require("../../seat/entities/seat");
 let Flight = class Flight {
     constructor(partial) {
         var _a;
@@ -90,6 +91,10 @@ __decorate([
     (0, typeorm_1.ManyToOne)(() => airport_1.Airport, (airport) => airport.arrivalFlights),
     __metadata("design:type", airport_1.Airport)
 ], Flight.prototype, "arriveAirport", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => seat_1.Seat, (seat) => seat.flight),
+    __metadata("design:type", Array)
+], Flight.prototype, "seats", void 0);
 exports.Flight = Flight = __decorate([
     (0, typeorm_1.Entity)(),
     __metadata("design:paramtypes", [Object])

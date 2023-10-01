@@ -251,6 +251,335 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"SeatClass": {
+				"enum": [
+					0,
+					1,
+					2,
+					3
+				],
+				"type": "number"
+			},
+			"SeatType": {
+				"enum": [
+					0,
+					1,
+					2,
+					3
+				],
+				"type": "number"
+			},
+			"SeatDto": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"seatNumber": {
+						"type": "string"
+					},
+					"seatClass": {
+						"$ref": "#/components/schemas/SeatClass"
+					},
+					"seatType": {
+						"$ref": "#/components/schemas/SeatType"
+					},
+					"flightId": {
+						"type": "number",
+						"format": "double"
+					},
+					"isReserved": {
+						"type": "boolean"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"seatNumber",
+					"seatClass",
+					"seatType",
+					"flightId",
+					"isReserved",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateSeatRequestDto": {
+				"properties": {
+					"seatNumber": {
+						"type": "string"
+					},
+					"seatClass": {
+						"$ref": "#/components/schemas/SeatClass"
+					},
+					"seatType": {
+						"$ref": "#/components/schemas/SeatType"
+					},
+					"flightId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"seatNumber",
+					"seatClass",
+					"seatType",
+					"flightId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Flight": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"flightNumber": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"flightStatus": {
+						"$ref": "#/components/schemas/FlightStatus"
+					},
+					"flightDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"departureDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"departureAirportId": {
+						"type": "number",
+						"format": "double"
+					},
+					"aircraftId": {
+						"type": "number",
+						"format": "double"
+					},
+					"arriveDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"arriveAirportId": {
+						"type": "number",
+						"format": "double"
+					},
+					"durationMinutes": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"aircraft": {
+						"$ref": "#/components/schemas/Aircraft"
+					},
+					"departureAirport": {
+						"$ref": "#/components/schemas/Airport"
+					},
+					"arriveAirport": {
+						"$ref": "#/components/schemas/Airport"
+					},
+					"seats": {
+						"items": {
+							"$ref": "#/components/schemas/Seat"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"flightNumber",
+					"price",
+					"flightStatus",
+					"flightDate",
+					"departureDate",
+					"departureAirportId",
+					"aircraftId",
+					"arriveDate",
+					"arriveAirportId",
+					"durationMinutes",
+					"createdAt",
+					"seats"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Aircraft": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"model": {
+						"type": "string"
+					},
+					"manufacturingYear": {
+						"type": "number",
+						"format": "double"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"flights": {
+						"items": {
+							"$ref": "#/components/schemas/Flight"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"model",
+					"manufacturingYear",
+					"createdAt",
+					"flights"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Airport": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"name": {
+						"type": "string"
+					},
+					"address": {
+						"type": "string"
+					},
+					"code": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					},
+					"departureFlights": {
+						"items": {
+							"$ref": "#/components/schemas/Flight"
+						},
+						"type": "array"
+					},
+					"arrivalFlights": {
+						"items": {
+							"$ref": "#/components/schemas/Flight"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"address",
+					"code",
+					"createdAt",
+					"departureFlights",
+					"arrivalFlights"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Seat": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"seatNumber": {
+						"type": "string"
+					},
+					"seatClass": {
+						"$ref": "#/components/schemas/SeatClass"
+					},
+					"seatType": {
+						"$ref": "#/components/schemas/SeatType"
+					},
+					"flightId": {
+						"type": "number",
+						"format": "double"
+					},
+					"isReserved": {
+						"type": "boolean"
+					},
+					"flight": {
+						"$ref": "#/components/schemas/Flight"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"seatNumber",
+					"seatClass",
+					"seatType",
+					"flightId",
+					"isReserved",
+					"createdAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReserveSeatRequestDto": {
+				"properties": {
+					"seatNumber": {
+						"type": "string"
+					},
+					"flightId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"seatNumber",
+					"flightId"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -397,6 +726,108 @@
 						}
 					}
 				]
+			}
+		},
+		"/seat/v1/create": {
+			"post": {
+				"operationId": "CreateSeat",
+				"responses": {
+					"201": {
+						"description": "CREATED",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SeatDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateSeatRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/seat/v1/get-available-seats": {
+			"get": {
+				"operationId": "GetAvailableSeats",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/SeatDto"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "flightId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/seat/v1/reserve": {
+			"post": {
+				"operationId": "ReserveSeat",
+				"responses": {
+					"204": {
+						"description": "NO_CONTENT",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Seat"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReserveSeatRequestDto"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

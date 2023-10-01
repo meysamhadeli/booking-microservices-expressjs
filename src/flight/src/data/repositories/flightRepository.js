@@ -29,6 +29,13 @@ class FlightRepository {
             });
         });
     }
+    findFlightById(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.ormRepository.findOneBy({
+                id: id
+            });
+        });
+    }
     getAll() {
         return __awaiter(this, void 0, void 0, function* () {
             return yield this.ormRepository.find();

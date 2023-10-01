@@ -6,6 +6,7 @@ import { Flight } from '../../flight/entities/flight';
 export interface IFlightRepository {
   createFlight(flight: Flight): Promise<Flight>;
   findFlightByNumber(flightNumber: string): Promise<Flight>;
+  findFlightById(id: number): Promise<Flight>;
   getAll(): Promise<Flight[]>;
 }
 
@@ -23,6 +24,12 @@ export class FlightRepository implements IFlightRepository {
   async findFlightByNumber(flightNumber: string): Promise<Flight> {
     return await this.ormRepository.findOneBy({
       flightNumber: flightNumber
+    });
+  }
+
+  async findFlightById(id: number): Promise<Flight> {
+    return await this.ormRepository.findOneBy({
+      id: id
     });
   }
 

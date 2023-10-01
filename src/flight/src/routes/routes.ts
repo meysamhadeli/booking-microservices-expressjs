@@ -10,6 +10,12 @@ import { CreateAirportController } from './../airport/features/v1/createAirport/
 import { CreateFlightController } from './../flight/features/v1/createFlight/createFlight';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { GetUserByIdController } from './../flight/features/v1/getFlightByNumber/getFlightByNumber';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { CreateSeatController } from './../seat/features/v1/createSeat/createSeat';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { GetAvailableSeatsController } from './../seat/features/v1/getAvailableSeats/getAvailableSeats';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ReserveSeatController } from './../seat/features/v1/reserveSeat/reserveSeat';
 import { expressAuthentication } from './../configurations/authentication';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
@@ -102,6 +108,120 @@ const models: TsoaRoute.Models = {
             "arriveDate": {"dataType":"datetime","required":true},
             "arriveAirportId": {"dataType":"double","required":true},
             "durationMinutes": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SeatClass": {
+        "dataType": "refEnum",
+        "enums": [0,1,2,3],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SeatType": {
+        "dataType": "refEnum",
+        "enums": [0,1,2,3],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SeatDto": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "seatNumber": {"dataType":"string","required":true},
+            "seatClass": {"ref":"SeatClass","required":true},
+            "seatType": {"ref":"SeatType","required":true},
+            "flightId": {"dataType":"double","required":true},
+            "isReserved": {"dataType":"boolean","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"datetime"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateSeatRequestDto": {
+        "dataType": "refObject",
+        "properties": {
+            "seatNumber": {"dataType":"string","required":true},
+            "seatClass": {"ref":"SeatClass","required":true},
+            "seatType": {"ref":"SeatType","required":true},
+            "flightId": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Flight": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "flightNumber": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+            "flightStatus": {"ref":"FlightStatus","required":true},
+            "flightDate": {"dataType":"datetime","required":true},
+            "departureDate": {"dataType":"datetime","required":true},
+            "departureAirportId": {"dataType":"double","required":true},
+            "aircraftId": {"dataType":"double","required":true},
+            "arriveDate": {"dataType":"datetime","required":true},
+            "arriveAirportId": {"dataType":"double","required":true},
+            "durationMinutes": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+            "aircraft": {"ref":"Aircraft"},
+            "departureAirport": {"ref":"Airport"},
+            "arriveAirport": {"ref":"Airport"},
+            "seats": {"dataType":"array","array":{"dataType":"refObject","ref":"Seat"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Aircraft": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "model": {"dataType":"string","required":true},
+            "manufacturingYear": {"dataType":"double","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+            "flights": {"dataType":"array","array":{"dataType":"refObject","ref":"Flight"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Airport": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "name": {"dataType":"string","required":true},
+            "address": {"dataType":"string","required":true},
+            "code": {"dataType":"string","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+            "departureFlights": {"dataType":"array","array":{"dataType":"refObject","ref":"Flight"},"required":true},
+            "arrivalFlights": {"dataType":"array","array":{"dataType":"refObject","ref":"Flight"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Seat": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "seatNumber": {"dataType":"string","required":true},
+            "seatClass": {"ref":"SeatClass","required":true},
+            "seatType": {"ref":"SeatType","required":true},
+            "flightId": {"dataType":"double","required":true},
+            "isReserved": {"dataType":"boolean","required":true},
+            "flight": {"ref":"Flight"},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"union","subSchemas":[{"dataType":"datetime"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReserveSeatRequestDto": {
+        "dataType": "refObject",
+        "properties": {
+            "seatNumber": {"dataType":"string","required":true},
+            "flightId": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -215,6 +335,84 @@ export function RegisterRoutes(app: Router) {
 
               const promise = controller.getFlightByNumber.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/seat/v1/create',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(CreateSeatController)),
+            ...(fetchMiddlewares<RequestHandler>(CreateSeatController.prototype.createSeat)),
+
+            function CreateSeatController_createSeat(request: any, response: any, next: any) {
+            const args = {
+                    request: {"in":"body","name":"request","required":true,"ref":"CreateSeatRequestDto"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new CreateSeatController();
+
+
+              const promise = controller.createSeat.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 201, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/seat/v1/get-available-seats',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(GetAvailableSeatsController)),
+            ...(fetchMiddlewares<RequestHandler>(GetAvailableSeatsController.prototype.getAvailableSeats)),
+
+            function GetAvailableSeatsController_getAvailableSeats(request: any, response: any, next: any) {
+            const args = {
+                    flightId: {"in":"query","name":"flightId","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new GetAvailableSeatsController();
+
+
+              const promise = controller.getAvailableSeats.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/seat/v1/reserve',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ReserveSeatController)),
+            ...(fetchMiddlewares<RequestHandler>(ReserveSeatController.prototype.reserveSeat)),
+
+            function ReserveSeatController_reserveSeat(request: any, response: any, next: any) {
+            const args = {
+                    request: {"in":"body","name":"request","required":true,"ref":"ReserveSeatRequestDto"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new ReserveSeatController();
+
+
+              const promise = controller.reserveSeat.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 204, next);
             } catch (err) {
                 return next(err);
             }

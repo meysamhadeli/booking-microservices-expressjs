@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne, JoinColum
 import { FlightStatus } from '../enums/flightStatus';
 import { Airport } from '../../airport/entities/airport';
 import { Aircraft } from '../../aircraft/entities/aircraft';
+import { Seat } from '../../seat/entities/seat';
 
 @Entity()
 export class Flight {
@@ -56,6 +57,9 @@ export class Flight {
 
   @ManyToOne(() => Airport, (airport) => airport.arrivalFlights)
   arriveAirport?: Airport;
+
+  @OneToMany(() => Seat, (seat) => seat.flight)
+  seats: Seat[];
 
   constructor(partial?: Partial<Flight>) {
     Object.assign(this, partial);

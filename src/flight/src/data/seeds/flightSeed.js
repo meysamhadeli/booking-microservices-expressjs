@@ -18,12 +18,17 @@ const aircraft_1 = require("../../aircraft/entities/aircraft");
 const flightRepository_1 = require("../repositories/flightRepository");
 const flight_1 = require("../../flight/entities/flight");
 const flightStatus_1 = require("../../flight/enums/flightStatus");
+const seatRepository_1 = require("../repositories/seatRepository");
+const seat_1 = require("../../seat/entities/seat");
+const seatClass_1 = require("../../seat/enums/seatClass");
+const seatType_1 = require("../../seat/enums/seatType");
 class FlightSeed {
     seedData() {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.seedAircraft();
             yield this.seedAirport();
             yield this.seedFlight();
+            yield this.seedSeats();
         });
     }
     seedAircraft() {
@@ -72,6 +77,31 @@ class FlightSeed {
                     arriveDate: new Date('2023-09-31'),
                     durationMinutes: 1000
                 }));
+            }
+        });
+    }
+    seedSeats() {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const seatRepository = tsyringe_1.container.resolve(seatRepository_1.SeatRepository);
+            if (((_a = (yield seatRepository.getAll())) === null || _a === void 0 ? void 0 : _a.length) == 0) {
+                const seats = [
+                    new seat_1.Seat({
+                        flightId: 1,
+                        seatNumber: '11A',
+                        seatClass: seatClass_1.SeatClass.FIRST_CLASS,
+                        seatType: seatType_1.SeatType.WINDOW
+                    }),
+                    new seat_1.Seat({
+                        flightId: 1,
+                        seatNumber: '12B',
+                        seatClass: seatClass_1.SeatClass.ECONOMY,
+                        seatType: seatType_1.SeatType.MIDDLE
+                    })
+                ];
+                for (const seat of seats) {
+                    yield seatRepository.createSeat(seat);
+                }
             }
         });
     }
