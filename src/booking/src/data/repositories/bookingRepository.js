@@ -9,11 +9,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerRepositories = void 0;
+exports.BookingRepository = void 0;
 const tsyringe_1 = require("tsyringe");
-const bookingRepository_1 = require("../data/repositories/bookingRepository");
-const registerRepositories = () => __awaiter(void 0, void 0, void 0, function* () {
-    tsyringe_1.container.register('IBookingRepository', bookingRepository_1.BookingRepository);
-});
-exports.registerRepositories = registerRepositories;
-//# sourceMappingURL=repositoryExtensions.js.map
+const dbContext_1 = require("building-blocks/typeorm/dbContext");
+const booking_1 = require("../../booking/entities/booking");
+class BookingRepository {
+    constructor() {
+        this.ormRepository = tsyringe_1.container.resolve(dbContext_1.DbContext).connection.getRepository(booking_1.Booking);
+    }
+    createBooking(booking) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield this.ormRepository.save(booking);
+        });
+    }
+}
+exports.BookingRepository = BookingRepository;
+//# sourceMappingURL=bookingRepository.js.map
