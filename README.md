@@ -108,7 +108,7 @@ Using the CQRS pattern, we cut each business functionality into vertical slices,
 ## How to Run
 
 > ### Docker
-```
+
 #### Docker Compose
 
 Run this app in docker using the [infrastructure.yaml](./deployments/docker-compose/infrastructure.yaml) file with the below command at the root of the application for `running` our `infrastructure`:
