@@ -12,7 +12,8 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.ts",
     "prettier:fix": "prettier --write **/*.ts",
-    "generate:swagger": "tsoa routes && tsoa spec"
+    "generate:swagger": "tsoa routes && tsoa spec",
+    "test": "jest"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
