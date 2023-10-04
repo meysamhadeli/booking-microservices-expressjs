@@ -1,7 +1,8 @@
 <div align="center" style="margin-bottom:20px">
   <img src="assets/logo.png" alt="booking-microservices-express-js" />
     <div align="center">
-                 <a href="[https://github.com/meysamhadeli/booking-microservices-express-js](https://github.com/meysamhadeli/booking-microservices-express-js)/blob/main/LICENSE"><img alt="build-status"          src="https://img.shields.io/github/license/meysamhadeli/booking-microservices-express-js?color=%234275f5&style=flat-square"/></a>
+                       <a href="https://github.com/meysamhadeli/booking-microservices-express-js/blob/main/LICENSE"><img alt="build-status"          src="https://img.shields.io/github/license/meysamhadeli/booking-microservices-express-js?color=%234275f5&style=flat-square"/></a>
+                <img alt="build-status"          src="https://img.shields.io/github/license/meysamhadeli/booking-microservices-express-js?color=%234275f5&style=flat-square"/></a>
     </div>
 </div>
            
