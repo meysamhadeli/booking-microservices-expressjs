@@ -10,6 +10,7 @@ import NotFoundException from '../types/exception/notFoundException';
 import ConflictException from '../types/exception/conflictException';
 import { container } from 'tsyringe';
 import { Logger } from '../logging/logger';
+import HttpClientException from '../types/exception/httpClientException';
 
 export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   const logger = container.resolve(Logger);
@@ -78,6 +79,21 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     res.status(httpStatus.CONFLICT).json(
       new ProblemDocument({
         type: ConflictException.name,
+        title: err.message,
+        detail: err.stack,
+        status: err.statusCode
+      })
+    );
+
+    logger.error(err);
+
+    return next;
+  }
+
+  if (err instanceof HttpClientException) {
+    res.status(httpStatus.CONFLICT).json(
+      new ProblemDocument({
+        type: HttpClientException.name,
         title: err.message,
         detail: err.stack,
         status: err.statusCode

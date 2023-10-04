@@ -21,13 +21,13 @@ const createAirport_1 = require("./../airport/features/v1/createAirport/createAi
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const createFlight_1 = require("./../flight/features/v1/createFlight/createFlight");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const getFlightByNumber_1 = require("./../flight/features/v1/getFlightByNumber/getFlightByNumber");
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const createSeat_1 = require("./../seat/features/v1/createSeat/createSeat");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const getAvailableSeats_1 = require("./../seat/features/v1/getAvailableSeats/getAvailableSeats");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const reserveSeat_1 = require("./../seat/features/v1/reserveSeat/reserveSeat");
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+const getFlightById_1 = require("./../flight/features/v1/getFlightById/getFlightById");
 const authentication_1 = require("./../configurations/authentication");
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
@@ -294,23 +294,6 @@ function RegisterRoutes(app) {
         }
     });
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/flight/v1/get-by-number', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getFlightByNumber_1.GetUserByIdController)), ...((0, runtime_1.fetchMiddlewares)(getFlightByNumber_1.GetUserByIdController.prototype.getFlightByNumber)), function GetUserByIdController_getFlightByNumber(request, response, next) {
-        const args = {
-            flightNumber: { "in": "query", "name": "flightNumber", "required": true, "dataType": "string" },
-        };
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        let validatedArgs = [];
-        try {
-            validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new getFlightByNumber_1.GetUserByIdController();
-            const promise = controller.getFlightByNumber.apply(controller, validatedArgs);
-            promiseHandler(controller, promise, response, 200, next);
-        }
-        catch (err) {
-            return next(err);
-        }
-    });
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     app.post('/seat/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createSeat_1.CreateSeatController)), ...((0, runtime_1.fetchMiddlewares)(createSeat_1.CreateSeatController.prototype.createSeat)), function CreateSeatController_createSeat(request, response, next) {
         const args = {
             request: { "in": "body", "name": "request", "required": true, "ref": "CreateSeatRequestDto" },
@@ -356,6 +339,23 @@ function RegisterRoutes(app) {
             const controller = new reserveSeat_1.ReserveSeatController();
             const promise = controller.reserveSeat.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 204, next);
+        }
+        catch (err) {
+            return next(err);
+        }
+    });
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    app.get('/flight/v1/get-by-id', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getFlightById_1.GetUserByIdController)), ...((0, runtime_1.fetchMiddlewares)(getFlightById_1.GetUserByIdController.prototype.getFlightById)), function GetUserByIdController_getFlightById(request, response, next) {
+        const args = {
+            id: { "in": "query", "name": "id", "required": true, "dataType": "double" },
+        };
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        let validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request, response);
+            const controller = new getFlightById_1.GetUserByIdController();
+            const promise = controller.getFlightById.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, 200, next);
         }
         catch (err) {
             return next(err);

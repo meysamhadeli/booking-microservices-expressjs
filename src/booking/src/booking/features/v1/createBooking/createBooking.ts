@@ -2,16 +2,14 @@ import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediat
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
 import httpStatus from 'http-status';
 import Joi from 'joi';
-import ConflictException from 'building-blocks/types/exception/conflictException';
 import { inject, injectable } from 'tsyringe';
-import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
-import { AircraftDto } from '../../../dtos/aircraftDto';
-import { IAircraftRepository } from '../../../../data/repositories/aircraftRepository';
-import { Aircraft } from '../../../entities/aircraft';
 import mapper from '../../../mappings';
 import { BookingDto } from '../../../dtos/bookingDto';
 import { IBookingRepository } from '../../../../data/repositories/bookingRepository';
 import { Booking } from '../../../entities/booking';
+import { IFlightClientService } from '../../../httpClient/services/flight/flightClientService';
+import { IPassengerClientService } from '../../../httpClient/services/passenger/passengerClientService';
+import notFoundException from 'building-blocks/types/exception/notFoundException';
 
 export class CreateBooking implements IRequest<BookingDto> {
   passengerId: number;
@@ -61,14 +59,42 @@ export class CreateBookingController extends Controller {
 @injectable()
 export class CreateBookingHandler implements IHandler<CreateBooking, BookingDto> {
   constructor(
-    @inject('IBookingRepository') private bookingRepository: IBookingRepository
+    @inject('IBookingRepository') private bookingRepository: IBookingRepository,
+    @inject('IFlightClientService') private flightClientService: IFlightClientService,
+    @inject('IPassengerClientService') private passengerClientService: IPassengerClientService
   ) {}
 
   async handle(request: CreateBooking): Promise<BookingDto> {
     await createBookingValidations.validateAsync(request);
 
-    const bookingEntity = await this.bookingRepository.createBooking(null);
+    const flightDto = await this.flightClientService.getFlightById(request.flightId);
 
+    const passengerDto = await this.passengerClientService.getPassengerById(request.passengerId);
+
+    const avalibaleSeats = await this.flightClientService.getAvalibaleSeats(request.flightId);
+
+    if (avalibaleSeats.length == 0) {
+      throw new notFoundException('No seat available!');
+    }
+
+    await this.flightClientService.reserveSeat({
+      seatNumber: avalibaleSeats[0]?.seatNumber,
+      flightId: flightDto?.id
+    });
+
+    const bookingEntity = await this.bookingRepository.createBooking(
+      new Booking({
+        seatNumber: avalibaleSeats[0]?.seatNumber,
+        flightNumber: flightDto?.flightNumber,
+        price: flightDto?.price,
+        passengerName: passengerDto?.name,
+        description: request?.description,
+        flightDate: flightDto?.flightDate,
+        aircraftId: flightDto?.aircraftId,
+        departureAirportId: flightDto?.departureAirportId,
+        arriveAirportId: flightDto?.arriveAirportId
+      })
+    );
 
     const result = mapper.map<Booking, BookingDto>(bookingEntity, new BookingDto());
 

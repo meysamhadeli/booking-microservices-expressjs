@@ -4,11 +4,17 @@ import config from 'building-blocks/config/config';
 import UnauthorizedException from 'building-blocks/types/exception/unauthorizedException';
 import { generateFakeJwt } from 'building-blocks/utils/encryption';
 
+export const httpContext = {
+  request: null
+};
+
 export async function expressAuthentication(
   request: express.Request,
   securityName: string,
   scopes?: string[]
 ): Promise<any> {
+  httpContext.request = request;
+
   if (securityName === 'api_key') {
     let token;
     if (request.query && request.query.access_token) {

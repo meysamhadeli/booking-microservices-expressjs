@@ -8,29 +8,29 @@ import { IFlightRepository } from '../../../../data/repositories/flightRepositor
 import { Flight } from '../../../entities/flight';
 import mapper from '../../../mappings';
 
-export class GetFlightByNumber implements IRequest<FlightDto> {
-  flightNumber: string;
+export class GetFlightById implements IRequest<FlightDto> {
+  id: number;
 
-  constructor(request: Partial<GetFlightByNumber> = {}) {
+  constructor(request: Partial<GetFlightById> = {}) {
     Object.assign(this, request);
   }
 }
 
-const getFlightByNumberValidations = {
+const getFlightByIdValidations = {
   params: Joi.object().keys({
-    flightNumber: Joi.string().required()
+    id: Joi.number().required()
   })
 };
 
 @Route('/flight')
 export class GetUserByIdController extends Controller {
-  @Get('v1/get-by-number')
+  @Get('v1/get-by-id')
   @Security('jwt')
   @SuccessResponse('200', 'OK')
-  public async getFlightByNumber(@Query() flightNumber: string): Promise<FlightDto> {
+  public async getFlightById(@Query() id: number): Promise<FlightDto> {
     const result = await mediatrJs.send<FlightDto>(
-      new GetFlightByNumber({
-        flightNumber: flightNumber
+      new GetFlightById({
+        id: id
       })
     );
 
@@ -42,12 +42,12 @@ export class GetUserByIdController extends Controller {
 }
 
 @injectable()
-export class GetFlightByNumberHandler implements IHandler<GetFlightByNumber, FlightDto> {
+export class GetFlightByIdHandler implements IHandler<GetFlightById, FlightDto> {
   constructor(@inject('IFlightRepository') private flightRepository: IFlightRepository) {}
-  async handle(request: GetFlightByNumber): Promise<FlightDto> {
-    await getFlightByNumberValidations.params.validateAsync(request);
+  async handle(request: GetFlightById): Promise<FlightDto> {
+    await getFlightByIdValidations.params.validateAsync(request);
 
-    const flightEntity = await this.flightRepository.findFlightByNumber(request.flightNumber);
+    const flightEntity = await this.flightRepository.findFlightById(request.id);
 
     const result = mapper.map<Flight, FlightDto>(flightEntity, new FlightDto());
 

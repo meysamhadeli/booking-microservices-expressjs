@@ -35,13 +35,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.expressAuthentication = void 0;
+exports.expressAuthentication = exports.httpContext = void 0;
 const jwt = __importStar(require("jsonwebtoken"));
 const config_1 = __importDefault(require("building-blocks/config/config"));
 const unauthorizedException_1 = __importDefault(require("building-blocks/types/exception/unauthorizedException"));
 const encryption_1 = require("building-blocks/utils/encryption");
+exports.httpContext = {
+    request: null
+};
 function expressAuthentication(request, securityName, scopes) {
     return __awaiter(this, void 0, void 0, function* () {
+        exports.httpContext.request = request;
         if (securityName === 'api_key') {
             let token;
             if (request.query && request.query.access_token) {

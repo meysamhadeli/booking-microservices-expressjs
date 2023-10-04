@@ -696,38 +696,6 @@
 				}
 			}
 		},
-		"/flight/v1/get-by-number": {
-			"get": {
-				"operationId": "GetFlightByNumber",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/FlightDto"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "flightNumber",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/seat/v1/create": {
 			"post": {
 				"operationId": "CreateSeat",
@@ -828,6 +796,39 @@
 						}
 					}
 				}
+			}
+		},
+		"/flight/v1/get-by-id": {
+			"get": {
+				"operationId": "GetFlightById",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FlightDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		}
 	},

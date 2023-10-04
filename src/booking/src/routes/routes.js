@@ -15,102 +15,37 @@ exports.RegisterRoutes = void 0;
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const runtime_1 = require("@tsoa/runtime");
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const createAircraft_1 = require("./../aircraft/features/v1/createAircraft/createAircraft");
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const createAirport_1 = require("./../airport/features/v1/createAirport/createAirport");
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const createFlight_1 = require("./../flight/features/v1/createFlight/createFlight");
-// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-const getFlightByNumber_1 = require("./../flight/features/v1/getFlightByNumber/getFlightByNumber");
+const createBooking_1 = require("./../booking/features/v1/createBooking/createBooking");
 const authentication_1 = require("./../configurations/authentication");
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 const models = {
-    "AircraftDto": {
-        "dataType": "refObject",
-        "properties": {
-            "id": { "dataType": "double", "required": true },
-            "model": { "dataType": "string", "required": true },
-            "name": { "dataType": "string", "required": true },
-            "manufacturingYear": { "dataType": "double", "required": true },
-            "createdAt": { "dataType": "datetime", "required": true },
-            "updatedAt": { "dataType": "datetime" },
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CreateAircraftRequestDto": {
-        "dataType": "refObject",
-        "properties": {
-            "model": { "dataType": "string", "required": true },
-            "name": { "dataType": "string", "required": true },
-            "manufacturingYear": { "dataType": "double", "required": true },
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "AirportDto": {
-        "dataType": "refObject",
-        "properties": {
-            "id": { "dataType": "double", "required": true },
-            "code": { "dataType": "string", "required": true },
-            "name": { "dataType": "string", "required": true },
-            "address": { "dataType": "string", "required": true },
-            "createdAt": { "dataType": "datetime", "required": true },
-            "updatedAt": { "dataType": "datetime" },
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CreateAirportRequestDto": {
-        "dataType": "refObject",
-        "properties": {
-            "code": { "dataType": "string", "required": true },
-            "name": { "dataType": "string", "required": true },
-            "address": { "dataType": "string", "required": true },
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "FlightStatus": {
-        "dataType": "refEnum",
-        "enums": [0, 1, 2, 3, 4],
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "FlightDto": {
+    "BookingDto": {
         "dataType": "refObject",
         "properties": {
             "id": { "dataType": "double", "required": true },
             "flightNumber": { "dataType": "string", "required": true },
-            "price": { "dataType": "double", "required": true },
-            "flightStatus": { "ref": "FlightStatus", "required": true },
-            "flightDate": { "dataType": "datetime", "required": true },
-            "departureDate": { "dataType": "datetime", "required": true },
-            "departureAirportId": { "dataType": "double", "required": true },
             "aircraftId": { "dataType": "double", "required": true },
-            "arriveDate": { "dataType": "datetime", "required": true },
+            "departureAirportId": { "dataType": "double", "required": true },
             "arriveAirportId": { "dataType": "double", "required": true },
-            "durationMinutes": { "dataType": "double", "required": true },
+            "flightDate": { "dataType": "datetime", "required": true },
+            "price": { "dataType": "double", "required": true },
+            "description": { "dataType": "string", "required": true },
+            "seatNumber": { "dataType": "string", "required": true },
+            "passengerName": { "dataType": "string", "required": true },
             "createdAt": { "dataType": "datetime", "required": true },
-            "updatedAt": { "dataType": "datetime" },
+            "updatedAt": { "dataType": "union", "subSchemas": [{ "dataType": "datetime" }, { "dataType": "enum", "enums": [null] }] },
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CreateFlightRequestDto": {
+    "CreateBookingRequestDto": {
         "dataType": "refObject",
         "properties": {
-            "flightNumber": { "dataType": "string", "required": true },
-            "price": { "dataType": "double", "required": true },
-            "flightStatus": { "ref": "FlightStatus", "required": true },
-            "flightDate": { "dataType": "datetime", "required": true },
-            "departureDate": { "dataType": "datetime", "required": true },
-            "departureAirportId": { "dataType": "double", "required": true },
-            "aircraftId": { "dataType": "double", "required": true },
-            "arriveDate": { "dataType": "datetime", "required": true },
-            "arriveAirportId": { "dataType": "double", "required": true },
-            "durationMinutes": { "dataType": "double", "required": true },
+            "passengerId": { "dataType": "double", "required": true },
+            "flightId": { "dataType": "double", "required": true },
+            "description": { "dataType": "string", "required": true },
         },
         "additionalProperties": false,
     },
@@ -123,68 +58,17 @@ function RegisterRoutes(app) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-    app.post('/aircraft/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createAircraft_1.CreateAircraftController)), ...((0, runtime_1.fetchMiddlewares)(createAircraft_1.CreateAircraftController.prototype.createAircraft)), function CreateAircraftController_createAircraft(request, response, next) {
+    app.post('/booking/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createBooking_1.CreateBookingController)), ...((0, runtime_1.fetchMiddlewares)(createBooking_1.CreateBookingController.prototype.createBooking)), function CreateBookingController_createBooking(request, response, next) {
         const args = {
-            request: { "in": "body", "name": "request", "required": true, "ref": "CreateAircraftRequestDto" },
+            request: { "in": "body", "name": "request", "required": true, "ref": "CreateBookingRequestDto" },
         };
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         let validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new createAircraft_1.CreateAircraftController();
-            const promise = controller.createAircraft.apply(controller, validatedArgs);
+            const controller = new createBooking_1.CreateBookingController();
+            const promise = controller.createBooking.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 201, next);
-        }
-        catch (err) {
-            return next(err);
-        }
-    });
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.post('/airport/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createAirport_1.CreateAirportController)), ...((0, runtime_1.fetchMiddlewares)(createAirport_1.CreateAirportController.prototype.createAirport)), function CreateAirportController_createAirport(request, response, next) {
-        const args = {
-            request: { "in": "body", "name": "request", "required": true, "ref": "CreateAirportRequestDto" },
-        };
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        let validatedArgs = [];
-        try {
-            validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new createAirport_1.CreateAirportController();
-            const promise = controller.createAirport.apply(controller, validatedArgs);
-            promiseHandler(controller, promise, response, 201, next);
-        }
-        catch (err) {
-            return next(err);
-        }
-    });
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.post('/flight/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createFlight_1.CreateFlightController)), ...((0, runtime_1.fetchMiddlewares)(createFlight_1.CreateFlightController.prototype.createFlight)), function CreateFlightController_createFlight(request, response, next) {
-        const args = {
-            request: { "in": "body", "name": "request", "required": true, "ref": "CreateFlightRequestDto" },
-        };
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        let validatedArgs = [];
-        try {
-            validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new createFlight_1.CreateFlightController();
-            const promise = controller.createFlight.apply(controller, validatedArgs);
-            promiseHandler(controller, promise, response, 201, next);
-        }
-        catch (err) {
-            return next(err);
-        }
-    });
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    app.get('/flight/v1/get-by-number', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getFlightByNumber_1.GetUserByIdController)), ...((0, runtime_1.fetchMiddlewares)(getFlightByNumber_1.GetUserByIdController.prototype.getFlightByNumber)), function GetUserByIdController_getFlightByNumber(request, response, next) {
-        const args = {
-            flightNumber: { "in": "query", "name": "flightNumber", "required": true, "dataType": "string" },
-        };
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        let validatedArgs = [];
-        try {
-            validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new getFlightByNumber_1.GetUserByIdController();
-            const promise = controller.getFlightByNumber.apply(controller, validatedArgs);
-            promiseHandler(controller, promise, response, 200, next);
         }
         catch (err) {
             return next(err);

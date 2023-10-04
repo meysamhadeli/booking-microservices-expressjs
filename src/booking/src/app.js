@@ -30,6 +30,7 @@ const prom_client_1 = require("prom-client");
 const dbContext_1 = require("./data/dbContext");
 const swagger_1 = require("building-blocks/swagger/swagger");
 const loggerExtensions_1 = require("./extensions/loggerExtensions");
+const httpClientExtensions_1 = require("./extensions/httpClientExtensions");
 const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, prom_client_1.collectDefaultMetrics)();
     const app = (0, express_1.default)();
@@ -51,6 +52,7 @@ const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
         logger.info(`Listening to port ${config_1.default.port}`);
     });
     const rabbitmq = yield (0, rabbitmqExtensions_1.initialRabbitmq)();
+    yield (0, httpClientExtensions_1.initialHttpClientServices)();
     yield (0, mediatrExtensions_1.registerMediatrHandlers)();
     if (config_1.default.env == 'development') {
         yield (0, swagger_1.initialSwagger)(app);

@@ -15,6 +15,7 @@ const notFoundException_1 = __importDefault(require("../types/exception/notFound
 const conflictException_1 = __importDefault(require("../types/exception/conflictException"));
 const tsyringe_1 = require("tsyringe");
 const logger_1 = require("../logging/logger");
+const httpClientException_1 = __importDefault(require("../types/exception/httpClientException"));
 const errorHandler = (err, req, res, next) => {
     const logger = tsyringe_1.container.resolve(logger_1.Logger);
     if (err instanceof applicationException_1.default) {
@@ -60,6 +61,16 @@ const errorHandler = (err, req, res, next) => {
     if (err instanceof conflictException_1.default) {
         res.status(http_status_1.default.CONFLICT).json(new http_problem_details_1.ProblemDocument({
             type: conflictException_1.default.name,
+            title: err.message,
+            detail: err.stack,
+            status: err.statusCode
+        }));
+        logger.error(err);
+        return next;
+    }
+    if (err instanceof httpClientException_1.default) {
+        res.status(http_status_1.default.CONFLICT).json(new http_problem_details_1.ProblemDocument({
+            type: httpClientException_1.default.name,
             title: err.message,
             detail: err.stack,
             status: err.statusCode

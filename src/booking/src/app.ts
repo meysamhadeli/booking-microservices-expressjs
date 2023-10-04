@@ -16,6 +16,7 @@ import { collectDefaultMetrics } from 'prom-client';
 import { initialDbContext } from './data/dbContext';
 import { initialSwagger } from 'building-blocks/swagger/swagger';
 import { initialLogger } from './extensions/loggerExtensions';
+import { initialHttpClientServices } from './extensions/httpClientExtensions';
 
 const startupApp = async () => {
   collectDefaultMetrics();
@@ -54,6 +55,8 @@ const startupApp = async () => {
   });
 
   const rabbitmq = await initialRabbitmq();
+
+  await initialHttpClientServices();
 
   await registerMediatrHandlers();
 
