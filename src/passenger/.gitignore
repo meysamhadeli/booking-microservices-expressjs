@@ -1,8 +1,12 @@
 # Dependencies
 node_modules
 
-# yarn error logs
-yarn-error.log
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # Environment varibales
 .env*
@@ -22,3 +26,10 @@ build
 
 # Ignore idea
 .idea/**
+
+# Ignore Yarn's lockfile
+yarn.lock
+
+# Ignore npm's lockfile
+package-lock.json
+

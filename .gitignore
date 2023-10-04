@@ -22,3 +22,9 @@ build
 
 # Ignore idea
 .idea/**
+
+# Ignore Yarn's lockfile
+yarn.lock
+
+# Ignore npm's lockfile
+package-lock.json

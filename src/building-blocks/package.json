@@ -68,6 +68,7 @@
     "typeorm": "^0.3.17",
     "typescript": "^5.2.2",
     "uuid": "^9.0.1",
-    "winston": "^3.10.0"
+    "winston": "^3.10.0",
+    "axios": "^1.5.1"
   }
 }
