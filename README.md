@@ -27,11 +27,11 @@
 - :sparkle: Using `Rabbitmq` on top of `amqp` for `Event Driven Architecture` between our microservices.
 - :sparkle: Using `Rest` for `internal communication` between our microservices with 'axios'.
 - :sparkle: Using `CQRS` implementation with `MediatrJs` internal library.
-- :sparkle: Using `Express` for web framework.
-- :sparkle: Using `Postgres` for database level with 'typeorm'.
+- :sparkle: Using `Express` for `web framework`.
+- :sparkle: Using `Postgres` for database level with `typeorm`.
 - :sparkle: Using `Unit Testing`, `Integration Testing`, `End To End Testing` for testing level.
-- :sparkle: Using `Joi` for validation of our handlers.
-- :sparkle: Using `Docker-Compose` for our deployment mechanism.
+- :sparkle: Using `Joi` for `validation` of our handlers.
+- :sparkle: Using `Docker-Compose` for our `deployment` mechanism.
 - :sparkle: Using `winston` and 'morgan' for `logging`.
 - :sparkle: Using `Jaeger` on top of `OpenTelemetry` for `tracing`.
 - :sparkle: Using `Prometteuse` and `Grafana` on top of `OpenTelemetry` for `monitoring`.
@@ -39,7 +39,7 @@
 - :sparkle: Using `swagger-ui-express` and `tsoa` for generate `api documentation` automaticly.
 - :sparkle: Using `ts-mapper` for `mapping` our objects.
 - :sparkle: Using `Problem Details` standard for `readable details of errors`.
-- :sparkle: Using `eslint` and `prettier` for formatting of our code.
+- :sparkle: Using `eslint` and `prettier` for `formatting` of our code.
 
 ## Plan
 
@@ -108,21 +108,6 @@ Using the CQRS pattern, we cut each business functionality into vertical slices,
 ## How to Run
 
 > ### Docker
-
-#### Config Certificate
-Run the following commands to [Config SSL](https://docs.microsoft.com/en-us/aspnet/core/security/docker-compose-https?view=aspnetcore-6.0) in your system
-
-#### Windows using Linux containers
-```bash
-dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\aspnetapp.pfx -p password
-dotnet dev-certs https --trust
-```
-***Note:** for running this command in `powershell` use `$env:USERPROFILE` instead of `%USERPROFILE%`*
-
-#### macOS or Linux
-```bash
-dotnet dev-certs https -ep ${HOME}/.aspnet/https/aspnetapp.pfx -p $CREDENTIAL_PLACEHOLDER$
-dotnet dev-certs https --trust
 ```
 #### Docker Compose
 
