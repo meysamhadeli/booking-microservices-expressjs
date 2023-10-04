@@ -1,11 +1,11 @@
 <div align="center" style="margin-bottom:20px">
   <img src="assets/logo.png" alt="booking-microservices-express-js" />
     <div align="center">
-                 <a href="[https://github.com/meysamhadeli/booking-microservices-express-js](https://github.com/meysamhadeli/booking-microservices-express-js)/blob/main/LICENSE"><img alt="build-status"          src="https://img.shields.io/github/license/meysamhadeli/booking-microservices-express-js?color=%234275f5&style=flat-square"/></a>
+                       <a href="https://github.com/meysamhadeli/booking-microservices-express-js/blob/main/LICENSE"><img           src="https://img.shields.io/github/license/meysamhadeli/booking-microservices-express-js?color=%234275f5&style=flat-square"/></a>
     </div>
 </div>
            
-> **The main idea of creating this project is implementing an infrastructure for up and running distributed system with the latest technology and architecture like Vertical Slice Architecture, Event Driven Architecture, CQRS, MongoDB, RabbitMq and Express in NodeJs, and we will not deal mainly with business.** 🚀
+> **The main idea of creating this project is implementing an infrastructure for up and running distributed system with the latest technology and architecture like Vertical Slice Architecture, Event Driven Architecture, CQRS, Postgres, RabbitMq and Express in Node.Js, and we will not deal mainly with business.** 🚀
 
 <a href="https://gitpod.io/#https://github.com/meysamhadeli/booking-microservices-express"><img alt="Open in Gitpod" src="https://gitpod.io/button/open-in-gitpod.svg"/></a>
 
@@ -40,6 +40,7 @@
 - :sparkle: Using `ts-mapper` for `mapping` our objects.
 - :sparkle: Using `Problem Details` standard for `readable details of errors`.
 - :sparkle: Using `eslint` and `prettier` for `formatting` of our code.
+- :sparkle: Using `tsyringe` for handeling dependency injection.
 
 ## Plan
 
@@ -58,7 +59,30 @@ High-level plan is represented in the table
 | Building Blocks   | Completed ✔️   |
 
 ## Technologies - Libraries
-
+- ✔️ **[`microsoft/TypeScript`](https://github.com/microsoft/TypeScript)** - TypeScript is a language for application-scale JavaScript.
+- ✔️ **[`expressjs/express`](https://github.com/expressjs/express)** - Fast, unopinionated, minimalist web framework for Node.js
+- ✔️ **[`typeorm/typeorm`](https://github.com/typeorm/typeorm)** - TypeORM is highly influenced by other ORMs, such as Hibernate, Doctrine and Entity Framework
+- ✔️ **[`amqp-node/amqplib`](https://github.com/amqp-node/amqplib)** - A library for making AMQP 0-9-1 clients for Node.JS
+- ✔️ **[`microsoft/tsyringe`](https://github.com/microsoft/tsyringe)** - A lightweight dependency injection container for TypeScript/JavaScript for constructor injection
+- ✔️ **[`open-telemetry/opentelemetry-js`](https://github.com/open-telemetry/opentelemetry-js)** - A framework for collecting traces, metrics, and logs from applications
+- ✔️ **[`siimon/prom-client`](https://github.com/siimon/prom-client)** - A prometheus client for Node.js that supports histogram, summaries, gauges and counters
+- ✔️ **[`scottie1984/swagger-ui-express`](https://github.com/scottie1984/swagger-ui-express)** - Serve auto-generated swagger-ui generated API docs from express
+- ✔️ **[`lukeautry/tsoa`](https://github.com/lukeautry/tsoa)** - OpenAPI-compliant REST APIs using TypeScript and Node
+- ✔️ **[`axios/axios`](https://github.com/axios/axios)** - Promise based HTTP client for the browser and node.js
+- ✔️ **[`motdotla/dotenv`](https://github.com/motdotla/dotenv)** - Dotenv is a zero-dependency module that loads environment variables from a .env
+- ✔️ **[`PDMLab/http-problem-details`](https://github.com/PDMLab/http-problem-details)** - This library implements HTTP Problem details (RFC 7807) for HTTP APIs
+- ✔️ **[`helmetjs/helmet`](https://github.com/helmetjs/helmet)** - Helmet helps secure Express apps by setting HTTP response headers
+- ✔️ **[`hapijs/joi`](https://github.com/hapijs/joi)** - The most powerful schema description language and data validator for JavaScript
+- ✔️ **[`expressjs/morgan`](https://github.com/expressjs/morgan)** - HTTP request logger middleware for node.js
+- ✔️ **[`winstonjs/winston`](https://github.com/winstonjs/winston)** - A logger for just about everything
+- ✔️ **[`jestjs/jest`](https://github.com/jestjs/jest)** - A javascript framework for testing
+- ✔️ **[`testcontainers/testcontainers-node`](https://github.com/testcontainers/testcontainers-node)** - A library to support tests with throwaway instances of Docker containers
+- ✔️ **[`faker-js/faker`](https://github.com/faker-js/faker)** - Generate massive amounts of fake (but realistic) data for testing and development
+- ✔️ **[`florinn/typemoq`](https://github.com/florinn/typemoq)** - Simple mocking library for JavaScript targeting TypeScript development
+- ✔️ **[`ladjs/supertest`](https://github.com/ladjs/supertest)** - High-level abstraction for testing HTTP
+- ✔️ **[`eslint/eslint`](https://github.com/eslint/eslint)** - ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code
+- ✔️ **[`prettier/prettier`](https://github.com/prettier/prettier)** - Opinionated Code Formatter
+- ✔️ **[`vercel/async-retry`](https://github.com/vercel/async-retry)** - Retrying made simple, easy, and async
 
 ## The Domain And Bounded Context - Service Boundary
 
@@ -108,10 +132,10 @@ Using the CQRS pattern, we cut each business functionality into vertical slices,
 ## How to Run
 
 > ### Docker
-```
+
 #### Docker Compose
 
-Run this app in docker using the [infrastructure.yaml](./deployments/docker-compose/infrastructure.yaml) file with the below command at the root of the application for `running` our `infrastructure`:
+Run our infrastructure with docker using the [infrastructure.yaml](./deployments/docker-compose/infrastructure.yaml) file with the below command at the root of app:
 
 ```bash
 docker-compose -f ./deployments/docker-compose/infrastructure.yaml up -d
