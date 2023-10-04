@@ -8,7 +8,7 @@ import { isPasswordMatch } from 'building-blocks/utils/encryption';
 import UnauthorizedException from 'building-blocks/types/exception/unauthorizedException';
 import { IUserRepository, UserRepository } from '../../../../data/repositories/userRepository';
 import { inject, injectable } from 'tsyringe';
-import { IAuthRepository } from '../../../../data/repositories/authRepository';
+import ApplicationException from 'building-blocks/types/exception/applicationException';
 
 export class Login implements IRequest<AuthDto> {
   email: string;
@@ -53,7 +53,7 @@ export class LoginHandler implements IHandler<Login, AuthDto> {
     const user = await this.userRepository.findUserByEmail(request.email);
 
     if (!user || !(await isPasswordMatch(request.password, user.password as string))) {
-      throw new UnauthorizedException('Incorrect email or password');
+      throw new ApplicationException('Incorrect email or password');
     }
 
     const token = await mediatrJs.send<AuthDto>(new GenerateToken({ userId: user.id }));

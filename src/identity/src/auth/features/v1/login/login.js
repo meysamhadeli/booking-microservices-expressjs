@@ -31,8 +31,8 @@ const joi_1 = __importDefault(require("joi"));
 const generateToken_1 = require("../generateToken/generateToken");
 const validation_1 = require("building-blocks/utils/validation");
 const encryption_1 = require("building-blocks/utils/encryption");
-const unauthorizedException_1 = __importDefault(require("building-blocks/types/exception/unauthorizedException"));
 const tsyringe_1 = require("tsyringe");
+const applicationException_1 = __importDefault(require("building-blocks/types/exception/applicationException"));
 class Login {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -78,7 +78,7 @@ let LoginHandler = class LoginHandler {
             yield loginValidations.validateAsync(request);
             const user = yield this.userRepository.findUserByEmail(request.email);
             if (!user || !(yield (0, encryption_1.isPasswordMatch)(request.password, user.password))) {
-                throw new unauthorizedException_1.default('Incorrect email or password');
+                throw new applicationException_1.default('Incorrect email or password');
             }
             const token = yield mediatr_js_1.mediatrJs.send(new generateToken_1.GenerateToken({ userId: user.id }));
             return token;
