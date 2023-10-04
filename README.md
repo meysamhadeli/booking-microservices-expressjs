@@ -5,7 +5,7 @@
     </div>
 </div>
            
-> **The main idea of creating this project is implementing an infrastructure for up and running distributed system with the latest technology and architecture like Vertical Slice Architecture, Event Driven Architecture, CQRS, MongoDB, RabbitMq and Express in NodeJs, and we will not deal mainly with business.** 🚀
+> **The main idea of creating this project is implementing an infrastructure for up and running distributed system with the latest technology and architecture like Vertical Slice Architecture, Event Driven Architecture, CQRS, Postgres, RabbitMq and Express in NodeJs, and we will not deal mainly with business.** 🚀
 
 <a href="https://gitpod.io/#https://github.com/meysamhadeli/booking-microservices-express"><img alt="Open in Gitpod" src="https://gitpod.io/button/open-in-gitpod.svg"/></a>
 
