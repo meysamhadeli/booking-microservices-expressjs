@@ -25,7 +25,7 @@
 
 - :sparkle: Using `Vertical Slice Architecture` for `architecture` level.
 - :sparkle: Using `Rabbitmq` on top of `amqp` for `Event Driven Architecture` between our microservices.
-- :sparkle: Using `Rest` for `internal communication` between our microservices with 'axios'.
+- :sparkle: Using `Rest` for `internal communication` between our microservices with `axios`.
 - :sparkle: Using `CQRS` implementation with `MediatrJs` internal library.
 - :sparkle: Using `Express` for `web framework`.
 - :sparkle: Using `Postgres` for database level with `typeorm`.
