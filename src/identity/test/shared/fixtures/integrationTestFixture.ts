@@ -20,7 +20,7 @@ import express, { Express } from 'express';
 import { initialRabbitmq } from '../../../src/extensions/rabbitmqExtensions';
 import { initialDbContext } from '../../../src/data/dbContext';
 
-export class IntegrationTestFixture {
+export class Fixture {
   databaseConnection: DataSource;
   rabbitMQConnection: RabbitMQConnection;
   userRepository: IUserRepository;
@@ -32,37 +32,44 @@ export class IntegrationTestFixture {
   app: Express;
 }
 
-export const initialIntegrationTestFixture = async (): Promise<IntegrationTestFixture> => {
-  const integrationFixture: IntegrationTestFixture = new IntegrationTestFixture();
+export class IntegrationTestFixture {
+  private fixture: Fixture = new Fixture();
 
-  const [pgOptions, pgContainer] = await postgresContainerStart();
-  integrationFixture.postgresContainer = pgContainer;
+  public async initilizeFixture(): Promise<Fixture> {
+    const [pgOptions, pgContainer] = await postgresContainerStart();
+    this.fixture.postgresContainer = pgContainer;
 
-  const [rabbitOptions, rabbitContainer] = await rabbitMqContainerStart();
-  integrationFixture.rabbitmqContainer = rabbitContainer;
+    const [rabbitOptions, rabbitContainer] = await rabbitMqContainerStart();
+    this.fixture.rabbitmqContainer = rabbitContainer;
 
-  integrationFixture.app = express();
+    this.fixture.app = express();
 
-  integrationFixture.databaseConnection = await initialDbContext(pgOptions);
+    this.fixture.databaseConnection = await initialDbContext(pgOptions);
 
-  integrationFixture.app.use(express.json());
+    this.fixture.app.use(express.json());
 
-  integrationFixture.app.use(express.urlencoded({ extended: true }));
+    this.fixture.app.use(express.urlencoded({ extended: true }));
 
-  integrationFixture.app.use(passport.initialize());
+    this.fixture.app.use(passport.initialize());
 
-  RegisterRoutes(integrationFixture.app);
+    RegisterRoutes(this.fixture.app);
 
-  integrationFixture.app.use(errorHandler);
+    this.fixture.app.use(errorHandler);
 
-  integrationFixture.rabbitMQConnection = await initialRabbitmq(rabbitOptions);
+    this.fixture.rabbitMQConnection = await initialRabbitmq(rabbitOptions);
 
-  integrationFixture.userRepository = container.resolve(UserRepository);
-  integrationFixture.authRepository = container.resolve(AuthRepository);
-  integrationFixture.publisher = container.resolve(Publisher);
-  integrationFixture.consumer = container.resolve(Consumer);
+    this.fixture.userRepository = container.resolve(UserRepository);
+    this.fixture.authRepository = container.resolve(AuthRepository);
+    this.fixture.publisher = container.resolve(Publisher);
+    this.fixture.consumer = container.resolve(Consumer);
 
-  await registerMediatrHandlers();
+    await registerMediatrHandlers();
 
-  return integrationFixture;
-};
+    return this.fixture;
+  }
+
+  public async cleanUp() {
+    await this.fixture.postgresContainer.stop();
+    await this.fixture.rabbitmqContainer.stop();
+  }
+}

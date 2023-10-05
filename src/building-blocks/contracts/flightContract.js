@@ -1,12 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FlightStatus = exports.FlightDto = void 0;
+exports.SeatType = exports.SeatClass = exports.FlightStatus = exports.ReserveSeatRequestDto = exports.SeatDto = exports.FlightDto = void 0;
 class FlightDto {
     constructor(request = {}) {
         Object.assign(this, request);
     }
 }
 exports.FlightDto = FlightDto;
+class SeatDto {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.SeatDto = SeatDto;
+class ReserveSeatRequestDto {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.ReserveSeatRequestDto = ReserveSeatRequestDto;
 var FlightStatus;
 (function (FlightStatus) {
     FlightStatus[FlightStatus["UNKNOWN"] = 0] = "UNKNOWN";
@@ -15,4 +27,18 @@ var FlightStatus;
     FlightStatus[FlightStatus["CANCELED"] = 3] = "CANCELED";
     FlightStatus[FlightStatus["COMPLETED"] = 4] = "COMPLETED";
 })(FlightStatus || (exports.FlightStatus = FlightStatus = {}));
+var SeatClass;
+(function (SeatClass) {
+    SeatClass[SeatClass["UNKNOWN"] = 0] = "UNKNOWN";
+    SeatClass[SeatClass["FIRST_CLASS"] = 1] = "FIRST_CLASS";
+    SeatClass[SeatClass["BUSINESS"] = 2] = "BUSINESS";
+    SeatClass[SeatClass["ECONOMY"] = 3] = "ECONOMY";
+})(SeatClass || (exports.SeatClass = SeatClass = {}));
+var SeatType;
+(function (SeatType) {
+    SeatType[SeatType["UNKNOWN"] = 0] = "UNKNOWN";
+    SeatType[SeatType["WINDOW"] = 1] = "WINDOW";
+    SeatType[SeatType["MIDDLE"] = 2] = "MIDDLE";
+    SeatType[SeatType["AISLE"] = 3] = "AISLE";
+})(SeatType || (exports.SeatType = SeatType = {}));
 //# sourceMappingURL=flightContract.js.map

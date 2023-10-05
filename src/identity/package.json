@@ -57,6 +57,7 @@
     "helmet": "^6.0.1",
     "http-problem-details": "^0.1.5",
     "http-status": "^1.5.3",
+    "jest-serial-runner": "^1.2.1",
     "joi": "^17.7.0",
     "moment": "^2.29.4",
     "morgan": "^1.10.0",

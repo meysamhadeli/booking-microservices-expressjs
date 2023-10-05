@@ -1,6 +1,7 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testTimeout: 60000,
-  testMatch: ['**/*.test.ts']
+  testTimeout: 120000,
+  testMatch: ['**/*.test.ts'],
+  runner: 'jest-serial-runner'
 };

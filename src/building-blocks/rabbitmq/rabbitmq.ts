@@ -258,7 +258,7 @@ export class Consumer implements IConsumer {
   }
 
   async isConsumed<T>(message: T): Promise<boolean> {
-    const timeoutTime = 20000; // 20 seconds in milliseconds
+    const timeoutTime = 30000; // 30 seconds in milliseconds
     const startTime = Date.now();
     let timeOutExpired = false;
     let isConsumed = false;

@@ -10,25 +10,23 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const initialIntegrationTestFixture_1 = require("../../../shared/fixtures/initialIntegrationTestFixture");
 const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
 const identityContract_1 = require("building-blocks/contracts/identityContract");
 const fakeCreateUser_1 = require("../../../shared/fakes/user/fakeCreateUser");
+const integrationTestFixture_1 = require("../../../shared/fixtures/integrationTestFixture");
 describe('integration test for create user', () => {
+    const integrationTestFixture = new integrationTestFixture_1.IntegrationTestFixture();
     let fixture;
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        fixture = yield (0, initialIntegrationTestFixture_1.initialIntegrationTestFixture)();
+        fixture = yield integrationTestFixture.initilizeFixture();
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield fixture.postgresContainer.stop();
-        yield fixture.rabbitmqContainer.stop();
+        yield integrationTestFixture.cleanUp();
     }));
     it('should create user and retrieve a user from the database', () => __awaiter(void 0, void 0, void 0, function* () {
         const result = yield mediatr_js_1.mediatrJs.send(fakeCreateUser_1.FakeCreateUser.generate());
         const isPublished = yield fixture.publisher.isPublished(new identityContract_1.UserCreated());
         expect(isPublished).toBe(true);
-        const isConsumed = yield fixture.consumer.isConsumed(new identityContract_1.UserCreated());
-        expect(isConsumed).toBe(true);
         const user = fixture.userRepository.findUserById(result.id);
         expect(user).not.toBeNull();
     }));

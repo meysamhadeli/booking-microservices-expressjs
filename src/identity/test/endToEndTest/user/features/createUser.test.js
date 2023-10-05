@@ -10,17 +10,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-const initialIntegrationTestFixture_1 = require("../../../shared/fixtures/initialIntegrationTestFixture");
 const fakeCreateUserRequestDto_1 = require("../../../shared/fakes/user/fakeCreateUserRequestDto");
+const endToEndFixture_1 = require("../../../shared/fixtures/endToEndFixture");
 const request = require('supertest');
 describe('end-to-end test for create user', () => {
+    const endToEndFixture = new endToEndFixture_1.EndToEndTestFixture();
     let fixture;
     beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        fixture = yield (0, initialIntegrationTestFixture_1.initialIntegrationTestFixture)();
+        fixture = yield endToEndFixture.initilizeFixture();
     }));
     afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-        yield fixture.postgresContainer.stop();
-        yield fixture.rabbitmqContainer.stop();
+        yield endToEndFixture.cleanUp();
     }));
     it('should create user and retrieve 201 status code', () => __awaiter(void 0, void 0, void 0, function* () {
         const createUserResponse = yield request(fixture.app)

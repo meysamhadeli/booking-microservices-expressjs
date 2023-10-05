@@ -1,6 +1,6 @@
 {
-  "name": "flight",
-  "description": "flight service",
+  "name": "identity",
+  "description": "identity service",
   "version": "1.0.0",
   "main": "src/app.ts",
   "author": "Meysam Hadeli",
@@ -12,7 +12,8 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.ts",
     "prettier:fix": "prettier --write **/*.ts",
-    "generate:swagger": "tsoa routes && tsoa spec"
+    "generate:swagger": "tsoa routes && tsoa spec",
+    "test": "jest"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
@@ -56,6 +57,7 @@
     "helmet": "^6.0.1",
     "http-problem-details": "^0.1.5",
     "http-status": "^1.5.3",
+    "jest-serial-runner": "^1.2.1",
     "joi": "^17.7.0",
     "moment": "^2.29.4",
     "morgan": "^1.10.0",

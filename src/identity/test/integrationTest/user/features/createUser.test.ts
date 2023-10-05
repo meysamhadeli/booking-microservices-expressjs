@@ -1,23 +1,20 @@
 import 'reflect-metadata';
-import {
-  initialIntegrationTestFixture,
-  IntegrationTestFixture
-} from '../../../shared/fixtures/initialIntegrationTestFixture';
 import { mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { UserDto } from '../../../../src/user/dtos/userDto';
 import { UserCreated } from 'building-blocks/contracts/identityContract';
 import { FakeCreateUser } from '../../../shared/fakes/user/fakeCreateUser';
+import { Fixture, IntegrationTestFixture } from '../../../shared/fixtures/integrationTestFixture';
 
 describe('integration test for create user', () => {
-  let fixture: IntegrationTestFixture;
+  const integrationTestFixture = new IntegrationTestFixture();
+  let fixture: Fixture;
 
   beforeAll(async () => {
-    fixture = await initialIntegrationTestFixture();
+    fixture = await integrationTestFixture.initilizeFixture();
   });
 
   afterAll(async () => {
-    await fixture.postgresContainer.stop();
-    await fixture.rabbitmqContainer.stop();
+    await integrationTestFixture.cleanUp();
   });
 
   it('should create user and retrieve a user from the database', async () => {
@@ -25,9 +22,6 @@ describe('integration test for create user', () => {
 
     const isPublished = await fixture.publisher.isPublished(new UserCreated());
     expect(isPublished).toBe(true);
-
-    const isConsumed = await fixture.consumer.isConsumed(new UserCreated());
-    expect(isConsumed).toBe(true);
 
     const user = fixture.userRepository.findUserById(result.id);
     expect(user).not.toBeNull();

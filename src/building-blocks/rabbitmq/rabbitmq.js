@@ -248,7 +248,7 @@ let Consumer = class Consumer {
     }
     isConsumed(message) {
         return __awaiter(this, void 0, void 0, function* () {
-            const timeoutTime = 20000; // 20 seconds in milliseconds
+            const timeoutTime = 30000; // 30 seconds in milliseconds
             const startTime = Date.now();
             let timeOutExpired = false;
             let isConsumed = false;
