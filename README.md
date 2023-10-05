@@ -34,7 +34,7 @@
 - :sparkle: Using `Passport` for authentication and authorization base on `JWT`.
 - :sparkle: Using `OpenTelemetry` for distributed tracing top of `Jaeger` and `Zipkin`.
 - :sparkle: Using `OpenTelemetry` for monitoring top of `Prometteuse` and `Grafana`.
-- :sparkle: Using `Joi` for `validation` of our handlers.
+- :sparkle: Using `Joi` for `validation` input in our handlers and endpoints.
 - :sparkle: Using `dotenv` for `configuration` management.
 - :sparkle: Using `Unit Testing` for testing small units and mocking our dependencies with `Jest`.
 - :sparkle: Using `End To End Testing` and `Integration Testing` for testing features with all dependencies with `testcontainers`.
