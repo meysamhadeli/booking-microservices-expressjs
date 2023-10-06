@@ -12,6 +12,8 @@
     "lint:fix": "eslint . --fix",
     "prettier": "prettier --check **/*.ts",
     "prettier:fix": "prettier --write **/*.ts",
+    "migration:run": "typeorm migration:run -d ./src/data/postgresOptions",
+    "migration:generate": "typeorm migration:generate -d ./src/data/postgresOptions ./src/data/migrations/create-passenger-table",
     "generate:swagger": "tsoa routes && tsoa spec",
     "test": "jest"
   },
