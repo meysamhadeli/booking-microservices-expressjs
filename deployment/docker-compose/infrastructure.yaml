@@ -45,9 +45,21 @@ services:
       - 6832:6832/udp
       - 9411:9411
       - 14268:14268
-      - 16686:16686    
-   networks:
-    - booking      
+      - 16686:16686
+    networks:
+      - booking
+
+    #######################################################
+    #  Zipkin
+    #######################################################
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    restart: unless-stopped
+    ports:
+      - '9411:9411'
+    networks:
+      - booking
 
 networks:
   booking:
