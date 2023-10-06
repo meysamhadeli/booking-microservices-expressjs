@@ -10,6 +10,8 @@ import { Booking } from '../../../entities/booking';
 import { IFlightClientService } from '../../../httpClient/services/flight/flightClientService';
 import { IPassengerClientService } from '../../../httpClient/services/passenger/passengerClientService';
 import notFoundException from 'building-blocks/types/exception/notFoundException';
+import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
+import { BookingCreated } from 'building-blocks/contracts/bookingContract';
 
 export class CreateBooking implements IRequest<BookingDto> {
   passengerId: number;
@@ -61,7 +63,8 @@ export class CreateBookingHandler implements IHandler<CreateBooking, BookingDto>
   constructor(
     @inject('IBookingRepository') private bookingRepository: IBookingRepository,
     @inject('IFlightClientService') private flightClientService: IFlightClientService,
-    @inject('IPassengerClientService') private passengerClientService: IPassengerClientService
+    @inject('IPassengerClientService') private passengerClientService: IPassengerClientService,
+    @inject('IPublisher') private publisher: IPublisher
   ) {}
 
   async handle(request: CreateBooking): Promise<BookingDto> {
@@ -95,6 +98,8 @@ export class CreateBookingHandler implements IHandler<CreateBooking, BookingDto>
         arriveAirportId: flightDto?.arriveAirportId
       })
     );
+
+    await this.publisher.publishMessage(new BookingCreated(bookingEntity));
 
     const result = mapper.map<Booking, BookingDto>(bookingEntity, new BookingDto());
 

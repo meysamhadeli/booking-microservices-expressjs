@@ -39,6 +39,10 @@ export class Mapper extends TypeMapper {
         (dest) => dest.passportNumber
       )
       .map(
+        (src) => src.passportNumber,
+        (dest) => dest.passportNumber
+      )
+      .map(
         (src) => src.isEmailVerified,
         (dest) => dest.isEmailVerified
       );

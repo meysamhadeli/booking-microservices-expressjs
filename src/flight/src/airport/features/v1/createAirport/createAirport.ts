@@ -9,6 +9,7 @@ import { AirportDto } from '../../../dtos/airportDto';
 import { IAirportRepository } from '../../../../data/repositories/airportRepository';
 import { Airport } from '../../../entities/airport';
 import mapper from '../../../../aircraft/mappings';
+import { AircraftCreated, AirportCreated } from 'building-blocks/contracts/flightContract';
 
 export class CreateAirport implements IRequest<AirportDto> {
   code: string;
@@ -78,6 +79,8 @@ export class CreateAirportHandler implements IHandler<CreateAirport, AirportDto>
         address: request.address
       })
     );
+
+    await this.publisher.publishMessage(new AirportCreated(airportEntity));
 
     const result = mapper.map<Airport, AirportDto>(airportEntity, new AirportDto());
 

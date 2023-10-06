@@ -8,6 +8,8 @@ import httpStatus from 'http-status';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
 import { IUserRepository, UserRepository } from '../../../../data/repositories/userRepository';
 import { inject, injectable } from 'tsyringe';
+import { UserCreated, UserDeleted } from 'building-blocks/contracts/identityContract';
+import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 
 export class DeleteUserById implements IRequest<UserDto> {
   id: number;
@@ -45,7 +47,10 @@ export class DeleteUserByIdController extends Controller {
 
 @injectable()
 export class DeleteUserByIdHandler implements IHandler<DeleteUserById, UserDto> {
-  constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
+  constructor(
+    @inject('IUserRepository') private userRepository: IUserRepository,
+    @inject('IPublisher') private publisher: IPublisher
+  ) {}
   async handle(request: DeleteUserById): Promise<UserDto> {
     await deleteUserValidations.params.validateAsync(request);
 
@@ -55,9 +60,11 @@ export class DeleteUserByIdHandler implements IHandler<DeleteUserById, UserDto> 
       throw new NotFoundException('User not found');
     }
 
-    const usersEntity = await this.userRepository.removeUser(user);
+    const userEntity = await this.userRepository.removeUser(user);
 
-    const result = mapper.map<User, UserDto>(usersEntity, new UserDto());
+    await this.publisher.publishMessage(new UserDeleted(userEntity));
+
+    const result = mapper.map<User, UserDto>(userEntity, new UserDto());
 
     return result;
   }

@@ -34,6 +34,7 @@ const tsyringe_1 = require("tsyringe");
 const aircraftDto_1 = require("../../../dtos/aircraftDto");
 const aircraft_1 = require("../../../entities/aircraft");
 const mappings_1 = __importDefault(require("../../../mappings"));
+const flightContract_1 = require("building-blocks/contracts/flightContract");
 class CreateAircraft {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -94,6 +95,7 @@ let CreateAircraftHandler = class CreateAircraftHandler {
                 manufacturingYear: request.manufacturingYear,
                 model: request.model
             }));
+            yield this.publisher.publishMessage(new flightContract_1.AircraftCreated(aircraftEntity));
             const result = mappings_1.default.map(aircraftEntity, new aircraftDto_1.AircraftDto());
             return result;
         });

@@ -1,4 +1,4 @@
-export class BookingDto {
+export class BookingCreated {
   id: number;
   flightNumber: string;
   aircraftId: number;
@@ -11,4 +11,8 @@ export class BookingDto {
   passengerName: string;
   createdAt: Date;
   updatedAt?: Date | null;
+
+  constructor(partial?: Partial<BookingCreated>) {
+    Object.assign(this, partial);
+  }
 }

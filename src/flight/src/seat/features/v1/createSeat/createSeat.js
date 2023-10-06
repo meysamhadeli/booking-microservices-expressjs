@@ -36,6 +36,7 @@ const seatClass_1 = require("../../../enums/seatClass");
 const seatType_1 = require("../../../enums/seatType");
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
 const seat_1 = require("../../../entities/seat");
+const flightContract_1 = require("building-blocks/contracts/flightContract");
 class CreateSeat {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -105,6 +106,7 @@ let CreateSeatHandler = class CreateSeatHandler {
                 seatType: request.seatType,
                 isReserved: false
             }));
+            yield this.publisher.publishMessage(new flightContract_1.SeatCreated(seatEntity));
             const result = mappings_1.default.map(seatEntity, new seatDto_1.SeatDto());
             return result;
         });

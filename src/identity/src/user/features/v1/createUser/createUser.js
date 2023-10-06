@@ -105,11 +105,7 @@ let CreateUserHandler = class CreateUserHandler {
                 passportNumber: request.passportNumber,
                 isEmailVerified: false
             }));
-            yield this.publisher.publishMessage(new identityContract_1.UserCreated({
-                name: userEntity.name,
-                passportNumber: userEntity.passportNumber,
-                id: userEntity.id
-            }));
+            yield this.publisher.publishMessage(new identityContract_1.UserCreated(userEntity));
             const result = mapping_1.default.map(userEntity, new userDto_1.UserDto());
             return result;
         });

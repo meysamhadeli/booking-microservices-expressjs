@@ -35,6 +35,7 @@ const mappings_1 = __importDefault(require("../../../../aircraft/mappings"));
 const flightStatus_1 = require("../../../enums/flightStatus");
 const flightDto_1 = require("../../../dtos/flightDto");
 const flight_1 = require("../../../entities/flight");
+const flightContract_1 = require("building-blocks/contracts/flightContract");
 class CreateFlight {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -118,6 +119,7 @@ let CreateFlightHandler = class CreateFlightHandler {
                 flightStatus: request.flightStatus,
                 durationMinutes: request.durationMinutes
             }));
+            yield this.publisher.publishMessage(new flightContract_1.FlightCreated(flightEntity));
             const result = mappings_1.default.map(flightEntity, new flightDto_1.FlightDto());
             return result;
         });

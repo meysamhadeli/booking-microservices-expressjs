@@ -1,6 +1,6 @@
 {
-  "name": "identity",
-  "description": "identity service",
+  "name": "passenger",
+  "description": "passenger service",
   "version": "1.0.0",
   "main": "src/app.ts",
   "author": "Meysam Hadeli",

@@ -1,3 +1,79 @@
+export class FlightCreated {
+  id: number;
+  flightNumber: string;
+  price: number;
+  flightStatus: FlightStatus;
+  flightDate: Date;
+  departureDate: Date;
+  departureAirportId: number;
+  aircraftId: number;
+  arriveDate: Date;
+  arriveAirportId: number;
+  durationMinutes: number;
+  createdAt: Date;
+  updatedAt?: Date;
+
+  constructor(request: Partial<FlightCreated> = {}) {
+    Object.assign(this, request);
+  }
+}
+
+export class AircraftCreated {
+  id: number;
+  model: string;
+  name: string;
+  manufacturingYear: number;
+  createdAt: Date;
+  updatedAt?: Date;
+
+  constructor(request: Partial<AircraftCreated> = {}) {
+    Object.assign(this, request);
+  }
+}
+
+export class AirportCreated {
+  id: number;
+  code: string;
+  name: string;
+  address: string;
+  createdAt: Date;
+  updatedAt?: Date;
+
+  constructor(request: Partial<AirportCreated> = {}) {
+    Object.assign(this, request);
+  }
+}
+
+export class SeatCreated {
+  id: number;
+  seatNumber: string;
+  seatClass: SeatClass;
+  seatType: SeatType;
+  flightId: number;
+  isReserved: boolean;
+  createdAt: Date;
+  updatedAt?: Date;
+
+  constructor(request: Partial<SeatCreated> = {}) {
+    Object.assign(this, request);
+  }
+}
+
+export class SeatReserved {
+  id: number;
+  seatNumber: string;
+  seatClass: SeatClass;
+  seatType: SeatType;
+  flightId: number;
+  isReserved: boolean;
+  createdAt: Date;
+  updatedAt?: Date;
+
+  constructor(request: Partial<SeatReserved> = {}) {
+    Object.assign(this, request);
+  }
+}
+
 export class FlightDto {
   id: number;
   flightNumber: string;

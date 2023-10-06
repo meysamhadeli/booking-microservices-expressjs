@@ -11,6 +11,8 @@ import { IUserRepository, UserRepository } from '../../../../data/repositories/u
 import httpStatus from 'http-status';
 import Joi from 'joi';
 import { inject, injectable } from 'tsyringe';
+import { UserDeleted, UserUpdated } from 'building-blocks/contracts/identityContract';
+import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 
 export class UpdateUser implements IRequest<UserDto> {
   id: number;
@@ -71,7 +73,10 @@ export class UpdateUserController extends Controller {
 
 @injectable()
 export class UpdateUserHandler implements IHandler<UpdateUser, UserDto> {
-  constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
+  constructor(
+    @inject('IUserRepository') private userRepository: IUserRepository,
+    @inject('IPublisher') private publisher: IPublisher
+  ) {}
 
   async handle(request: UpdateUser): Promise<UserDto> {
     await updateUserValidations.validateAsync(request);
@@ -95,6 +100,8 @@ export class UpdateUserHandler implements IHandler<UpdateUser, UserDto> {
         updatedAt: new Date()
       })
     );
+
+    await this.publisher.publishMessage(new UserUpdated(userEntity));
 
     const result = mapper.map<User, UserDto>(userEntity, new UserDto());
 

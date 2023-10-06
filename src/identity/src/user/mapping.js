@@ -16,6 +16,7 @@ class Mapper extends ts_mapper_1.TypeMapper {
             .map((src) => src === null || src === void 0 ? void 0 : src.updatedAt, (dest) => dest === null || dest === void 0 ? void 0 : dest.updatedAt)
             .map((src) => src.createdAt, (dest) => dest.createdAt)
             .map((src) => src.passportNumber, (dest) => dest.passportNumber)
+            .map((src) => src.passportNumber, (dest) => dest.passportNumber)
             .map((src) => src.isEmailVerified, (dest) => dest.isEmailVerified);
     }
 }

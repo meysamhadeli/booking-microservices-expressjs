@@ -9,6 +9,7 @@ import { AircraftDto } from '../../../dtos/aircraftDto';
 import { IAircraftRepository } from '../../../../data/repositories/aircraftRepository';
 import { Aircraft } from '../../../entities/aircraft';
 import mapper from '../../../mappings';
+import { AircraftCreated, FlightCreated } from 'building-blocks/contracts/flightContract';
 
 export class CreateAircraft implements IRequest<AircraftDto> {
   model: string;
@@ -78,6 +79,8 @@ export class CreateAircraftHandler implements IHandler<CreateAircraft, AircraftD
         model: request.model
       })
     );
+
+    await this.publisher.publishMessage(new AircraftCreated(aircraftEntity));
 
     const result = mapper.map<Aircraft, AircraftDto>(aircraftEntity, new AircraftDto());
 

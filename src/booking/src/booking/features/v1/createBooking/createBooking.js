@@ -34,6 +34,7 @@ const mappings_1 = __importDefault(require("../../../mappings"));
 const bookingDto_1 = require("../../../dtos/bookingDto");
 const booking_1 = require("../../../entities/booking");
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
+const bookingContract_1 = require("building-blocks/contracts/bookingContract");
 class CreateBooking {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -78,10 +79,11 @@ exports.CreateBookingController = CreateBookingController = __decorate([
     (0, tsoa_1.Route)('/booking')
 ], CreateBookingController);
 let CreateBookingHandler = class CreateBookingHandler {
-    constructor(bookingRepository, flightClientService, passengerClientService) {
+    constructor(bookingRepository, flightClientService, passengerClientService, publisher) {
         this.bookingRepository = bookingRepository;
         this.flightClientService = flightClientService;
         this.passengerClientService = passengerClientService;
+        this.publisher = publisher;
     }
     handle(request) {
         var _a, _b;
@@ -108,6 +110,7 @@ let CreateBookingHandler = class CreateBookingHandler {
                 departureAirportId: flightDto === null || flightDto === void 0 ? void 0 : flightDto.departureAirportId,
                 arriveAirportId: flightDto === null || flightDto === void 0 ? void 0 : flightDto.arriveAirportId
             }));
+            yield this.publisher.publishMessage(new bookingContract_1.BookingCreated(bookingEntity));
             const result = mappings_1.default.map(bookingEntity, new bookingDto_1.BookingDto());
             return result;
         });
@@ -119,6 +122,7 @@ exports.CreateBookingHandler = CreateBookingHandler = __decorate([
     __param(0, (0, tsyringe_1.inject)('IBookingRepository')),
     __param(1, (0, tsyringe_1.inject)('IFlightClientService')),
     __param(2, (0, tsyringe_1.inject)('IPassengerClientService')),
-    __metadata("design:paramtypes", [Object, Object, Object])
+    __param(3, (0, tsyringe_1.inject)('IPublisher')),
+    __metadata("design:paramtypes", [Object, Object, Object, Object])
 ], CreateBookingHandler);
 //# sourceMappingURL=createBooking.js.map

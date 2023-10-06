@@ -1,6 +1,6 @@
 {
-  "name": "identity",
-  "description": "identity service",
+  "name": "booking",
+  "description": "booking service",
   "version": "1.0.0",
   "main": "src/app.ts",
   "author": "Meysam Hadeli",

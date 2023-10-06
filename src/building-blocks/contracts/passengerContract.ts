@@ -6,6 +6,10 @@ export class PassengerDto {
   passportType: PassengerType;
   createdAt: Date;
   updatedAt?: Date;
+
+  constructor(partial?: Partial<PassengerDto>) {
+    Object.assign(this, partial);
+  }
 }
 
 export enum PassengerType {

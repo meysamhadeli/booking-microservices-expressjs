@@ -10,6 +10,8 @@ import { FlightStatus } from '../../../enums/flightStatus';
 import { FlightDto } from '../../../dtos/flightDto';
 import { IFlightRepository } from '../../../../data/repositories/flightRepository';
 import { Flight } from '../../../entities/flight';
+import { UserUpdated } from 'building-blocks/contracts/identityContract';
+import { FlightCreated } from 'building-blocks/contracts/flightContract';
 
 export class CreateFlight implements IRequest<CreateFlight> {
   flightNumber: string;
@@ -122,6 +124,8 @@ export class CreateFlightHandler implements IHandler<CreateFlight, FlightDto> {
         durationMinutes: request.durationMinutes
       })
     );
+
+    await this.publisher.publishMessage(new FlightCreated(flightEntity));
 
     const result = mapper.map<Flight, FlightDto>(flightEntity, new FlightDto());
 

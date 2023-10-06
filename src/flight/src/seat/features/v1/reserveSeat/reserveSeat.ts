@@ -10,6 +10,7 @@ import { ISeatRepository } from '../../../../data/repositories/seatRepository';
 import { IFlightRepository } from '../../../../data/repositories/flightRepository';
 import NotFoundException from 'building-blocks/types/exception/notFoundException';
 import { Seat } from '../../../entities/seat';
+import { SeatCreated, SeatReserved } from 'building-blocks/contracts/flightContract';
 
 export class ReserveSeat implements IRequest<SeatDto> {
   seatNumber: string;
@@ -88,6 +89,8 @@ export class ReserveSeatHandler implements IHandler<ReserveSeat, SeatDto> {
         updatedAt: new Date()
       })
     );
+
+    await this.publisher.publishMessage(new SeatReserved(seatEntity));
 
     const result = mapper.map<Seat, SeatDto>(seatEntity, new SeatDto());
 

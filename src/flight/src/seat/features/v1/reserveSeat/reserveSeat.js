@@ -34,6 +34,7 @@ const mappings_1 = __importDefault(require("../../../../aircraft/mappings"));
 const seatDto_1 = require("../../../dtos/seatDto");
 const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
 const seat_1 = require("../../../entities/seat");
+const flightContract_1 = require("building-blocks/contracts/flightContract");
 class ReserveSeat {
     constructor(request = {}) {
         Object.assign(this, request);
@@ -102,6 +103,7 @@ let ReserveSeatHandler = class ReserveSeatHandler {
                 createdAt: seat.createdAt,
                 updatedAt: new Date()
             }));
+            yield this.publisher.publishMessage(new flightContract_1.SeatReserved(seatEntity));
             const result = mappings_1.default.map(seatEntity, new seatDto_1.SeatDto());
             return result;
         });
