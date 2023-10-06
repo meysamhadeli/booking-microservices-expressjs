@@ -39,7 +39,7 @@
 - :sparkle: Using `Unit Testing` for testing `small units` and `mocking` our dependencies with `Jest`.
 - :sparkle: Using `End-To-End Testing` and `Integration Testing` for testing `features` with all dependencies with `testcontainers`.
 - :sparkle: Using `winston` and 'morgan' for `logging`.
-- :sparkle: Using `swagger-ui-express` and `tsoa` for generate `api documentation` automaticly.
+- :sparkle: Using `swagger-ui-express` and `tsoa` for generate `api documentation` automatically.
 - :sparkle: Using `ts-mapper` for `mapping` our objects.
 - :sparkle: Using `Problem Details` standard for `readable details of errors`.
 - :sparkle: Using `eslint` and `prettier` for `formatting` of our code.
@@ -168,7 +168,7 @@ Please follow this [contribution guideline](./CONTRIBUTION.md) to submit a pull 
 ## Project References & Credits
 
 - [https://github.com/jbogard/ContosoUniversityDotNetCore-Pages](https://github.com/jbogard/ContosoUniversityDotNetCore-Pages)
-- [https://github.com/kgrzybek/modular-monolith-with-ddd](https://github.com/kgrzybek/modular-monolith-with-ddd)
+- [https://github.com/hagopj13/node-express-boilerplate](https://github.com/hagopj13/node-express-boilerplate)
 
 ## License
 This project is made available under the MIT license. See [LICENSE](https://github.com/meysamhadeli/booking-microservices-express-js/blob/main/LICENSE) for details.
