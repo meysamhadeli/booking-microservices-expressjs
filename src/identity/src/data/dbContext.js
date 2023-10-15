@@ -15,7 +15,7 @@ const dbContext_1 = require("building-blocks/typeorm/dbContext");
 const repositoryExtensions_1 = require("../extensions/repositoryExtensions");
 const userSeed_1 = require("./seeds/userSeed");
 const initialDbContext = (options) => __awaiter(void 0, void 0, void 0, function* () {
-    tsyringe_1.container.register('IDbContext', dbContext_1.DbContext);
+    tsyringe_1.container.registerSingleton('IDbContext', dbContext_1.DbContext);
     const dbContext = tsyringe_1.container.resolve(dbContext_1.DbContext);
     const connection = yield dbContext.initialize(options);
     const userSeed = tsyringe_1.container.resolve(userSeed_1.UserSeed);

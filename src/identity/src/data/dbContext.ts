@@ -8,7 +8,7 @@ import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConne
 export const initialDbContext = async (
   options?: PostgresConnectionOptions
 ): Promise<Connection> => {
-  container.register<IDbContext>('IDbContext', DbContext);
+  container.registerSingleton<IDbContext>('IDbContext', DbContext);
 
   const dbContext = container.resolve(DbContext);
 
