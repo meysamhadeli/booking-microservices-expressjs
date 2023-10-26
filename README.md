@@ -37,7 +37,7 @@
 - :sparkle: Using `Joi` for `validation` input in our handlers and endpoints.
 - :sparkle: Using `dotenv` for `configuration` management.
 - :sparkle: Using `Unit Testing` for testing `small units` and `mocking` our dependencies with `Jest`.
-- :sparkle: Using `End-To-End Testing` and `Integration Testing` for testing `features` with all dependencies using docker container with `testcontainers`.
+- :sparkle: Using `End-To-End Testing` and `Integration Testing` for testing `features` with all dependencies using `testcontainers`.
 - :sparkle: Using `winston` and 'morgan' for `logging`.
 - :sparkle: Using `swagger-ui-express` and `tsoa` for generate `api documentation` automatically.
 - :sparkle: Using `ts-mapper` for `mapping` our objects.
