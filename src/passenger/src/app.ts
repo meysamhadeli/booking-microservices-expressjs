@@ -10,8 +10,7 @@ import config from 'building-blocks/config/config';
 import { errorHandler } from 'building-blocks/middlewares/errorHandler';
 import { initialRabbitmq } from './extensions/rabbitmqExtensions';
 import { registerMediatrHandlers } from './extensions/mediatrExtensions';
-import { initialOtel } from './extensions/otelExtensions';
-import { initialMonitoring } from './extensions/monitoringExtensions';
+import { initialOpenTelemetry } from './extensions/otelExtensions';
 import { collectDefaultMetrics } from 'prom-client';
 import { initialDbContext } from './data/dbContext';
 import { initialSwagger } from 'building-blocks/swagger/swagger';
@@ -26,8 +25,6 @@ const startupApp = async () => {
 
   app.use(morganMiddleware);
 
-  await initialMonitoring(app);
-
   const databaseConnection = await initialDbContext();
 
   app.use(helmet());
@@ -41,7 +38,7 @@ const startupApp = async () => {
   app.use(cors());
   app.options('*', cors());
 
-  await initialOtel();
+  await initialOpenTelemetry(app);
 
   app.use(passport.initialize());
 
