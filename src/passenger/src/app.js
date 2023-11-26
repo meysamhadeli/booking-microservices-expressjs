@@ -21,7 +21,6 @@ const passport_1 = __importDefault(require("passport"));
 const morgan_1 = require("building-blocks/logging/morgan");
 const routes_1 = require("./routes/routes");
 const config_1 = __importDefault(require("building-blocks/config/config"));
-const errorHandler_1 = require("building-blocks/middlewares/errorHandler");
 const rabbitmqExtensions_1 = require("./extensions/rabbitmqExtensions");
 const mediatrExtensions_1 = require("./extensions/mediatrExtensions");
 const otelExtensions_1 = require("./extensions/otelExtensions");
@@ -29,6 +28,7 @@ const prom_client_1 = require("prom-client");
 const dbContext_1 = require("./data/dbContext");
 const swagger_1 = require("building-blocks/swagger/swagger");
 const loggerExtensions_1 = require("./extensions/loggerExtensions");
+const errorHandler_1 = require("building-blocks/error-handler/errorHandler");
 const startupApp = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, prom_client_1.collectDefaultMetrics)();
     const app = (0, express_1.default)();

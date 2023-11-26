@@ -1,6 +1,36 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SeatType = exports.SeatClass = exports.FlightStatus = exports.ReserveSeatRequestDto = exports.SeatDto = exports.FlightDto = void 0;
+exports.SeatType = exports.SeatClass = exports.FlightStatus = exports.ReserveSeatRequestDto = exports.SeatDto = exports.FlightDto = exports.SeatReserved = exports.SeatCreated = exports.AirportCreated = exports.AircraftCreated = exports.FlightCreated = void 0;
+class FlightCreated {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.FlightCreated = FlightCreated;
+class AircraftCreated {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.AircraftCreated = AircraftCreated;
+class AirportCreated {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.AirportCreated = AirportCreated;
+class SeatCreated {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.SeatCreated = SeatCreated;
+class SeatReserved {
+    constructor(request = {}) {
+        Object.assign(this, request);
+    }
+}
+exports.SeatReserved = SeatReserved;
 class FlightDto {
     constructor(request = {}) {
         Object.assign(this, request);

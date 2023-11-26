@@ -9,25 +9,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UpdateSeatTable1696195472621 = void 0;
-class UpdateSeatTable1696195472621 {
+exports.CreateBookingTable1701007002236 = void 0;
+class CreateBookingTable1701007002236 {
     constructor() {
-        this.name = 'UpdateSeatTable1696195472621';
+        this.name = 'CreateBookingTable1701007002236';
     }
     up(queryRunner) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield queryRunner.query(`ALTER TABLE "seat" RENAME COLUMN "price" TO "isReserved"`);
-            yield queryRunner.query(`ALTER TABLE "seat" DROP COLUMN "isReserved"`);
-            yield queryRunner.query(`ALTER TABLE "seat" ADD "isReserved" boolean NOT NULL`);
+            yield queryRunner.query(`CREATE TABLE "booking" ("id" SERIAL NOT NULL, "flightNumber" character varying NOT NULL, "aircraftId" integer NOT NULL, "departureAirportId" integer NOT NULL, "arriveAirportId" integer NOT NULL, "flightDate" TIMESTAMP NOT NULL, "price" integer NOT NULL, "description" character varying NOT NULL, "seatNumber" character varying NOT NULL, "passengerName" character varying NOT NULL, "createdAt" TIMESTAMP NOT NULL, "updatedAt" TIMESTAMP, CONSTRAINT "PK_49171efc69702ed84c812f33540" PRIMARY KEY ("id"))`);
         });
     }
     down(queryRunner) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield queryRunner.query(`ALTER TABLE "seat" DROP COLUMN "isReserved"`);
-            yield queryRunner.query(`ALTER TABLE "seat" ADD "isReserved" integer NOT NULL`);
-            yield queryRunner.query(`ALTER TABLE "seat" RENAME COLUMN "isReserved" TO "price"`);
+            yield queryRunner.query(`DROP TABLE "booking"`);
         });
     }
 }
-exports.UpdateSeatTable1696195472621 = UpdateSeatTable1696195472621;
-//# sourceMappingURL=1696195472621-update-seat-table.js.map
+exports.CreateBookingTable1701007002236 = CreateBookingTable1701007002236;
+//# sourceMappingURL=1701007002236-create-booking-table.js.map

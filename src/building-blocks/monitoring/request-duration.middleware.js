@@ -23,22 +23,28 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requestDurationHistogram = exports.errorCounter = exports.requestCounter = void 0;
+exports.requestDurationMiddleware = void 0;
 const Prometheus = __importStar(require("prom-client"));
-exports.requestCounter = new Prometheus.Counter({
-    name: 'express_request_total',
-    help: 'Total number of HTTP requests handled by the Express app',
-    labelNames: ['method', 'route', 'statusCode']
-});
-exports.errorCounter = new Prometheus.Counter({
-    name: 'express_error_total',
-    help: 'Total number of errors encountered by the Express app',
-    labelNames: ['route']
-});
-exports.requestDurationHistogram = new Prometheus.Histogram({
-    name: 'express_request_duration_seconds',
+const requestDurationHistogram = new Prometheus.Histogram({
+    name: 'http_request_duration_seconds',
     help: 'Duration of HTTP requests in seconds',
-    labelNames: ['method', 'route'],
-    buckets: [0.1, 0.5, 1, 2, 5]
+    labelNames: ['method', 'path'],
+    buckets: [0.1, 0.5, 1, 2, 5], // Adjust buckets based on your requirements
 });
-//# sourceMappingURL=metrics.js.map
+const requestDurationMiddleware = (err, req, res, next) => {
+    const start = process.hrtime();
+    res.on('finish', () => {
+        const duration = getDurationInMilliseconds(start);
+        const labels = { method: req.method, path: req.path };
+        requestDurationHistogram.observe(labels, duration / 1000); // Convert to seconds
+    });
+    next();
+};
+exports.requestDurationMiddleware = requestDurationMiddleware;
+function getDurationInMilliseconds(start) {
+    const NS_PER_SEC = 1e9;
+    const NS_TO_MS = 1e6;
+    const diff = process.hrtime(start);
+    return (diff[0] * NS_PER_SEC + diff[1]) / NS_TO_MS;
+}
+//# sourceMappingURL=request-duration.middleware.js.map

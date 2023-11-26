@@ -9,10 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreatePassengerTable1695138686471 = void 0;
-class CreatePassengerTable1695138686471 {
+exports.CreatePassengerTable1701007135099 = void 0;
+class CreatePassengerTable1701007135099 {
     constructor() {
-        this.name = 'CreatePassengerTable1695138686471';
+        this.name = 'CreatePassengerTable1701007135099';
     }
     up(queryRunner) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -27,5 +27,5 @@ class CreatePassengerTable1695138686471 {
         });
     }
 }
-exports.CreatePassengerTable1695138686471 = CreatePassengerTable1695138686471;
-//# sourceMappingURL=1695138686471-create-passenger-table.js.map
+exports.CreatePassengerTable1701007135099 = CreatePassengerTable1701007135099;
+//# sourceMappingURL=1701007135099-create-passenger-table.js.map

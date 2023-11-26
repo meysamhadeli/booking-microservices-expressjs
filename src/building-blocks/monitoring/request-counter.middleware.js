@@ -23,22 +23,30 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.requestDurationHistogram = exports.errorCounter = exports.requestCounter = void 0;
+exports.requestCounterMiddleware = void 0;
 const Prometheus = __importStar(require("prom-client"));
-exports.requestCounter = new Prometheus.Counter({
-    name: 'express_request_total',
-    help: 'Total number of HTTP requests handled by the Express app',
-    labelNames: ['method', 'route', 'statusCode']
+const requestCounter = new Prometheus.Counter({
+    name: 'http_requests_total',
+    help: 'Total number of HTTP requests',
+    labelNames: ['method', 'path', 'status']
 });
-exports.errorCounter = new Prometheus.Counter({
-    name: 'express_error_total',
-    help: 'Total number of errors encountered by the Express app',
-    labelNames: ['route']
+const errorCounter = new Prometheus.Counter({
+    name: 'http_errors_total',
+    help: 'Total number of HTTP errors',
+    labelNames: ['method', 'path', 'status']
 });
-exports.requestDurationHistogram = new Prometheus.Histogram({
-    name: 'express_request_duration_seconds',
-    help: 'Duration of HTTP requests in seconds',
-    labelNames: ['method', 'route'],
-    buckets: [0.1, 0.5, 1, 2, 5]
-});
-//# sourceMappingURL=metrics.js.map
+const requestCounterMiddleware = (err, req, res, next) => {
+    const labels = { method: req.method, path: req.path };
+    requestCounter.inc(labels);
+    res.on('finish', () => {
+        const status = res.statusCode.toString();
+        requestCounter.inc(Object.assign(Object.assign({}, labels), { status }));
+        // Check if the status code represents an error (4xx or 5xx)
+        if (status.startsWith('4') || status.startsWith('5')) {
+            errorCounter.inc(Object.assign(Object.assign({}, labels), { status }));
+        }
+    });
+    next();
+};
+exports.requestCounterMiddleware = requestCounterMiddleware;
+//# sourceMappingURL=request-counter.middleware.js.map

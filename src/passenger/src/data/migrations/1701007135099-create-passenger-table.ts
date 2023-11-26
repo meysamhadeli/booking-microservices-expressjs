@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class CreatePassengerTable1695138686471 implements MigrationInterface {
-    name = 'CreatePassengerTable1695138686471'
+export class CreatePassengerTable1701007135099 implements MigrationInterface {
+    name = 'CreatePassengerTable1701007135099'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TYPE "public"."passenger_passengertype_enum" AS ENUM('0', '1', '2', '3')`);

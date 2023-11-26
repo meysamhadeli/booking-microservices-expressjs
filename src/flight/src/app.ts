@@ -14,7 +14,7 @@ import { collectDefaultMetrics } from 'prom-client';
 import { initialDbContext } from './data/dbContext';
 import { initialSwagger } from 'building-blocks/swagger/swagger';
 import { initialLogger } from './extensions/loggerExtensions';
-import {errorHandler} from "building-blocks/error-handler/errorHandler";
+import { errorHandler } from 'building-blocks/error-handler/errorHandler';
 
 const startupApp = async () => {
   collectDefaultMetrics();
