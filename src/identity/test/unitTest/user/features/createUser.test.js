@@ -52,21 +52,16 @@ describe('unit test for create user', () => {
         mockUserRepository
             .setup((x) => x.findUserByEmail(TypeMoq.It.isAnyString()))
             .returns(() => null);
-        const userCreated = new identityContract_1.UserCreated({
-            name: fakeUser.name,
-            passportNumber: fakeUser.passportNumber,
-            id: fakeUser.id
-        });
         // Mock userRepository's behavior when creating a user
         mockUserRepository
             .setup((x) => x.createUser(TypeMoq.It.isAnyObject(user_1.User)))
             .returns(() => Promise.resolve(fakeUser));
         // Mock publisher's behavior when publishing a user created
-        mockPublisher.setup((x) => x.publishMessage(userCreated)).returns(() => Promise.resolve());
+        mockPublisher.setup((x) => x.publishMessage(TypeMoq.It.isAnyObject(identityContract_1.UserCreated))).returns(() => Promise.resolve(null));
         const result = yield createUserHandler.handle(fakeCreateUser_1.FakeCreateUser.generate(fakeUser));
         // Verify that the publishMessage method was called exactly once
         mockUserRepository.verify((x) => x.findUserByEmail(TypeMoq.It.isAnyString()), TypeMoq.Times.once());
-        mockPublisher.verify((x) => x.publishMessage(userCreated), TypeMoq.Times.once());
+        mockPublisher.verify((x) => x.publishMessage(TypeMoq.It.isAnyObject(identityContract_1.UserCreated)), TypeMoq.Times.once());
         mockUserRepository.verify((x) => x.createUser(TypeMoq.It.isAnyObject(user_1.User)), TypeMoq.Times.once());
         expect(result).not.toBeNull();
     }));

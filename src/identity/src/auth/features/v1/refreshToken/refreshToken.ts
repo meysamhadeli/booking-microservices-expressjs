@@ -37,9 +37,7 @@ export class RefreshTokenController extends Controller {
 
 @injectable()
 export class RefreshTokenHandler implements IHandler<RefreshToken, AuthDto> {
-  constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {
-  }
-
+  constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
   async handle(request: RefreshToken): Promise<AuthDto> {
     await refreshTokenValidations.params.validateAsync(request);

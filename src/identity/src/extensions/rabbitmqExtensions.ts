@@ -6,7 +6,6 @@ import {
   RabbitmqOptions
 } from 'building-blocks/rabbitmq/rabbitmq';
 
-
 export const initialRabbitmq = async (options?: RabbitmqOptions): Promise<RabbitMQConnection> => {
   const rabbitMQConnection = container.resolve(RabbitMQConnection);
   await rabbitMQConnection.createConnection(options);
