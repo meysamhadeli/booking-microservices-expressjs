@@ -16,7 +16,6 @@ exports.IntegrationTestFixture = exports.Fixture = void 0;
 const postgresContainer_1 = require("building-blocks/test/container/postgres/postgresContainer");
 const passport_1 = __importDefault(require("passport"));
 const routes_1 = require("../../../src/routes/routes");
-const errorHandler_1 = require("building-blocks/middlewares/errorHandler");
 const mediatrExtensions_1 = require("../../../src/extensions/mediatrExtensions");
 const rabbitmqContainer_1 = require("building-blocks/test/container/rabbitmq/rabbitmqContainer");
 const rabbitmq_1 = require("building-blocks/rabbitmq/rabbitmq");
@@ -26,6 +25,7 @@ const authRepository_1 = require("../../../src/data/repositories/authRepository"
 const express_1 = __importDefault(require("express"));
 const rabbitmqExtensions_1 = require("../../../src/extensions/rabbitmqExtensions");
 const dbContext_1 = require("../../../src/data/dbContext");
+const errorHandler_1 = require("building-blocks/error-handler/errorHandler");
 class Fixture {
 }
 exports.Fixture = Fixture;

@@ -8,10 +8,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Environment varibales
-.env*
-!.env*.example
-
 # Code coverage
 coverage
 

@@ -1,7 +1,6 @@
 import { postgresContainerStart } from 'building-blocks/test/container/postgres/postgresContainer';
 import passport from 'passport';
 import { RegisterRoutes } from '../../../src/routes/routes';
-import { errorHandler } from 'building-blocks/middlewares/errorHandler';
 import { registerMediatrHandlers } from '../../../src/extensions/mediatrExtensions';
 import { rabbitMqContainerStart } from 'building-blocks/test/container/rabbitmq/rabbitmqContainer';
 import { DataSource } from 'typeorm';
@@ -19,6 +18,7 @@ import { AuthRepository, IAuthRepository } from '../../../src/data/repositories/
 import express, { Express } from 'express';
 import { initialRabbitmq } from '../../../src/extensions/rabbitmqExtensions';
 import { initialDbContext } from '../../../src/data/dbContext';
+import { errorHandler } from 'building-blocks/error-handler/errorHandler';
 
 export class Fixture {
   databaseConnection: DataSource;

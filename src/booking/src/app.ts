@@ -7,7 +7,6 @@ import passport from 'passport';
 import { morganMiddleware } from 'building-blocks/logging/morgan';
 import { RegisterRoutes } from './routes/routes';
 import config from 'building-blocks/config/config';
-import { errorHandler } from 'building-blocks/middlewares/errorHandler';
 import { initialRabbitmq } from './extensions/rabbitmqExtensions';
 import { registerMediatrHandlers } from './extensions/mediatrExtensions';
 import { initialOpenTelemetry } from './extensions/otelExtensions';
@@ -16,6 +15,7 @@ import { initialDbContext } from './data/dbContext';
 import { initialSwagger } from 'building-blocks/swagger/swagger';
 import { initialLogger } from './extensions/loggerExtensions';
 import { initialHttpClientServices } from './extensions/httpClientExtensions';
+import { errorHandler } from 'building-blocks/error-handler/errorHandler';
 
 const startupApp = async () => {
   collectDefaultMetrics();
