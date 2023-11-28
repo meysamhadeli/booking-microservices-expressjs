@@ -57,7 +57,9 @@ describe('unit test for create user', () => {
             .setup((x) => x.createUser(TypeMoq.It.isAnyObject(user_1.User)))
             .returns(() => Promise.resolve(fakeUser));
         // Mock publisher's behavior when publishing a user created
-        mockPublisher.setup((x) => x.publishMessage(TypeMoq.It.isAnyObject(identityContract_1.UserCreated))).returns(() => Promise.resolve(null));
+        mockPublisher
+            .setup((x) => x.publishMessage(TypeMoq.It.isAnyObject(identityContract_1.UserCreated)))
+            .returns(() => Promise.resolve());
         const result = yield createUserHandler.handle(fakeCreateUser_1.FakeCreateUser.generate(fakeUser));
         // Verify that the publishMessage method was called exactly once
         mockUserRepository.verify((x) => x.findUserByEmail(TypeMoq.It.isAnyString()), TypeMoq.Times.once());
