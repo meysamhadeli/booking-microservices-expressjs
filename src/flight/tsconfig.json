@@ -1,16 +1,14 @@
 {
   "compilerOptions": {
-    "lib": ["es5", "es6", "dom"],
     "module": "commonjs",
     "declaration": true,
     "esModuleInterop": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
+    "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
