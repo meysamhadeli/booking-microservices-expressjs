@@ -15,7 +15,7 @@ export interface IDbContext {
 }
 
 export interface IDataSeeder {
-  seedData(): Promise<void>;
+  seedData(dataSource: DataSource): Promise<void>;
 }
 
 @injectable()
