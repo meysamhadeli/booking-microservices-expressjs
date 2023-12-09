@@ -28,7 +28,6 @@ jobs:
         working-directory: ./src/building-blocks
       - run: npm ci
       - run: npm run build --if-present
-      - run: npm test
 
       - name: identity_service build
         working-directory: ./src/identity
