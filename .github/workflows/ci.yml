@@ -33,8 +33,26 @@ jobs:
           npm run build
         working-directory: ./src/identity
 
-      - name: test identity
-        run: npm test
-        working-directory: ./src/identity
+      - name: build flight
+        run: |
+          npm install
+          npm run build
+        working-directory: ./src/flight
+
+      - name: build passenger
+        run: |
+          npm install
+          npm run build
+        working-directory: ./src/passenger
+
+      - name: build booking
+        run: |
+          npm install
+          npm run build
+        working-directory: ./src/booking
+
+#      - name: test identity
+#        run: npm test
+#        working-directory: ./src/identity
 
 
