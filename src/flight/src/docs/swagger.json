@@ -696,6 +696,39 @@
 				}
 			}
 		},
+		"/flight/v1/get-by-id": {
+			"get": {
+				"operationId": "GetFlightById",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FlightDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/seat/v1/create": {
 			"post": {
 				"operationId": "CreateSeat",
@@ -727,42 +760,6 @@
 						}
 					}
 				}
-			}
-		},
-		"/seat/v1/get-available-seats": {
-			"get": {
-				"operationId": "GetAvailableSeats",
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/SeatDto"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "flightId",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
 			}
 		},
 		"/seat/v1/reserve": {
@@ -798,16 +795,19 @@
 				}
 			}
 		},
-		"/flight/v1/get-by-id": {
+		"/seat/v1/get-available-seats": {
 			"get": {
-				"operationId": "GetFlightById",
+				"operationId": "GetAvailableSeats",
 				"responses": {
 					"200": {
 						"description": "OK",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/FlightDto"
+									"items": {
+										"$ref": "#/components/schemas/SeatDto"
+									},
+									"type": "array"
 								}
 							}
 						}
@@ -821,7 +821,7 @@
 				"parameters": [
 					{
 						"in": "query",
-						"name": "id",
+						"name": "flightId",
 						"required": true,
 						"schema": {
 							"format": "double",

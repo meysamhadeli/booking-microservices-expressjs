@@ -20,7 +20,7 @@ const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
 const passengerDto_1 = require("../../../dtos/passengerDto");
 const tsoa_1 = require("tsoa");
 const joi_1 = __importDefault(require("joi"));
-const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
+const notFoundException_1 = __importDefault(require("building-blocks/types/exception/not-found.exception"));
 const mappings_1 = __importDefault(require("../../../mappings"));
 const tsyringe_1 = require("tsyringe");
 class GetPassengerById {

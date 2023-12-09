@@ -1,4 +1,4 @@
-import { FlightDto, ReserveSeatRequestDto, SeatDto } from 'building-blocks/contracts/flightContract';
+import { FlightDto, ReserveSeatRequestDto, SeatDto } from 'building-blocks/contracts/flight.contract';
 export interface IFlightClientService {
     getFlightById(id: number): Promise<FlightDto>;
     getAvalibaleSeats(flightId: number): Promise<SeatDto[]>;

@@ -3,19 +3,19 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { CreateAircraftController } from './../aircraft/features/v1/createAircraft/createAircraft';
+import { CreateAircraftController } from './../aircraft/features/v1/create-aircraft/create-aircraft';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { CreateAirportController } from './../airport/features/v1/createAirport/createAirport';
+import { CreateAirportController } from './../airport/features/v1/create-airport/create-airport';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { CreateFlightController } from './../flight/features/v1/createFlight/createFlight';
+import { CreateFlightController } from './../flight/features/v1/create-flight/create-flight';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { CreateSeatController } from './../seat/features/v1/createSeat/createSeat';
+import { GetUserByIdController } from './../flight/features/v1/get-flight-by-id/get-flight-by-id';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { GetAvailableSeatsController } from './../seat/features/v1/getAvailableSeats/getAvailableSeats';
+import { CreateSeatController } from './../seat/features/v1/create-seat/create-seat';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { ReserveSeatController } from './../seat/features/v1/reserveSeat/reserveSeat';
+import { ReserveSeatController } from './../seat/features/v1/reserve-seat/reserve-seat';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { GetUserByIdController } from './../flight/features/v1/getFlightById/getFlightById';
+import { GetAvailableSeatsController } from './../seat/features/v1/get-available-seats/get-available-seats';
 import { expressAuthentication } from './../configurations/authentication';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
@@ -314,6 +314,32 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/flight/v1/get-by-id',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(GetUserByIdController)),
+            ...(fetchMiddlewares<RequestHandler>(GetUserByIdController.prototype.getFlightById)),
+
+            function GetUserByIdController_getFlightById(request: any, response: any, next: any) {
+            const args = {
+                    id: {"in":"query","name":"id","required":true,"dataType":"double"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new GetUserByIdController();
+
+
+              const promise = controller.getFlightById.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/seat/v1/create',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CreateSeatController)),
@@ -335,32 +361,6 @@ export function RegisterRoutes(app: Router) {
 
               const promise = controller.createSeat.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, 201, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/seat/v1/get-available-seats',
-            authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(GetAvailableSeatsController)),
-            ...(fetchMiddlewares<RequestHandler>(GetAvailableSeatsController.prototype.getAvailableSeats)),
-
-            function GetAvailableSeatsController_getAvailableSeats(request: any, response: any, next: any) {
-            const args = {
-                    flightId: {"in":"query","name":"flightId","required":true,"dataType":"double"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new GetAvailableSeatsController();
-
-
-              const promise = controller.getAvailableSeats.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);
             }
@@ -392,14 +392,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/flight/v1/get-by-id',
+        app.get('/seat/v1/get-available-seats',
             authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(GetUserByIdController)),
-            ...(fetchMiddlewares<RequestHandler>(GetUserByIdController.prototype.getFlightById)),
+            ...(fetchMiddlewares<RequestHandler>(GetAvailableSeatsController)),
+            ...(fetchMiddlewares<RequestHandler>(GetAvailableSeatsController.prototype.getAvailableSeats)),
 
-            function GetUserByIdController_getFlightById(request: any, response: any, next: any) {
+            function GetAvailableSeatsController_getAvailableSeats(request: any, response: any, next: any) {
             const args = {
-                    id: {"in":"query","name":"id","required":true,"dataType":"double"},
+                    flightId: {"in":"query","name":"flightId","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -408,10 +408,10 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new GetUserByIdController();
+                const controller = new GetAvailableSeatsController();
 
 
-              const promise = controller.getFlightById.apply(controller, validatedArgs as any);
+              const promise = controller.getAvailableSeats.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);

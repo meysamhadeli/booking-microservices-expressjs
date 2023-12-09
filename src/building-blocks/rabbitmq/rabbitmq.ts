@@ -1,8 +1,7 @@
 import * as amqp from 'amqplib';
 import asyncRetry from 'async-retry';
 import config from '../config/config';
-import { container, inject, injectable, singleton } from 'tsyringe';
-import { OpenTelemetryTracer } from '../openTelemetry/otel';
+import { container, injectable, singleton } from 'tsyringe';
 import { getTypeName } from '../utils/reflection';
 import { deserializeObject, serializeObject } from '../utils/serialization';
 import { getUnixTime } from 'date-fns';
@@ -10,6 +9,7 @@ import { snakeCase } from 'lodash';
 import { sleep } from '../utils/time';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from '../logging/logger';
+import {OpenTelemetryTracer} from "../open-telemetry/open-telemetry";
 
 let connection: amqp.Connection = null;
 let channel: amqp.Channel = null;

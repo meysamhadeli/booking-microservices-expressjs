@@ -1,23 +1,14 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegisterRoutes = void 0;
 const runtime_1 = require("@tsoa/runtime");
-const createAircraft_1 = require("./../aircraft/features/v1/createAircraft/createAircraft");
-const createAirport_1 = require("./../airport/features/v1/createAirport/createAirport");
-const createFlight_1 = require("./../flight/features/v1/createFlight/createFlight");
-const createSeat_1 = require("./../seat/features/v1/createSeat/createSeat");
-const getAvailableSeats_1 = require("./../seat/features/v1/getAvailableSeats/getAvailableSeats");
-const reserveSeat_1 = require("./../seat/features/v1/reserveSeat/reserveSeat");
-const getFlightById_1 = require("./../flight/features/v1/getFlightById/getFlightById");
+const create_aircraft_1 = require("./../aircraft/features/v1/create-aircraft/create-aircraft");
+const create_airport_1 = require("./../airport/features/v1/create-airport/create-airport");
+const create_flight_1 = require("./../flight/features/v1/create-flight/create-flight");
+const get_flight_by_id_1 = require("./../flight/features/v1/get-flight-by-id/get-flight-by-id");
+const create_seat_1 = require("./../seat/features/v1/create-seat/create-seat");
+const reserve_seat_1 = require("./../seat/features/v1/reserve-seat/reserve-seat");
+const get_available_seats_1 = require("./../seat/features/v1/get-available-seats/get-available-seats");
 const authentication_1 = require("./../configurations/authentication");
 const promiseAny = require('promise.any');
 const models = {
@@ -210,14 +201,14 @@ const models = {
 };
 const validationService = new runtime_1.ValidationService(models);
 function RegisterRoutes(app) {
-    app.post('/aircraft/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createAircraft_1.CreateAircraftController)), ...((0, runtime_1.fetchMiddlewares)(createAircraft_1.CreateAircraftController.prototype.createAircraft)), function CreateAircraftController_createAircraft(request, response, next) {
+    app.post('/aircraft/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(create_aircraft_1.CreateAircraftController)), ...((0, runtime_1.fetchMiddlewares)(create_aircraft_1.CreateAircraftController.prototype.createAircraft)), function CreateAircraftController_createAircraft(request, response, next) {
         const args = {
             request: { "in": "body", "name": "request", "required": true, "ref": "CreateAircraftRequestDto" },
         };
         let validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new createAircraft_1.CreateAircraftController();
+            const controller = new create_aircraft_1.CreateAircraftController();
             const promise = controller.createAircraft.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 201, next);
         }
@@ -225,14 +216,14 @@ function RegisterRoutes(app) {
             return next(err);
         }
     });
-    app.post('/airport/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createAirport_1.CreateAirportController)), ...((0, runtime_1.fetchMiddlewares)(createAirport_1.CreateAirportController.prototype.createAirport)), function CreateAirportController_createAirport(request, response, next) {
+    app.post('/airport/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(create_airport_1.CreateAirportController)), ...((0, runtime_1.fetchMiddlewares)(create_airport_1.CreateAirportController.prototype.createAirport)), function CreateAirportController_createAirport(request, response, next) {
         const args = {
             request: { "in": "body", "name": "request", "required": true, "ref": "CreateAirportRequestDto" },
         };
         let validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new createAirport_1.CreateAirportController();
+            const controller = new create_airport_1.CreateAirportController();
             const promise = controller.createAirport.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 201, next);
         }
@@ -240,14 +231,14 @@ function RegisterRoutes(app) {
             return next(err);
         }
     });
-    app.post('/flight/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createFlight_1.CreateFlightController)), ...((0, runtime_1.fetchMiddlewares)(createFlight_1.CreateFlightController.prototype.createFlight)), function CreateFlightController_createFlight(request, response, next) {
+    app.post('/flight/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(create_flight_1.CreateFlightController)), ...((0, runtime_1.fetchMiddlewares)(create_flight_1.CreateFlightController.prototype.createFlight)), function CreateFlightController_createFlight(request, response, next) {
         const args = {
             request: { "in": "body", "name": "request", "required": true, "ref": "CreateFlightRequestDto" },
         };
         let validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new createFlight_1.CreateFlightController();
+            const controller = new create_flight_1.CreateFlightController();
             const promise = controller.createFlight.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 201, next);
         }
@@ -255,59 +246,14 @@ function RegisterRoutes(app) {
             return next(err);
         }
     });
-    app.post('/seat/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createSeat_1.CreateSeatController)), ...((0, runtime_1.fetchMiddlewares)(createSeat_1.CreateSeatController.prototype.createSeat)), function CreateSeatController_createSeat(request, response, next) {
-        const args = {
-            request: { "in": "body", "name": "request", "required": true, "ref": "CreateSeatRequestDto" },
-        };
-        let validatedArgs = [];
-        try {
-            validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new createSeat_1.CreateSeatController();
-            const promise = controller.createSeat.apply(controller, validatedArgs);
-            promiseHandler(controller, promise, response, 201, next);
-        }
-        catch (err) {
-            return next(err);
-        }
-    });
-    app.get('/seat/v1/get-available-seats', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getAvailableSeats_1.GetAvailableSeatsController)), ...((0, runtime_1.fetchMiddlewares)(getAvailableSeats_1.GetAvailableSeatsController.prototype.getAvailableSeats)), function GetAvailableSeatsController_getAvailableSeats(request, response, next) {
-        const args = {
-            flightId: { "in": "query", "name": "flightId", "required": true, "dataType": "double" },
-        };
-        let validatedArgs = [];
-        try {
-            validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new getAvailableSeats_1.GetAvailableSeatsController();
-            const promise = controller.getAvailableSeats.apply(controller, validatedArgs);
-            promiseHandler(controller, promise, response, 200, next);
-        }
-        catch (err) {
-            return next(err);
-        }
-    });
-    app.post('/seat/v1/reserve', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(reserveSeat_1.ReserveSeatController)), ...((0, runtime_1.fetchMiddlewares)(reserveSeat_1.ReserveSeatController.prototype.reserveSeat)), function ReserveSeatController_reserveSeat(request, response, next) {
-        const args = {
-            request: { "in": "body", "name": "request", "required": true, "ref": "ReserveSeatRequestDto" },
-        };
-        let validatedArgs = [];
-        try {
-            validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new reserveSeat_1.ReserveSeatController();
-            const promise = controller.reserveSeat.apply(controller, validatedArgs);
-            promiseHandler(controller, promise, response, 204, next);
-        }
-        catch (err) {
-            return next(err);
-        }
-    });
-    app.get('/flight/v1/get-by-id', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getFlightById_1.GetUserByIdController)), ...((0, runtime_1.fetchMiddlewares)(getFlightById_1.GetUserByIdController.prototype.getFlightById)), function GetUserByIdController_getFlightById(request, response, next) {
+    app.get('/flight/v1/get-by-id', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(get_flight_by_id_1.GetUserByIdController)), ...((0, runtime_1.fetchMiddlewares)(get_flight_by_id_1.GetUserByIdController.prototype.getFlightById)), function GetUserByIdController_getFlightById(request, response, next) {
         const args = {
             id: { "in": "query", "name": "id", "required": true, "dataType": "double" },
         };
         let validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new getFlightById_1.GetUserByIdController();
+            const controller = new get_flight_by_id_1.GetUserByIdController();
             const promise = controller.getFlightById.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 200, next);
         }
@@ -315,42 +261,85 @@ function RegisterRoutes(app) {
             return next(err);
         }
     });
+    app.post('/seat/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(create_seat_1.CreateSeatController)), ...((0, runtime_1.fetchMiddlewares)(create_seat_1.CreateSeatController.prototype.createSeat)), function CreateSeatController_createSeat(request, response, next) {
+        const args = {
+            request: { "in": "body", "name": "request", "required": true, "ref": "CreateSeatRequestDto" },
+        };
+        let validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request, response);
+            const controller = new create_seat_1.CreateSeatController();
+            const promise = controller.createSeat.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, 201, next);
+        }
+        catch (err) {
+            return next(err);
+        }
+    });
+    app.post('/seat/v1/reserve', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(reserve_seat_1.ReserveSeatController)), ...((0, runtime_1.fetchMiddlewares)(reserve_seat_1.ReserveSeatController.prototype.reserveSeat)), function ReserveSeatController_reserveSeat(request, response, next) {
+        const args = {
+            request: { "in": "body", "name": "request", "required": true, "ref": "ReserveSeatRequestDto" },
+        };
+        let validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request, response);
+            const controller = new reserve_seat_1.ReserveSeatController();
+            const promise = controller.reserveSeat.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, 204, next);
+        }
+        catch (err) {
+            return next(err);
+        }
+    });
+    app.get('/seat/v1/get-available-seats', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(get_available_seats_1.GetAvailableSeatsController)), ...((0, runtime_1.fetchMiddlewares)(get_available_seats_1.GetAvailableSeatsController.prototype.getAvailableSeats)), function GetAvailableSeatsController_getAvailableSeats(request, response, next) {
+        const args = {
+            flightId: { "in": "query", "name": "flightId", "required": true, "dataType": "double" },
+        };
+        let validatedArgs = [];
+        try {
+            validatedArgs = getValidatedArgs(args, request, response);
+            const controller = new get_available_seats_1.GetAvailableSeatsController();
+            const promise = controller.getAvailableSeats.apply(controller, validatedArgs);
+            promiseHandler(controller, promise, response, 200, next);
+        }
+        catch (err) {
+            return next(err);
+        }
+    });
     function authenticateMiddleware(security = []) {
-        return function runAuthenticationMiddleware(request, _response, next) {
-            return __awaiter(this, void 0, void 0, function* () {
-                const failedAttempts = [];
-                const pushAndRethrow = (error) => {
-                    failedAttempts.push(error);
-                    throw error;
-                };
-                const secMethodOrPromises = [];
-                for (const secMethod of security) {
-                    if (Object.keys(secMethod).length > 1) {
-                        const secMethodAndPromises = [];
-                        for (const name in secMethod) {
-                            secMethodAndPromises.push((0, authentication_1.expressAuthentication)(request, name, secMethod[name])
-                                .catch(pushAndRethrow));
-                        }
-                        secMethodOrPromises.push(Promise.all(secMethodAndPromises)
-                            .then(users => { return users[0]; }));
+        return async function runAuthenticationMiddleware(request, _response, next) {
+            const failedAttempts = [];
+            const pushAndRethrow = (error) => {
+                failedAttempts.push(error);
+                throw error;
+            };
+            const secMethodOrPromises = [];
+            for (const secMethod of security) {
+                if (Object.keys(secMethod).length > 1) {
+                    const secMethodAndPromises = [];
+                    for (const name in secMethod) {
+                        secMethodAndPromises.push((0, authentication_1.expressAuthentication)(request, name, secMethod[name])
+                            .catch(pushAndRethrow));
                     }
-                    else {
-                        for (const name in secMethod) {
-                            secMethodOrPromises.push((0, authentication_1.expressAuthentication)(request, name, secMethod[name])
-                                .catch(pushAndRethrow));
-                        }
+                    secMethodOrPromises.push(Promise.all(secMethodAndPromises)
+                        .then(users => { return users[0]; }));
+                }
+                else {
+                    for (const name in secMethod) {
+                        secMethodOrPromises.push((0, authentication_1.expressAuthentication)(request, name, secMethod[name])
+                            .catch(pushAndRethrow));
                     }
                 }
-                try {
-                    request['user'] = yield promiseAny.call(Promise, secMethodOrPromises);
-                    next();
-                }
-                catch (err) {
-                    const error = failedAttempts.pop();
-                    error.status = error.status || 401;
-                    next(error);
-                }
-            });
+            }
+            try {
+                request['user'] = await promiseAny.call(Promise, secMethodOrPromises);
+                next();
+            }
+            catch (err) {
+                const error = failedAttempts.pop();
+                error.status = error.status || 401;
+                next(error);
+            }
         };
     }
     function isController(object) {

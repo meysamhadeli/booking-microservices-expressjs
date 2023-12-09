@@ -34,9 +34,9 @@ const mappings_1 = __importDefault(require("../../../../aircraft/mappings"));
 const seatDto_1 = require("../../../dtos/seatDto");
 const seatClass_1 = require("../../../enums/seatClass");
 const seatType_1 = require("../../../enums/seatType");
-const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
+const notFoundException_1 = __importDefault(require("building-blocks/types/exception/not-found.exception"));
 const seat_1 = require("../../../entities/seat");
-const flightContract_1 = require("building-blocks/contracts/flightContract");
+const flightContract_1 = require("building-blocks/contracts/flight.contract");
 class CreateSeat {
     constructor(request = {}) {
         Object.assign(this, request);

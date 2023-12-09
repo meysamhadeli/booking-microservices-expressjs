@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegisterRoutes = void 0;
 const runtime_1 = require("@tsoa/runtime");
-const getPassengerById_1 = require("../passenger/features/v1/getPassengerById/getPassengerById");
-const getPassengers_1 = require("../passenger/features/v1/getPassengers/getPassengers");
+const get_passenger_by_id_1 = require("./../passenger/features/v1/get-passenger-by-id/get-passenger-by-id");
+const get_passengers_1 = require("./../passenger/features/v1/get-passengers/get-passengers");
 const authentication_1 = require("./../configurations/authentication");
 const promiseAny = require('promise.any');
 const models = {
@@ -27,14 +27,14 @@ const models = {
 };
 const validationService = new runtime_1.ValidationService(models);
 function RegisterRoutes(app) {
-    app.get('/passenger/v1/get-by-id', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getPassengerById_1.GetPassengerByIdController)), ...((0, runtime_1.fetchMiddlewares)(getPassengerById_1.GetPassengerByIdController.prototype.getPassengerById)), function GetPassengerByIdController_getPassengerById(request, response, next) {
+    app.get('/passenger/v1/get-by-id', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(get_passenger_by_id_1.GetPassengerByIdController)), ...((0, runtime_1.fetchMiddlewares)(get_passenger_by_id_1.GetPassengerByIdController.prototype.getPassengerById)), function GetPassengerByIdController_getPassengerById(request, response, next) {
         const args = {
             id: { "in": "query", "name": "id", "required": true, "dataType": "double" },
         };
         let validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new getPassengerById_1.GetPassengerByIdController();
+            const controller = new get_passenger_by_id_1.GetPassengerByIdController();
             const promise = controller.getPassengerById.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 200, next);
         }
@@ -42,7 +42,7 @@ function RegisterRoutes(app) {
             return next(err);
         }
     });
-    app.get('/passenger/v1/get-all', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(getPassengers_1.GetPassengersController)), ...((0, runtime_1.fetchMiddlewares)(getPassengers_1.GetPassengersController.prototype.getPassengers)), function GetPassengersController_getPassengers(request, response, next) {
+    app.get('/passenger/v1/get-all', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(get_passengers_1.GetPassengersController)), ...((0, runtime_1.fetchMiddlewares)(get_passengers_1.GetPassengersController.prototype.getPassengers)), function GetPassengersController_getPassengers(request, response, next) {
         const args = {
             pageSize: { "default": 10, "in": "query", "name": "pageSize", "dataType": "double" },
             page: { "default": 1, "in": "query", "name": "page", "dataType": "double" },
@@ -53,7 +53,7 @@ function RegisterRoutes(app) {
         let validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new getPassengers_1.GetPassengersController();
+            const controller = new get_passengers_1.GetPassengersController();
             const promise = controller.getPassengers.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 200, next);
         }

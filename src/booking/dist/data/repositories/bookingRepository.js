@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BookingRepository = void 0;
 const tsyringe_1 = require("tsyringe");
-const dbContext_1 = require("building-blocks/typeorm/dbContext");
+const dbContext_1 = require("building-blocks/typeorm/db-context");
 const booking_1 = require("../../booking/entities/booking");
 class BookingRepository {
     constructor() {

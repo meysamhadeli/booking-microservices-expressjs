@@ -3,21 +3,21 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { LoginController } from '../auth/features/v1/login/login';
+import { LoginController } from './../auth/features/v1/login/login';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { LogoutController } from '../auth/features/v1/logout/logout';
+import { LogoutController } from './../auth/features/v1/logout/logout';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { RefreshTokenController } from '../auth/features/v1/refreshToken/refreshToken';
+import { DeleteUserByIdController } from './../user/features/v1/delete-user-by-id/delete-user-by-id';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { CreateUserController } from '../user/features/v1/createUser/createUser';
+import { CreateUserController } from './../user/features/v1/create-user/create-user';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { DeleteUserByIdController } from '../user/features/v1/deleteUserById/deleteUserById';
+import { GetUserByIdController } from './../user/features/v1/get-user-by-id/get-user-by-id';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { GetUserByIdController } from '../user/features/v1/getUserById/getUserById';
+import { GetUsersController } from './../user/features/v1/get-users/get-users';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { GetUsersController } from '../user/features/v1/getUsers/getUsers';
+import { UpdateUserController } from './../user/features/v1/update-user/update-user';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { UpdateUserController } from '../user/features/v1/updateUser/updateUser';
+import { RefreshTokenController } from './../auth/features/v1/refresh-token/refresh-token';
 import { expressAuthentication } from './../configurations/authentication';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
@@ -167,13 +167,14 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/identity/v1/refreshToken',
-            ...(fetchMiddlewares<RequestHandler>(RefreshTokenController)),
-            ...(fetchMiddlewares<RequestHandler>(RefreshTokenController.prototype.refreshToken)),
+        app.delete('/user/v1/delete',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(DeleteUserByIdController)),
+            ...(fetchMiddlewares<RequestHandler>(DeleteUserByIdController.prototype.deleteUserById)),
 
-            function RefreshTokenController_refreshToken(request: any, response: any, next: any) {
+            function DeleteUserByIdController_deleteUserById(request: any, response: any, next: any) {
             const args = {
-                    refreshToken: {"in":"body-prop","name":"refreshToken","required":true,"dataType":"string"},
+                    id: {"in":"query","name":"id","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -182,11 +183,11 @@ export function RegisterRoutes(app: Router) {
             try {
                 validatedArgs = getValidatedArgs(args, request, response);
 
-                const controller = new RefreshTokenController();
+                const controller = new DeleteUserByIdController();
 
 
-              const promise = controller.refreshToken.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, 200, next);
+              const promise = controller.deleteUserById.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 204, next);
             } catch (err) {
                 return next(err);
             }
@@ -213,32 +214,6 @@ export function RegisterRoutes(app: Router) {
 
               const promise = controller.createUser.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, 201, next);
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/user/v1/delete',
-            authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(DeleteUserByIdController)),
-            ...(fetchMiddlewares<RequestHandler>(DeleteUserByIdController.prototype.deleteUserById)),
-
-            function DeleteUserByIdController_deleteUserById(request: any, response: any, next: any) {
-            const args = {
-                    id: {"in":"query","name":"id","required":true,"dataType":"double"},
-            };
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = getValidatedArgs(args, request, response);
-
-                const controller = new DeleteUserByIdController();
-
-
-              const promise = controller.deleteUserById.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, 204, next);
             } catch (err) {
                 return next(err);
             }
@@ -322,6 +297,31 @@ export function RegisterRoutes(app: Router) {
 
               const promise = controller.updateUser.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, 204, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/identity/v1/refreshToken',
+            ...(fetchMiddlewares<RequestHandler>(RefreshTokenController)),
+            ...(fetchMiddlewares<RequestHandler>(RefreshTokenController.prototype.refreshToken)),
+
+            function RefreshTokenController_refreshToken(request: any, response: any, next: any) {
+            const args = {
+                    refreshToken: {"in":"body-prop","name":"refreshToken","required":true,"dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const controller = new RefreshTokenController();
+
+
+              const promise = controller.refreshToken.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, 200, next);
             } catch (err) {
                 return next(err);
             }

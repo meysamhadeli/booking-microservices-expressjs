@@ -29,7 +29,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.expressAuthentication = exports.httpContext = void 0;
 const jwt = __importStar(require("jsonwebtoken"));
 const config_1 = __importDefault(require("building-blocks/config/config"));
-const unauthorizedException_1 = __importDefault(require("building-blocks/types/exception/unauthorizedException"));
+const unauthorized_exception_1 = __importDefault(require("building-blocks/types/exception/unauthorized.exception"));
 const encryption_1 = require("building-blocks/utils/encryption");
 exports.httpContext = {
     request: null
@@ -53,22 +53,22 @@ async function expressAuthentication(request, securityName, scopes) {
             token = authorizationHeader.split(' ')[1];
         }
         else {
-            return Promise.reject(new unauthorizedException_1.default('Unauthorized'));
+            return Promise.reject(new unauthorized_exception_1.default('Unauthorized'));
         }
         return new Promise((resolve, reject) => {
             if (!token) {
-                reject(new unauthorizedException_1.default('Unauthorized'));
+                reject(new unauthorized_exception_1.default('Unauthorized'));
             }
             jwt.verify(token, config_1.default.jwt.secret, function (err, decoded) {
                 var _a;
                 if (err) {
-                    reject(new unauthorizedException_1.default('Unauthorized'));
+                    reject(new unauthorized_exception_1.default('Unauthorized'));
                 }
                 else {
                     if (scopes != undefined) {
                         for (const scope of scopes) {
                             if (!((_a = decoded === null || decoded === void 0 ? void 0 : decoded.scopes) === null || _a === void 0 ? void 0 : _a.includes(scope))) {
-                                reject(new unauthorizedException_1.default('Unauthorized: JWT does not contain required scope.'));
+                                reject(new unauthorized_exception_1.default('Unauthorized: JWT does not contain required scope.'));
                             }
                         }
                     }
@@ -77,7 +77,7 @@ async function expressAuthentication(request, securityName, scopes) {
             });
         });
     }
-    return Promise.reject(new unauthorizedException_1.default('Unauthorized'));
+    return Promise.reject(new unauthorized_exception_1.default('Unauthorized'));
 }
 exports.expressAuthentication = expressAuthentication;
 //# sourceMappingURL=authentication.js.map

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegisterRoutes = void 0;
 const runtime_1 = require("@tsoa/runtime");
-const createBooking_1 = require("./../booking/features/v1/createBooking/createBooking");
+const create_booking_1 = require("./../booking/features/v1/create-booking/create-booking");
 const authentication_1 = require("./../configurations/authentication");
 const promiseAny = require('promise.any');
 const models = {
@@ -36,14 +36,14 @@ const models = {
 };
 const validationService = new runtime_1.ValidationService(models);
 function RegisterRoutes(app) {
-    app.post('/booking/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(createBooking_1.CreateBookingController)), ...((0, runtime_1.fetchMiddlewares)(createBooking_1.CreateBookingController.prototype.createBooking)), function CreateBookingController_createBooking(request, response, next) {
+    app.post('/booking/v1/create', authenticateMiddleware([{ "jwt": [] }]), ...((0, runtime_1.fetchMiddlewares)(create_booking_1.CreateBookingController)), ...((0, runtime_1.fetchMiddlewares)(create_booking_1.CreateBookingController.prototype.createBooking)), function CreateBookingController_createBooking(request, response, next) {
         const args = {
             request: { "in": "body", "name": "request", "required": true, "ref": "CreateBookingRequestDto" },
         };
         let validatedArgs = [];
         try {
             validatedArgs = getValidatedArgs(args, request, response);
-            const controller = new createBooking_1.CreateBookingController();
+            const controller = new create_booking_1.CreateBookingController();
             const promise = controller.createBooking.apply(controller, validatedArgs);
             promiseHandler(controller, promise, response, 201, next);
         }

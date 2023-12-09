@@ -28,7 +28,7 @@ exports.GetFlightByIdHandler = exports.GetUserByIdController = exports.GetFlight
 const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
 const tsoa_1 = require("tsoa");
 const joi_1 = __importDefault(require("joi"));
-const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
+const notFoundException_1 = __importDefault(require("building-blocks/types/exception/not-found.exception"));
 const tsyringe_1 = require("tsyringe");
 const flightDto_1 = require("../../../dtos/flightDto");
 const mappings_1 = __importDefault(require("../../../mappings"));

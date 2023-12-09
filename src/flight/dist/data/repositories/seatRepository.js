@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SeatRepository = void 0;
 const tsyringe_1 = require("tsyringe");
-const dbContext_1 = require("building-blocks/typeorm/dbContext");
+const dbContext_1 = require("building-blocks/typeorm/db-context");
 const seat_1 = require("../../seat/entities/seat");
 class SeatRepository {
     constructor() {

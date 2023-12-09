@@ -7,15 +7,15 @@ import passport from 'passport';
 import { morganMiddleware } from 'building-blocks/logging/morgan';
 import { RegisterRoutes } from './routes/routes';
 import config from 'building-blocks/config/config';
-import { initialRabbitmq } from './extensions/rabbitmqExtensions';
-import { registerMediatrHandlers } from './extensions/mediatrExtensions';
-import { initialOpenTelemetry } from './extensions/otelExtensions';
 import { collectDefaultMetrics } from 'prom-client';
-import { initialDbContext } from './data/dbContext';
 import { initialSwagger } from 'building-blocks/swagger/swagger';
-import { initialLogger } from './extensions/loggerExtensions';
-import { initialHttpClientServices } from './extensions/httpClientExtensions';
-import { errorHandler } from 'building-blocks/error-handler/errorHandler';
+import { erroHandler } from 'building-blocks/error-handler/erro-handler';
+import {initialDbContext} from "./data/db.context";
+import {initialLogger} from "./extensions/logger.extensions";
+import {initialOpenTelemetry} from "./extensions/otel.extensions";
+import {initialRabbitmq} from "./extensions/rabbitmq.extensions";
+import {initialHttpClientServices} from "./extensions/http-client.extensions";
+import {registerMediatrHandlers} from "./extensions/mediatr.extensions";
 
 const startupApp = async () => {
   collectDefaultMetrics();
@@ -45,7 +45,7 @@ const startupApp = async () => {
 
   RegisterRoutes(app);
 
-  app.use(errorHandler);
+  app.use(erroHandler);
 
   app.listen(config.port, () => {
     logger.info(`Listening to port ${config.port}`);

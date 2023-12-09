@@ -189,7 +189,7 @@
 	"info": {
 		"title": "identity",
 		"version": "1.0.0",
-		"description": "identity service for authentication and authorization",
+		"description": "identity service",
 		"license": {
 			"name": "MIT"
 		},
@@ -258,41 +258,37 @@
 				}
 			}
 		},
-		"/identity/v1/refreshToken": {
-			"post": {
-				"operationId": "RefreshToken",
+		"/user/v1/delete": {
+			"delete": {
+				"operationId": "DeleteUserById",
 				"responses": {
-					"200": {
-						"description": "OK",
+					"204": {
+						"description": "NO_CONTENT",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/AuthDto"
+									"$ref": "#/components/schemas/UserDto"
 								}
 							}
 						}
 					}
 				},
-				"security": [],
-				"parameters": [],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"properties": {
-									"refreshToken": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"refreshToken"
-								],
-								"type": "object"
-							}
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
-				}
+				]
 			}
 		},
 		"/user/v1/create": {
@@ -326,39 +322,6 @@
 						}
 					}
 				}
-			}
-		},
-		"/user/v1/delete": {
-			"delete": {
-				"operationId": "DeleteUserById",
-				"responses": {
-					"204": {
-						"description": "NO_CONTENT",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/UserDto"
-								}
-							}
-						}
-					}
-				},
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "query",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
 			}
 		},
 		"/user/v1/get-by-id": {
@@ -505,6 +468,43 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/UpdateUserRequestDto"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/identity/v1/refreshToken": {
+			"post": {
+				"operationId": "RefreshToken",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuthDto"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object"
 							}
 						}
 					}

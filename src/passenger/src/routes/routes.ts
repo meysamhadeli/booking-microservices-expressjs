@@ -3,9 +3,9 @@
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { GetPassengerByIdController } from '../passenger/features/v1/getPassengerById/getPassengerById';
+import { GetPassengerByIdController } from './../passenger/features/v1/get-passenger-by-id/get-passenger-by-id';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { GetPassengersController } from '../passenger/features/v1/getPassengers/getPassengers';
+import { GetPassengersController } from './../passenger/features/v1/get-passengers/get-passengers';
 import { expressAuthentication } from './../configurations/authentication';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');

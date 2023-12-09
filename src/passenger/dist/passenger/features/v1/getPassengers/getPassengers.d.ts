@@ -2,7 +2,7 @@ import { IHandler, IRequest } from 'building-blocks/mediatr-js/mediatr.js';
 import { PassengerDto } from '../../../dtos/passengerDto';
 import { Controller } from 'tsoa';
 import { IPassengerRepository } from '../../../../data/repositories/passengerRepository';
-import { PagedResult } from 'building-blocks/types/pagination/pagedResult';
+import { PagedResult } from 'building-blocks/types/pagination/paged-result';
 export declare class GetPassengers implements IRequest<PagedResult<PassengerDto[]>> {
     page: number;
     pageSize: number;

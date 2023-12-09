@@ -24,8 +24,8 @@ const tsyringe_1 = require("tsyringe");
 const mappings_1 = __importDefault(require("../../../mappings"));
 const bookingDto_1 = require("../../../dtos/bookingDto");
 const booking_1 = require("../../../entities/booking");
-const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
-const bookingContract_1 = require("building-blocks/contracts/bookingContract");
+const notFoundException_1 = __importDefault(require("building-blocks/types/exception/not-found.exception"));
+const bookingContract_1 = require("building-blocks/contracts/booking.contract");
 class CreateBooking {
     constructor(request = {}) {
         Object.assign(this, request);

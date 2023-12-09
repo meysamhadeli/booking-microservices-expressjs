@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialDbContext = void 0;
 const tsyringe_1 = require("tsyringe");
-const dbContext_1 = require("building-blocks/typeorm/dbContext");
+const dbContext_1 = require("building-blocks/typeorm/db-context");
 const repositoryExtensions_1 = require("../extensions/repositoryExtensions");
 const initialDbContext = async (options) => {
     tsyringe_1.container.register('IDbContext', dbContext_1.DbContext);

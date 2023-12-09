@@ -55,13 +55,7 @@
 				"additionalProperties": false
 			}
 		},
-		"securitySchemes": {
-			"jwt": {
-				"type": "http",
-				"scheme": "bearer",
-				"bearerFormat": "JWT"
-			}
-		}
+		"securitySchemes": {}
 	},
 	"info": {
 		"title": "passenger",

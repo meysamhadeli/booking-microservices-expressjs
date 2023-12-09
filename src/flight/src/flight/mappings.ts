@@ -1,6 +1,6 @@
 import { TypeMapper } from 'ts-mapper';
-import { Flight } from './entities/flight';
-import { FlightDto } from './dtos/flightDto';
+import {FlightDto} from "./dtos/flight.dto";
+import {Flight} from "./entities/flight.entity";
 
 export class Mapper extends TypeMapper {
   constructor() {

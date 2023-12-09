@@ -1,14 +1,13 @@
 import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Body, Controller, Post, Route, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
-import { GenerateToken } from '../generateToken/generateToken';
-import { AuthDto } from '../../../dtos/authDto';
+import { AuthDto } from '../../../dtos/auth.dto';
 import { password } from 'building-blocks/utils/validation';
 import { isPasswordMatch } from 'building-blocks/utils/encryption';
-import UnauthorizedException from 'building-blocks/types/exception/unauthorizedException';
-import { IUserRepository, UserRepository } from '../../../../data/repositories/userRepository';
 import { inject, injectable } from 'tsyringe';
-import ApplicationException from 'building-blocks/types/exception/applicationException';
+import ApplicationException from 'building-blocks/types/exception/application.exception';
+import {IUserRepository} from "../../../../data/repositories/user.repository";
+import {GenerateToken} from "../generate-token/generate-token";
 
 export class Login implements IRequest<AuthDto> {
   email: string;

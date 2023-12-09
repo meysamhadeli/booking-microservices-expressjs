@@ -55,7 +55,6 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.20",
     "prettier": "^2.8.1",
     "prom-client": "^14.2.0",
     "reflect-metadata": "^0.1.13",

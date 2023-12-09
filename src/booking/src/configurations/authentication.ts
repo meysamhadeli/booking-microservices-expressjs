@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
 import config from 'building-blocks/config/config';
-import UnauthorizedException from 'building-blocks/types/exception/unauthorizedException';
+import UnauthorizedException from 'building-blocks/types/exception/unauthorized.exception';
 import { generateFakeJwt } from 'building-blocks/utils/encryption';
 
 export const httpContext = {

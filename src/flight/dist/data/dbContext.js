@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialDbContext = void 0;
 const tsyringe_1 = require("tsyringe");
-const dbContext_1 = require("building-blocks/typeorm/dbContext");
+const dbContext_1 = require("building-blocks/typeorm/db-context");
 const repositoryExtensions_1 = require("../extensions/repositoryExtensions");
 const flightSeed_1 = require("./seeds/flightSeed");
 const initialDbContext = (options) => __awaiter(void 0, void 0, void 0, function* () {

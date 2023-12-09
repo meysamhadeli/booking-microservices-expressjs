@@ -32,9 +32,9 @@ const joi_1 = __importDefault(require("joi"));
 const tsyringe_1 = require("tsyringe");
 const mappings_1 = __importDefault(require("../../../../aircraft/mappings"));
 const seatDto_1 = require("../../../dtos/seatDto");
-const notFoundException_1 = __importDefault(require("building-blocks/types/exception/notFoundException"));
+const notFoundException_1 = __importDefault(require("building-blocks/types/exception/not-found.exception"));
 const seat_1 = require("../../../entities/seat");
-const flightContract_1 = require("building-blocks/contracts/flightContract");
+const flightContract_1 = require("building-blocks/contracts/flight.contract");
 class ReserveSeat {
     constructor(request = {}) {
         Object.assign(this, request);

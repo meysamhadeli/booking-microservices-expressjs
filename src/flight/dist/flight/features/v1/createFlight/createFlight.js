@@ -29,13 +29,13 @@ const mediatr_js_1 = require("building-blocks/mediatr-js/mediatr.js");
 const tsoa_1 = require("tsoa");
 const http_status_1 = __importDefault(require("http-status"));
 const joi_1 = __importDefault(require("joi"));
-const conflictException_1 = __importDefault(require("building-blocks/types/exception/conflictException"));
+const conflictException_1 = __importDefault(require("building-blocks/types/exception/conflict.exception"));
 const tsyringe_1 = require("tsyringe");
 const mappings_1 = __importDefault(require("../../../../aircraft/mappings"));
 const flightStatus_1 = require("../../../enums/flightStatus");
 const flightDto_1 = require("../../../dtos/flightDto");
 const flight_1 = require("../../../entities/flight");
-const flightContract_1 = require("building-blocks/contracts/flightContract");
+const flightContract_1 = require("building-blocks/contracts/flight.contract");
 class CreateFlight {
     constructor(request = {}) {
         Object.assign(this, request);

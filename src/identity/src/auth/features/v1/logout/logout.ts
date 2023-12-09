@@ -2,10 +2,10 @@ import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediat
 import { BodyProp, Controller, Post, Route, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import httpStatus from 'http-status';
-import { TokenType } from '../../../enums/tokenType';
-import NotFoundException from 'building-blocks/types/exception/notFoundException';
-import { IAuthRepository } from '../../../../data/repositories/authRepository';
+import NotFoundException from 'building-blocks/types/exception/not-found.exception';
 import { inject, injectable } from 'tsyringe';
+import {IAuthRepository} from "../../../../data/repositories/auth.repository";
+import {TokenType} from "../../../enums/token-type.enum";
 
 export class Logout implements IRequest<number> {
   refreshToken: string;

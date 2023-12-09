@@ -1,4 +1,4 @@
-import { PassengerDto } from 'building-blocks/contracts/passengerContract';
+import { PassengerDto } from 'building-blocks/contracts/passenger.contract';
 export interface IPassengerClientService {
     getPassengerById(id: number): Promise<PassengerDto>;
 }

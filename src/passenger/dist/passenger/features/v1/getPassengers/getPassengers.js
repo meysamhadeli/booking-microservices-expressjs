@@ -22,7 +22,7 @@ const tsoa_1 = require("tsoa");
 const mappings_1 = __importDefault(require("../../../mappings"));
 const tsyringe_1 = require("tsyringe");
 const joi_1 = __importDefault(require("joi"));
-const pagedResult_1 = require("building-blocks/types/pagination/pagedResult");
+const pagedResult_1 = require("building-blocks/types/pagination/paged-result");
 class GetPassengers {
     constructor(request = {}) {
         this.page = 1;

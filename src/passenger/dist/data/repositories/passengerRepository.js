@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PassengerRepository = void 0;
 const passenger_1 = require("../../passenger/entities/passenger");
-const dbContext_1 = require("building-blocks/typeorm/dbContext");
+const dbContext_1 = require("building-blocks/typeorm/db-context");
 const tsyringe_1 = require("tsyringe");
 class PassengerRepository {
     constructor() {

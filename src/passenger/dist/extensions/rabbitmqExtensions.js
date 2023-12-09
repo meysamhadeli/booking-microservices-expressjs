@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.initialRabbitmq = void 0;
 const tsyringe_1 = require("tsyringe");
 const rabbitmq_1 = require("building-blocks/rabbitmq/rabbitmq");
-const identityContract_1 = require("building-blocks/contracts/identityContract");
+const identityContract_1 = require("building-blocks/contracts/identity.contract");
 const createUser_1 = require("../user/consumers/createUser");
 const initialRabbitmq = async (options) => {
     const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_1.RabbitMQConnection);

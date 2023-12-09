@@ -1,4 +1,4 @@
-import { IDataSeeder } from 'building-blocks/typeorm/dbContext';
+import { IDataSeeder } from 'building-blocks/typeorm/db-context';
 export declare class FlightSeed implements IDataSeeder {
     seedData(): Promise<void>;
     private seedAircraft;
