@@ -20,18 +20,21 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-          
-      - run: npm install
-        working-directory: ./src/building-blocks
-      - run: npm run build
+
+      - name: build building-blocks
+        run: |
+          npm install
+          npm run build
         working-directory: ./src/building-blocks
 
-      - run: npm install
-        working-directory: ./src/identityd
-      - run: npm run build
+      - name: build identity
+        run: |
+          npm install
+          npm run build
         working-directory: ./src/identityd
 
-      - run: npm test
+      - name: test identity
+        run: npm test
         working-directory: ./src/identity
 
 
