@@ -6,7 +6,7 @@
   "author": "Meysam Hadeli",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc -p tsconfig.json && NODE_ENV=development nodemon src/app.ts --watch",
+    "dev": "tsc -p tsconfig.json && nodemon src/app.ts --watch",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -72,7 +72,6 @@
     "tsyringe": "^4.8.0",
     "typemoq": "^2.1.0",
     "typeorm": "^0.3.17",
-    "win-node-env": "^0.6.1",
     "winston": "^3.8.2"
   }
 }
