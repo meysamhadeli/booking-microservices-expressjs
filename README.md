@@ -10,7 +10,7 @@
 
 
 > **You can find `Nestjs` ported of this project in this link:**
-🔗 [https://github.com/meysamhadeli/booking-microservices-nestjs](https://github.com/meysamhadeli/booking-microservices-nestjs)
+🔗 [booking-microservices-nestjs](https://github.com/meysamhadeli/booking-microservices-nestjs)
 
 <a href="https://gitpod.io/#https://github.com/meysamhadeli/booking-microservices-express"><img alt="Open in Gitpod" src="https://gitpod.io/button/open-in-gitpod.svg"/></a>
 
