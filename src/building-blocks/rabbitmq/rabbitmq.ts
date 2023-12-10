@@ -70,6 +70,13 @@ export class RabbitMQConnection implements IRabbitMQConnection {
             maxTimeout: config.retry.maxTimeout
           }
         );
+
+        connection.on("error", async (error): Promise<void> => {
+          this.logger.error(`Error occurred on connection: ${error}`);
+          await this.closeConnection();
+          await this.createConnection();
+        });
+
       } catch (error) {
         throw new Error('Rabbitmq connection is failed!');
       }
@@ -97,6 +104,13 @@ export class RabbitMQConnection implements IRabbitMQConnection {
           }
         );
       }
+
+      channel.on("error", async (error): Promise<void> => {
+        this.logger.error(`Error occurred on channel: ${error}`);
+        await this.closeChanel();
+        await this.getChannel();
+      });
+
       return channel;
     } catch (error) {
       this.logger.error('Failed to get channel!');
