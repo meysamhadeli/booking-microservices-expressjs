@@ -9,9 +9,8 @@
 > **The main idea of creating this project is implementing an infrastructure for up and running distributed system with the latest technology and architecture like Vertical Slice Architecture, Event Driven Architecture, CQRS, Postgres, RabbitMq and Express in Node.Js, and we will not deal mainly with business.** 🚀
 
 
-> **You can find `Nestjs` ported of this project in below link:**
-[https://github.com/meysamhadeli/booking-microservices-nestjs](https://github.com/meysamhadeli/booking-microservices-nestjs)
-
+> **You can find `Nestjs` ported of this project in this link:**
+🔗 [https://github.com/meysamhadeli/booking-microservices-nestjs](https://github.com/meysamhadeli/booking-microservices-nestjs)
 
 <a href="https://gitpod.io/#https://github.com/meysamhadeli/booking-microservices-express"><img alt="Open in Gitpod" src="https://gitpod.io/button/open-in-gitpod.svg"/></a>
 
