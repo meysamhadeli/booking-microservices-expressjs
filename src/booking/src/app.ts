@@ -23,6 +23,10 @@ const startupApp = async () => {
 
   const app = express();
 
+  app.get('/', function (req, res) {
+    res.end(config.serviceName);
+  });
+
   const logger = await initialLogger();
 
   app.use(httpContextMiddleware);
@@ -51,7 +55,7 @@ const startupApp = async () => {
   app.use(erroHandler);
 
   app.listen(config.port, () => {
-    logger.info(`Listening to port ${config.port}`);
+    logger.info(`Listening to http://localhost:${config.port}`);
   });
 
   const rabbitmq = await initialRabbitmq();

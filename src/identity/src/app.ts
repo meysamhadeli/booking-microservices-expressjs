@@ -4,12 +4,12 @@ import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
 import passport from 'passport';
-import { morganMiddleware } from 'building-blocks/logging/morgan';
-import { RegisterRoutes } from './routes/routes';
+import {morganMiddleware} from 'building-blocks/logging/morgan';
+import {RegisterRoutes} from './routes/routes';
 import config from 'building-blocks/config/config';
-import { collectDefaultMetrics } from 'prom-client';
-import { initialSwagger } from 'building-blocks/swagger/swagger';
-import { erroHandler } from 'building-blocks/error-handler/erro-handler';
+import {collectDefaultMetrics} from 'prom-client';
+import {initialSwagger} from 'building-blocks/swagger/swagger';
+import {erroHandler} from 'building-blocks/error-handler/erro-handler';
 import {initialLogger} from "./extensions/logger.extensions";
 import {initialDbContext} from "./data/db.context";
 import {initialOpenTelemetry} from "./extensions/otel.extensions";
@@ -21,6 +21,10 @@ const startupApp = async () => {
   collectDefaultMetrics();
 
   const app = express();
+
+  app.get('/', function (req, res) {
+    res.end(config.serviceName);
+  });
 
   const logger = await initialLogger();
 
@@ -34,7 +38,7 @@ const startupApp = async () => {
 
   app.use(express.json());
 
-  app.use(express.urlencoded({ extended: true }));
+  app.use(express.urlencoded({extended: true}));
 
   app.use(compression());
 
@@ -50,7 +54,7 @@ const startupApp = async () => {
   app.use(erroHandler);
 
   app.listen(config.port, () => {
-    logger.info(`Listening to port ${config.port}`);
+    logger.info(`Listening to http://localhost:${config.port}`);
   });
 
   const rabbitmq = await initialRabbitmq();
