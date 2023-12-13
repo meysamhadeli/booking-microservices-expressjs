@@ -68,7 +68,7 @@ authorization: Bearer {{Login.response.body.access.token}}
 
 ###
 # @name Update_User
-PUT  {{identity-api}}/api/v1/user/update?id=3
+PUT  {{identity-api}}/api/v1/user/update?id=2
 accept: application/json
 Content-Type: application/json
 authorization: Bearer {{Login.response.body.access.token}}
@@ -85,7 +85,7 @@ authorization: Bearer {{Login.response.body.access.token}}
 
 ###
 # @name Delete_User
-DELETE   {{identity-api}}/api/v1/user/delete?id=1
+DELETE   {{identity-api}}/api/v1/user/delete?id=2
 accept: application/json
 Content-Type: application/json
 authorization: Bearer {{Login.response.body.access.token}}
@@ -118,7 +118,7 @@ GET {{flight-api}}
 
 ###
 # @name Create_Airport
-POST {{flight-api}}/api/v1/airport/airport
+POST {{flight-api}}/api/v1/airport/create
 accept: application/json
 Content-Type: application/json
 authorization: Bearer {{Login.response.body.access.token}}
