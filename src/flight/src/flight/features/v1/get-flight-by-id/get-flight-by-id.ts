@@ -22,9 +22,9 @@ const getFlightByIdValidations = {
   })
 };
 
-@Route('/flight')
+@Route('/api/v1/flight')
 export class GetUserByIdController extends Controller {
-  @Get('v1/get-by-id')
+  @Get('get-by-id')
   @Security('jwt')
   @SuccessResponse('200', 'OK')
   public async getFlightById(@Query() id: number): Promise<FlightDto> {

@@ -4,7 +4,7 @@
 import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CreateBookingController } from './../booking/features/v1/create-booking/create-booking';
-import { expressAuthentication } from './../configurations/authentication';
+import { expressAuthentication } from './../../../building-blocks/jwt/jwt';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
 import type { RequestHandler, Router } from 'express';
@@ -51,7 +51,7 @@ export function RegisterRoutes(app: Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.post('/booking/v1/create',
+        app.post('/api/v1/booking/create',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CreateBookingController)),
             ...(fetchMiddlewares<RequestHandler>(CreateBookingController.prototype.createBooking)),

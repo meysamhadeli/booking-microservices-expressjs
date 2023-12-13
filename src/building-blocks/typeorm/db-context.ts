@@ -1,8 +1,8 @@
-import { Connection, createConnection, DataSource, DataSourceOptions } from 'typeorm';
+import {Connection, ConnectionManager, createConnection, DataSource, DataSourceOptions, useContainer} from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import config from '../config/config';
 import { Logger } from '../logging/logger';
-import { container, injectable } from 'tsyringe';
+import {container, injectable, instanceCachingFactory} from 'tsyringe';
 
 let connection: Connection = null;
 

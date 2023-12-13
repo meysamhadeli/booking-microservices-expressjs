@@ -32,9 +32,9 @@ const loginValidations = Joi.object({
   password: Joi.string().required().custom(password)
 });
 
-@Route('/identity')
+@Route('/api/v1/identity')
 export class LoginController extends Controller {
-  @Post('v1/login')
+  @Post('login')
   @SuccessResponse('200', 'OK')
   public async login(@Body() request: LoginRequestDto): Promise<AuthDto> {
     const result = await mediatrJs.send<AuthDto>(new Login(request));

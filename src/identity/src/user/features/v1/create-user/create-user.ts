@@ -13,6 +13,7 @@ import {Role} from "../../../enums/role.enum";
 import {UserDto} from "../../../dtos/user.dto";
 import {IUserRepository} from "../../../../data/repositories/user.repository";
 import {User} from "../../../entities/user.entity";
+import {HttpContext} from "building-blocks/context/context";
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;
@@ -46,12 +47,13 @@ const createUserValidations = Joi.object({
   role: Joi.string().required().valid(Role.USER, Role.ADMIN)
 });
 
-@Route('/user')
+@Route('/api/v1/user')
 export class CreateUserController extends Controller {
-  @Post('v1/create')
+  @Post('create')
   @Security('jwt')
   @SuccessResponse('201', 'CREATED')
   public async createUser(@Body() request: CreateUserRequestDto): Promise<UserDto> {
+
     const result = await mediatrJs.send<UserDto>(
       new CreateUser({
         email: request.email,
@@ -74,10 +76,10 @@ export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
     @inject('IUserRepository') private userRepository: IUserRepository
   ) {}
 
-  async handle(request: CreateUser): Promise<UserDto> {
-    await createUserValidations.validateAsync(request);
+  async handle(command: CreateUser): Promise<UserDto> {
+    await createUserValidations.validateAsync(command);
 
-    const existUser = await this.userRepository.findUserByEmail(request.email);
+    const existUser = await this.userRepository.findUserByEmail(command.email);
 
     if (existUser) {
       throw new ConflictException('Email already taken');
@@ -85,11 +87,11 @@ export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
 
     const userEntity = await this.userRepository.createUser(
       new User({
-        email: request.email,
-        name: request.name,
-        password: await encryptPassword(request.password),
-        role: request.role,
-        passportNumber: request.passportNumber,
+        email: command.email,
+        name: command.name,
+        password: await encryptPassword(command.password),
+        role: command.role,
+        passportNumber: command.passportNumber,
         isEmailVerified: false
       })
     );

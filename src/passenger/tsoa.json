@@ -8,6 +8,6 @@
   },
   "routes": {
     "routesDir": "./src/routes",
-    "authenticationModule": "./src/configurations/authentication.ts"
+    "authenticationModule": "./../building-blocks/jwt/jwt.ts"
   }
 }

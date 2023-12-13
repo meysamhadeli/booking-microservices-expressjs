@@ -21,9 +21,9 @@ const getAvailableSeatsValidations = {
   })
 };
 
-@Route('/seat')
+@Route('/api/v1/seat')
 export class GetAvailableSeatsController extends Controller {
-  @Get('v1/get-available-seats')
+  @Get('get-available-seats')
   @Security('jwt')
   @SuccessResponse('200', 'OK')
   public async getAvailableSeats(@Query() flightId: number): Promise<SeatDto[]> {

@@ -28,9 +28,9 @@ const getUsersValidations = Joi.object<GetUsers>({
   searchTerm: Joi.string().allow(null).optional()
 });
 
-@Route('/user')
+@Route('/api/v1/user')
 export class GetUsersController extends Controller {
-  @Get('v1/get')
+  @Get('get')
   @Security('jwt')
   @SuccessResponse('200', 'OK')
   public async getUsers(

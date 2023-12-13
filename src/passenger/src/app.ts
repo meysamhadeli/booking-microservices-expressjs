@@ -15,6 +15,7 @@ import {initialDbContext} from "./data/db.context";
 import {initialOpenTelemetry} from "./extensions/otel.extensions";
 import {initialRabbitmq} from "./extensions/rabbitmq.extensions";
 import {registerMediatrHandlers} from "./extensions/mediatr.extensions";
+import {httpContextMiddleware} from "building-blocks/context/context";
 
 const startupApp = async () => {
   collectDefaultMetrics();
@@ -22,6 +23,8 @@ const startupApp = async () => {
   const app = express();
 
   const logger = await initialLogger();
+
+  app.use(httpContextMiddleware);
 
   app.use(morganMiddleware);
 

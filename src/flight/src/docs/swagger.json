@@ -597,7 +597,7 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/aircraft/v1/create": {
+		"/api/v1/aircraft/create": {
 			"post": {
 				"operationId": "CreateAircraft",
 				"responses": {
@@ -630,7 +630,7 @@
 				}
 			}
 		},
-		"/airport/v1/create": {
+		"/api/v1/airport/create": {
 			"post": {
 				"operationId": "CreateAirport",
 				"responses": {
@@ -663,7 +663,7 @@
 				}
 			}
 		},
-		"/flight/v1/create": {
+		"/api/v1/flight/create": {
 			"post": {
 				"operationId": "CreateFlight",
 				"responses": {
@@ -696,7 +696,7 @@
 				}
 			}
 		},
-		"/flight/v1/get-by-id": {
+		"/api/v1/flight/get-by-id": {
 			"get": {
 				"operationId": "GetFlightById",
 				"responses": {
@@ -729,7 +729,7 @@
 				]
 			}
 		},
-		"/seat/v1/create": {
+		"/api/v1/seat/create": {
 			"post": {
 				"operationId": "CreateSeat",
 				"responses": {
@@ -762,7 +762,7 @@
 				}
 			}
 		},
-		"/seat/v1/reserve": {
+		"/api/v1/seat/reserve": {
 			"post": {
 				"operationId": "ReserveSeat",
 				"responses": {
@@ -795,7 +795,7 @@
 				}
 			}
 		},
-		"/seat/v1/get-available-seats": {
+		"/api/v1/seat/get-available-seats": {
 			"get": {
 				"operationId": "GetAvailableSeats",
 				"responses": {

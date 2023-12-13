@@ -1,8 +1,8 @@
 import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
-import config from 'building-blocks/config/config';
-import UnauthorizedException from 'building-blocks/types/exception/unauthorized.exception';
-import { generateFakeJwt } from 'building-blocks/utils/encryption';
+import config from "../config/config";
+import {generateFakeJwt} from "../utils/encryption";
+import UnauthorizedException from "../types/exception/unauthorized.exception";
 
 export async function expressAuthentication(
   request: express.Request,
@@ -24,7 +24,6 @@ export async function expressAuthentication(
       request.headers.authorization = 'Bearer' + ' ' + token;
     }
 
-    // Get the "Authorization" header from the request
     const authorizationHeader = request.headers['authorization'];
 
     if (authorizationHeader && authorizationHeader.startsWith('Bearer ')) {

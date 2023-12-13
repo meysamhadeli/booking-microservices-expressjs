@@ -70,7 +70,7 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/passenger/v1/get-by-id": {
+		"/api/v1/passenger/get-by-id": {
 			"get": {
 				"operationId": "GetPassengerById",
 				"responses": {
@@ -103,7 +103,7 @@
 				]
 			}
 		},
-		"/passenger/v1/get-all": {
+		"/api/v1/passenger/get-all": {
 			"get": {
 				"operationId": "GetPassengers",
 				"responses": {

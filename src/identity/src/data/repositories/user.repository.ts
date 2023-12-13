@@ -1,18 +1,18 @@
-import { Repository, SelectQueryBuilder } from 'typeorm';
-import { container } from 'tsyringe';
-import { DbContext } from 'building-blocks/typeorm/db-context';
-import {User} from "../../user/entities/user.entity";
+import { Repository, SelectQueryBuilder } from "typeorm";
+import { User } from "../../user/entities/user.entity";
+import {container} from "tsyringe";
+import {DbContext} from "building-blocks/typeorm/db-context";
 
 export interface IUserRepository {
   createUser(user: User): Promise<User>;
 
-  updateUser(user: User): Promise<User>;
+  updateUser(user: User): Promise<void>;
 
   findUsers(
     page: number,
     pageSize: number,
     orderBy: string,
-    order: 'ASC' | 'DESC',
+    order: "ASC" | "DESC",
     searchTerm?: string
   ): Promise<[User[], number]>;
 
@@ -38,29 +38,29 @@ export class UserRepository implements IUserRepository {
     return await this.ormRepository.save(user);
   }
 
-  async updateUser(user: User): Promise<User> {
-    return await this.ormRepository.save(user);
+  async updateUser(user: User): Promise<void> {
+    await this.ormRepository.update(user.id, user);
   }
 
   async findUsers(
     page: number,
     pageSize: number,
     orderBy: string,
-    order: 'ASC' | 'DESC',
+    order: "ASC" | "DESC",
     searchTerm?: string
   ): Promise<[User[], number]> {
     const skip = (page - 1) * pageSize;
     const take = pageSize;
 
     const queryBuilder: SelectQueryBuilder<User> = this.ormRepository
-      .createQueryBuilder('user')
+      .createQueryBuilder("user")
       .orderBy(`user.${orderBy}`, order)
       .skip(skip)
       .take(take);
 
     // Apply filter criteria to the query
     if (searchTerm) {
-      queryBuilder.andWhere('user.name LIKE :name', { name: `%${searchTerm}%` });
+      queryBuilder.andWhere("user.name LIKE :name", { name: `%${searchTerm}%` });
     }
 
     return await queryBuilder.getManyAndCount();

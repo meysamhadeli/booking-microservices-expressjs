@@ -37,9 +37,9 @@ const createAirportValidations = Joi.object({
   name: Joi.string().required()
 });
 
-@Route('/airport')
+@Route('/api/v1/airport')
 export class CreateAirportController extends Controller {
-  @Post('v1/create')
+  @Post('create')
   @Security('jwt')
   @SuccessResponse('201', 'CREATED')
   public async createAirport(@Body() request: CreateAirportRequestDto): Promise<AirportDto> {

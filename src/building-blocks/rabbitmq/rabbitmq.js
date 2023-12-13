@@ -72,6 +72,11 @@ let RabbitMQConnection = class RabbitMQConnection {
                     minTimeout: config_1.default.retry.minTimeout,
                     maxTimeout: config_1.default.retry.maxTimeout
                 });
+                connection.on("error", async (error) => {
+                    this.logger.error(`Error occurred on connection: ${error}`);
+                    await this.closeConnection();
+                    await this.createConnection();
+                });
             }
             catch (error) {
                 throw new Error('Rabbitmq connection is failed!');
@@ -95,6 +100,11 @@ let RabbitMQConnection = class RabbitMQConnection {
                     maxTimeout: config_1.default.retry.maxTimeout
                 });
             }
+            channel.on("error", async (error) => {
+                this.logger.error(`Error occurred on channel: ${error}`);
+                await this.closeChanel();
+                await this.getChannel();
+            });
             return channel;
         }
         catch (error) {

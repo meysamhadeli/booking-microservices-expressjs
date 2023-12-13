@@ -21,13 +21,13 @@ export class DeleteUserById implements IRequest<UserDto> {
 
 const deleteUserValidations = {
   params: Joi.object().keys({
-    userId: Joi.number().integer().required()
+    id: Joi.number().integer().required()
   })
 };
 
-@Route('/user')
+@Route('/api/v1/user')
 export class DeleteUserByIdController extends Controller {
-  @Delete('v1/delete')
+  @Delete('delete')
   @Security('jwt')
   @SuccessResponse('204', 'NO_CONTENT')
   public async deleteUserById(@Query() id: number): Promise<UserDto> {

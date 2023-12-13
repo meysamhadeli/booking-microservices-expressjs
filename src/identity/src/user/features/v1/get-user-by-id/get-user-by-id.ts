@@ -22,9 +22,9 @@ const getUserByIdValidations = {
   })
 };
 
-@Route('/user')
+@Route('/api/v1/user')
 export class GetUserByIdController extends Controller {
-  @Get('v1/get-by-id')
+  @Get('get-by-id')
   @Security('jwt')
   @SuccessResponse('200', 'OK')
   public async getUserById(@Query() id: number): Promise<UserDto> {

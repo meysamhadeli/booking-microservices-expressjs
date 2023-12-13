@@ -18,7 +18,7 @@ import { GetUsersController } from './../user/features/v1/get-users/get-users';
 import { UpdateUserController } from './../user/features/v1/update-user/update-user';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RefreshTokenController } from './../auth/features/v1/refresh-token/refresh-token';
-import { expressAuthentication } from './../configurations/authentication';
+import { expressAuthentication } from './../../../building-blocks/jwt/jwt';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
 import type { RequestHandler, Router } from 'express';
@@ -117,7 +117,7 @@ export function RegisterRoutes(app: Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.post('/identity/v1/login',
+        app.post('/api/v1/identity/login',
             ...(fetchMiddlewares<RequestHandler>(LoginController)),
             ...(fetchMiddlewares<RequestHandler>(LoginController.prototype.login)),
 
@@ -142,13 +142,13 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/identity/v1/logout',
+        app.post('/api/v1/identity/logout',
             ...(fetchMiddlewares<RequestHandler>(LogoutController)),
             ...(fetchMiddlewares<RequestHandler>(LogoutController.prototype.logout)),
 
             function LogoutController_logout(request: any, response: any, next: any) {
             const args = {
-                    refreshToken: {"in":"body-prop","name":"refreshToken","required":true,"dataType":"string"},
+                    accessToken: {"in":"body-prop","name":"accessToken","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -167,7 +167,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/user/v1/delete',
+        app.delete('/api/v1/user/delete',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(DeleteUserByIdController)),
             ...(fetchMiddlewares<RequestHandler>(DeleteUserByIdController.prototype.deleteUserById)),
@@ -193,7 +193,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/user/v1/create',
+        app.post('/api/v1/user/create',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CreateUserController)),
             ...(fetchMiddlewares<RequestHandler>(CreateUserController.prototype.createUser)),
@@ -219,7 +219,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/user/v1/get-by-id',
+        app.get('/api/v1/user/get-by-id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(GetUserByIdController)),
             ...(fetchMiddlewares<RequestHandler>(GetUserByIdController.prototype.getUserById)),
@@ -245,7 +245,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/user/v1/get',
+        app.get('/api/v1/user/get',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(GetUsersController)),
             ...(fetchMiddlewares<RequestHandler>(GetUsersController.prototype.getUsers)),
@@ -275,7 +275,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/user/v1/update',
+        app.put('/api/v1/user/update',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(UpdateUserController)),
             ...(fetchMiddlewares<RequestHandler>(UpdateUserController.prototype.updateUser)),
@@ -302,7 +302,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/identity/v1/refreshToken',
+        app.post('/api/v1/identity/refreshToken',
             ...(fetchMiddlewares<RequestHandler>(RefreshTokenController)),
             ...(fetchMiddlewares<RequestHandler>(RefreshTokenController.prototype.refreshToken)),
 

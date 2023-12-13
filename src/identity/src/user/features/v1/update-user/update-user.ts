@@ -39,6 +39,7 @@ export class UpdateUserRequestDto {
 }
 
 const updateUserValidations = Joi.object({
+  id: Joi.number().required(),
   email: Joi.string().required().email(),
   password: Joi.string().required().custom(password),
   name: Joi.string().required(),
@@ -46,16 +47,16 @@ const updateUserValidations = Joi.object({
   role: Joi.string().required().valid(Role.USER, Role.ADMIN)
 });
 
-@Route('/user')
+@Route('/api/v1/user')
 export class UpdateUserController extends Controller {
-  @Put('v1/update')
+  @Put('update')
   @Security('jwt')
   @SuccessResponse('204', 'NO_CONTENT')
   public async updateUser(
     @Query() id: number,
     @Body() request: UpdateUserRequestDto
-  ): Promise<UserDto> {
-    const result = await mediatrJs.send<UserDto>(
+  ): Promise<void> {
+    await mediatrJs.send(
       new UpdateUser({
         id: id,
         email: request.email,
@@ -67,44 +68,40 @@ export class UpdateUserController extends Controller {
     );
 
     this.setStatus(httpStatus.NO_CONTENT);
-    return result;
   }
 }
 
 @injectable()
-export class UpdateUserHandler implements IHandler<UpdateUser, UserDto> {
+export class UpdateUserHandler implements IHandler<UpdateUser, any> {
   constructor(
     @inject('IUserRepository') private userRepository: IUserRepository,
     @inject('IPublisher') private publisher: IPublisher
   ) {}
 
-  async handle(request: UpdateUser): Promise<UserDto> {
-    await updateUserValidations.validateAsync(request);
+  async handle(command: UpdateUser): Promise<any> {
+    await updateUserValidations.validateAsync(command);
 
-    const existUser = await this.userRepository.findUserById(request.id);
+    const existUser = await this.userRepository.findUserById(command.id);
 
     if (!existUser) {
       throw new NotFoundException('User not found');
     }
 
-    const userEntity = await this.userRepository.updateUser(
-      new User({
-        email: request.email,
-        name: request.name,
-        password: await encryptPassword(request.password),
-        role: request.role,
-        passportNumber: request.passportNumber,
-        isEmailVerified: existUser.isEmailVerified,
-        tokens: existUser.tokens,
-        createdAt: existUser.createdAt,
-        updatedAt: new Date()
-      })
-    );
+    const updateUserEntity =  new User({
+      id: command.id,
+      email: command.email,
+      name: command.name,
+      password: await encryptPassword(command.password),
+      role: command.role,
+      passportNumber: command.passportNumber,
+      isEmailVerified: existUser.isEmailVerified,
+      tokens: existUser.tokens,
+      createdAt: existUser.createdAt,
+      updatedAt: new Date()
+    });
 
-    await this.publisher.publishMessage(new UserUpdated(userEntity));
+    await this.userRepository.updateUser(updateUserEntity);
 
-    const result = mapper.map<User, UserDto>(userEntity, new UserDto());
-
-    return result;
+    await this.publisher.publishMessage(new UserUpdated(updateUserEntity));
   }
 }

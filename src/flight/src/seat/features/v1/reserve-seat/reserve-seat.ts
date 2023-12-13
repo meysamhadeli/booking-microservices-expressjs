@@ -35,9 +35,9 @@ const reserveSeatValidations = Joi.object({
   flightId: Joi.number().required()
 });
 
-@Route('/seat')
+@Route('/api/v1/seat')
 export class ReserveSeatController extends Controller {
-  @Post('v1/reserve')
+  @Post('reserve')
   @Security('jwt')
   @SuccessResponse('204', 'NO_CONTENT')
   public async reserveSeat(@Body() request: ReserveSeatRequestDto): Promise<Seat> {

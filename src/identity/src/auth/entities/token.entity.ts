@@ -12,6 +12,9 @@ export class Token {
   token: string;
 
   @Column()
+  refreshToken: string;
+
+  @Column()
   expires: Date;
 
   @Column()

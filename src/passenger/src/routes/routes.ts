@@ -6,7 +6,7 @@ import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, H
 import { GetPassengerByIdController } from './../passenger/features/v1/get-passenger-by-id/get-passenger-by-id';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { GetPassengersController } from './../passenger/features/v1/get-passengers/get-passengers';
-import { expressAuthentication } from './../configurations/authentication';
+import { expressAuthentication } from './../../../building-blocks/jwt/jwt';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
 import type { RequestHandler, Router } from 'express';
@@ -43,7 +43,7 @@ export function RegisterRoutes(app: Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.get('/passenger/v1/get-by-id',
+        app.get('/api/v1/passenger/get-by-id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(GetPassengerByIdController)),
             ...(fetchMiddlewares<RequestHandler>(GetPassengerByIdController.prototype.getPassengerById)),
@@ -69,7 +69,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/passenger/v1/get-all',
+        app.get('/api/v1/passenger/get-all',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(GetPassengersController)),
             ...(fetchMiddlewares<RequestHandler>(GetPassengersController.prototype.getPassengers)),

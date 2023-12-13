@@ -24,9 +24,9 @@ const refreshTokenValidations = {
   })
 };
 
-@Route('/identity')
+@Route('/api/v1/identity')
 export class RefreshTokenController extends Controller {
-  @Post('v1/refreshToken')
+  @Post('refreshToken')
   @SuccessResponse('200', 'OK')
   public async refreshToken(@BodyProp() refreshToken: string): Promise<AuthDto> {
     const result = await mediatrJs.send<AuthDto>(new RefreshToken({ refreshToken: refreshToken }));
@@ -39,21 +39,21 @@ export class RefreshTokenController extends Controller {
 export class RefreshTokenHandler implements IHandler<RefreshToken, AuthDto> {
   constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
-  async handle(request: RefreshToken): Promise<AuthDto> {
-    await refreshTokenValidations.params.validateAsync(request);
+  async handle(command: RefreshToken): Promise<AuthDto> {
+    await refreshTokenValidations.params.validateAsync(command);
 
     try {
       const refreshTokenData = await mediatrJs.send<Token>(
         new ValidateToken({
-          token: request.refreshToken,
+          token: command.refreshToken,
           type: TokenType.REFRESH
         })
       );
-      const { userId } = refreshTokenData;
+      const {userId} = refreshTokenData;
 
       await this.authRepository.removeToken(refreshTokenData);
 
-      const result = await mediatrJs.send<AuthDto>(new GenerateToken({ userId: userId }));
+      const result = await mediatrJs.send<AuthDto>(new GenerateToken({userId: userId}));
 
       return result;
     } catch (error) {

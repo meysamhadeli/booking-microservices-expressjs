@@ -1,12 +1,12 @@
-import { IDataSeeder } from 'building-blocks/typeorm/db-context';
-import { container } from 'tsyringe';
+import {IDataSeeder} from "building-blocks/typeorm/db-context";
+import {container} from "tsyringe";
 import {AircraftRepository} from "../repositories/aircraft.repository";
 import {Aircraft} from "../../aircraft/entities/aircraft.entity";
 import {AirportRepository} from "../repositories/airport.repository";
 import {Airport} from "../../airport/entities/airport.entity";
 import {FlightRepository} from "../repositories/flight.repository";
-import {Flight} from "../../flight/entities/flight.entity";
 import {FlightStatus} from "../../flight/enums/flight-status.enum";
+import {Flight} from "../../flight/entities/flight.entity";
 import {SeatRepository} from "../repositories/seat.repository";
 import {Seat} from "../../seat/entities/seat.entity";
 import {SeatClass} from "../../seat/enums/seat-class.enum";
@@ -24,14 +24,24 @@ export class FlightSeed implements IDataSeeder {
     const aircraftRepository = container.resolve(AircraftRepository);
 
     if ((await aircraftRepository.getAll())?.length == 0) {
-      await aircraftRepository.createAircraft(
+      const aircrafts = [
         new Aircraft({
           id: 1,
           name: 'airbus',
-          manufacturingYear: 2002,
+          manufacturingYear: 2008,
           model: '3300'
-        })
-      );
+        }),
+        new Aircraft({
+          id: 2,
+          name: 'fokker',
+          manufacturingYear: 2002,
+          model: '2200'
+        }),
+      ];
+
+      for (const aircraft of aircrafts) {
+        await aircraftRepository.createAircraft(aircraft);
+      }
     }
   }
 
@@ -39,14 +49,25 @@ export class FlightSeed implements IDataSeeder {
     const airportRepository = container.resolve(AirportRepository);
 
     if ((await airportRepository.getAll())?.length == 0) {
-      await airportRepository.createAirport(
-        new Airport({
-          id: 1,
-          name: 'mehrabad',
-          code: '1422',
-          address: 'tehran'
-        })
-      );
+      const airports =
+        [
+          new Airport({
+            id: 1,
+            name: 'mehrabad',
+            code: '1422',
+            address: 'tehran'
+          }),
+          new Airport({
+            id: 2,
+            name: 'kish airport',
+            code: '1222',
+            address: 'kish'
+          })
+        ];
+
+      for (const airport of airports) {
+        await airportRepository.createAirport(airport);
+      }
     }
   }
 
@@ -97,3 +118,4 @@ export class FlightSeed implements IDataSeeder {
     }
   }
 }
+

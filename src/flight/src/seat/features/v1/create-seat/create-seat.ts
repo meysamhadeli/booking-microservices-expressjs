@@ -47,9 +47,9 @@ const createSeatValidations = Joi.object({
     .valid(SeatType.UNKNOWN, SeatType.AISLE, SeatType.MIDDLE, SeatType.WINDOW)
 });
 
-@Route('/seat')
+@Route('/api/v1/seat')
 export class CreateSeatController extends Controller {
-  @Post('v1/create')
+  @Post('create')
   @Security('jwt')
   @SuccessResponse('201', 'CREATED')
   public async createSeat(@Body() request: CreateSeatRequestDto): Promise<SeatDto> {

@@ -42,30 +42,31 @@ const generateJwtToken = (
 export class GenerateTokenHandler implements IHandler<GenerateToken, AuthDto> {
   constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
-  async handle(request: GenerateToken): Promise<AuthDto> {
-    await generateTokenValidations.params.validateAsync(request);
+  async handle(command: GenerateToken): Promise<AuthDto> {
+    await generateTokenValidations.params.validateAsync(command);
 
     const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
     const accessToken = generateJwtToken(
-      request.userId,
+      command.userId,
       accessTokenExpires.unix(),
       TokenType.ACCESS
     );
 
     const refreshTokenExpires = moment().add(config.jwt.refreshExpirationDays, 'days');
     const refreshToken = generateJwtToken(
-      request.userId,
+      command.userId,
       refreshTokenExpires.unix(),
       TokenType.REFRESH
     );
 
     await this.authRepository.createToken(
       new Token({
-        token: refreshToken,
-        expires: refreshTokenExpires.toDate(),
-        type: TokenType.REFRESH,
+        token: accessToken,
+        refreshToken: refreshToken,
+        expires: accessTokenExpires.toDate(),
+        type: TokenType.ACCESS,
         blacklisted: false,
-        userId: request.userId
+        userId: command.userId
       })
     );
 

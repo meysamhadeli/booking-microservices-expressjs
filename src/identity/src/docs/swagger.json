@@ -199,7 +199,7 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/identity/v1/login": {
+		"/api/v1/identity/login": {
 			"post": {
 				"operationId": "Login",
 				"responses": {
@@ -228,7 +228,7 @@
 				}
 			}
 		},
-		"/identity/v1/logout": {
+		"/api/v1/identity/logout": {
 			"post": {
 				"operationId": "Logout",
 				"responses": {
@@ -244,12 +244,12 @@
 						"application/json": {
 							"schema": {
 								"properties": {
-									"refreshToken": {
+									"accessToken": {
 										"type": "string"
 									}
 								},
 								"required": [
-									"refreshToken"
+									"accessToken"
 								],
 								"type": "object"
 							}
@@ -258,7 +258,7 @@
 				}
 			}
 		},
-		"/user/v1/delete": {
+		"/api/v1/user/delete": {
 			"delete": {
 				"operationId": "DeleteUserById",
 				"responses": {
@@ -291,7 +291,7 @@
 				]
 			}
 		},
-		"/user/v1/create": {
+		"/api/v1/user/create": {
 			"post": {
 				"operationId": "CreateUser",
 				"responses": {
@@ -324,7 +324,7 @@
 				}
 			}
 		},
-		"/user/v1/get-by-id": {
+		"/api/v1/user/get-by-id": {
 			"get": {
 				"operationId": "GetUserById",
 				"responses": {
@@ -357,7 +357,7 @@
 				]
 			}
 		},
-		"/user/v1/get": {
+		"/api/v1/user/get": {
 			"get": {
 				"operationId": "GetUsers",
 				"responses": {
@@ -431,7 +431,7 @@
 				]
 			}
 		},
-		"/user/v1/update": {
+		"/api/v1/user/update": {
 			"put": {
 				"operationId": "UpdateUser",
 				"responses": {
@@ -474,7 +474,7 @@
 				}
 			}
 		},
-		"/identity/v1/refreshToken": {
+		"/api/v1/identity/refreshToken": {
 			"post": {
 				"operationId": "RefreshToken",
 				"responses": {

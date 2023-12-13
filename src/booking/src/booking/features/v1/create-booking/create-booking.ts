@@ -9,9 +9,9 @@ import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import { BookingCreated } from 'building-blocks/contracts/booking.contract';
 import {BookingDto} from "../../../dtos/booking.dto";
 import {IBookingRepository} from "../../../../data/repositories/booking.repository";
-import {IFlightClientService} from "../../../http-client/services/flight/flight.client";
-import {IPassengerClientService} from "../../../http-client/services/passenger/passenger.client";
 import {Booking} from "../../../entities/booking.entity";
+import {IFlightClient} from "../../../http-client/services/flight/flight.client";
+import {IPassengerClient} from "../../../http-client/services/passenger/passenger.client";
 
 export class CreateBooking implements IRequest<BookingDto> {
   passengerId: number;
@@ -39,9 +39,9 @@ const createBookingValidations = Joi.object({
   description: Joi.string().required()
 });
 
-@Route('/booking')
+@Route('/api/v1/booking')
 export class CreateBookingController extends Controller {
-  @Post('v1/create')
+  @Post('create')
   @Security('jwt')
   @SuccessResponse('201', 'CREATED')
   public async createBooking(@Body() request: CreateBookingRequestDto): Promise<BookingDto> {
@@ -62,8 +62,8 @@ export class CreateBookingController extends Controller {
 export class CreateBookingHandler implements IHandler<CreateBooking, BookingDto> {
   constructor(
     @inject('IBookingRepository') private bookingRepository: IBookingRepository,
-    @inject('IFlightClientService') private flightClientService: IFlightClientService,
-    @inject('IPassengerClientService') private passengerClientService: IPassengerClientService,
+    @inject('IFlightClient') private flightClientService: IFlightClient,
+    @inject('IPassengerClient') private passengerClientService: IPassengerClient,
     @inject('IPublisher') private publisher: IPublisher
   ) {}
 

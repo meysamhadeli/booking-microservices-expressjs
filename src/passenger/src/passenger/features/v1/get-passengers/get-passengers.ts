@@ -28,9 +28,9 @@ const getPassengersValidations = Joi.object<GetPassengers>({
   searchTerm: Joi.string().allow(null).optional()
 });
 
-@Route('/passenger')
+@Route('/api/v1/passenger')
 export class GetPassengersController extends Controller {
-  @Get('v1/get-all')
+  @Get('get-all')
   @Security('jwt')
   @SuccessResponse('200', 'OK')
   public async getPassengers(

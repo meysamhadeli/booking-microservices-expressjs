@@ -11,7 +11,12 @@ export interface IAuthRepository {
 
   findTokenByUserId(
     token: string,
-    tokenType: TokenType,
+    userId: number,
+    blacklisted: boolean
+  ): Promise<Token>;
+
+  findRefreshTokenByUserId(
+    refreshToken: string,
     userId: number,
     blacklisted: boolean
   ): Promise<Token>;
@@ -39,13 +44,23 @@ export class AuthRepository implements IAuthRepository {
 
   async findTokenByUserId(
     token: string,
-    tokenType: TokenType,
     userId: number,
     blacklisted: boolean
   ): Promise<Token> {
     return await this.ormRepository.findOneBy({
       token: token,
-      type: tokenType,
+      userId: userId,
+      blacklisted: blacklisted
+    });
+  }
+
+  async findRefreshTokenByUserId(
+    refreshToken: string,
+    userId: number,
+    blacklisted: boolean
+  ): Promise<Token> {
+    return await this.ormRepository.findOneBy({
+      refreshToken: refreshToken,
       userId: userId,
       blacklisted: blacklisted
     });

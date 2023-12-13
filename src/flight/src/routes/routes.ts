@@ -16,7 +16,7 @@ import { CreateSeatController } from './../seat/features/v1/create-seat/create-s
 import { ReserveSeatController } from './../seat/features/v1/reserve-seat/reserve-seat';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { GetAvailableSeatsController } from './../seat/features/v1/get-available-seats/get-available-seats';
-import { expressAuthentication } from './../configurations/authentication';
+import { expressAuthentication } from './../../../building-blocks/jwt/jwt';
 // @ts-ignore - no great way to install types from subpackage
 const promiseAny = require('promise.any');
 import type { RequestHandler, Router } from 'express';
@@ -236,7 +236,7 @@ export function RegisterRoutes(app: Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
-        app.post('/aircraft/v1/create',
+        app.post('/api/v1/aircraft/create',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CreateAircraftController)),
             ...(fetchMiddlewares<RequestHandler>(CreateAircraftController.prototype.createAircraft)),
@@ -262,7 +262,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/airport/v1/create',
+        app.post('/api/v1/airport/create',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CreateAirportController)),
             ...(fetchMiddlewares<RequestHandler>(CreateAirportController.prototype.createAirport)),
@@ -288,7 +288,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/flight/v1/create',
+        app.post('/api/v1/flight/create',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CreateFlightController)),
             ...(fetchMiddlewares<RequestHandler>(CreateFlightController.prototype.createFlight)),
@@ -314,7 +314,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/flight/v1/get-by-id',
+        app.get('/api/v1/flight/get-by-id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(GetUserByIdController)),
             ...(fetchMiddlewares<RequestHandler>(GetUserByIdController.prototype.getFlightById)),
@@ -340,7 +340,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/seat/v1/create',
+        app.post('/api/v1/seat/create',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CreateSeatController)),
             ...(fetchMiddlewares<RequestHandler>(CreateSeatController.prototype.createSeat)),
@@ -366,7 +366,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/seat/v1/reserve',
+        app.post('/api/v1/seat/reserve',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ReserveSeatController)),
             ...(fetchMiddlewares<RequestHandler>(ReserveSeatController.prototype.reserveSeat)),
@@ -392,7 +392,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/seat/v1/get-available-seats',
+        app.get('/api/v1/seat/get-available-seats',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(GetAvailableSeatsController)),
             ...(fetchMiddlewares<RequestHandler>(GetAvailableSeatsController.prototype.getAvailableSeats)),

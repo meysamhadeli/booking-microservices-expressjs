@@ -8,7 +8,7 @@ import {IAuthRepository} from "../../../../data/repositories/auth.repository";
 import {TokenType} from "../../../enums/token-type.enum";
 
 export class Logout implements IRequest<number> {
-  refreshToken: string;
+  accessToken: string;
 
   constructor(request: Partial<Logout> = {}) {
     Object.assign(this, request);
@@ -17,16 +17,16 @@ export class Logout implements IRequest<number> {
 
 const logoutValidations = {
   params: Joi.object().keys({
-    refreshToken: Joi.string().required()
+    accessToken: Joi.string().required()
   })
 };
 
-@Route('/identity')
+@Route('/api/v1/identity')
 export class LogoutController extends Controller {
-  @Post('v1/logout')
+  @Post('logout')
   @SuccessResponse('204', 'NO_CONTENT')
-  public async logout(@BodyProp() refreshToken: string): Promise<void> {
-    await mediatrJs.send<number>(new Logout({ refreshToken: refreshToken }));
+  public async logout(@BodyProp() accessToken: string): Promise<void> {
+    await mediatrJs.send<number>(new Logout({ accessToken: accessToken }));
 
     this.setStatus(httpStatus.NO_CONTENT);
   }
@@ -36,13 +36,13 @@ export class LogoutController extends Controller {
 export class LogoutHandler implements IHandler<Logout, number> {
   constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
-  async handle(request: Logout): Promise<number> {
-    await logoutValidations.params.validateAsync(request);
+  async handle(command: Logout): Promise<number> {
+    await logoutValidations.params.validateAsync(command);
 
-    const token = await this.authRepository.findToken(request.refreshToken, TokenType.REFRESH);
+    const token = await this.authRepository.findToken(command.accessToken, TokenType.ACCESS);
 
     if (!token) {
-      throw new NotFoundException('Refresh Token Not found');
+      throw new NotFoundException('Access Token Not found');
     }
 
     const tokenEntity = await this.authRepository.removeToken(token);

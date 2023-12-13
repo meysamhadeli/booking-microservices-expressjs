@@ -2,9 +2,9 @@ import { IDataSeeder } from 'building-blocks/typeorm/db-context';
 import { container } from 'tsyringe';
 import { encryptPassword } from 'building-blocks/utils/encryption';
 import { Logger } from 'building-blocks/logging/logger';
-import {UserRepository} from "../repositories/user.repository";
 import {User} from "../../user/entities/user.entity";
 import {Role} from "../../user/enums/role.enum";
+import {UserRepository} from "../repositories/user.repository";
 
 export class UserSeed implements IDataSeeder {
   logger = container.resolve(Logger);
@@ -15,7 +15,7 @@ export class UserSeed implements IDataSeeder {
         new User({
           email: 'dev@dev.com',
           name: 'developer',
-          password: await encryptPassword('Admin@1234'),
+          password: await encryptPassword('Admin@12345'),
           isEmailVerified: false,
           role: Role.ADMIN,
           passportNumber: '12345678'

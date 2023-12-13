@@ -37,9 +37,9 @@ const createAircraftValidations = Joi.object({
   name: Joi.string().required()
 });
 
-@Route('/aircraft')
+@Route('/api/v1/aircraft')
 export class CreateAircraftController extends Controller {
-  @Post('v1/create')
+  @Post('create')
   @Security('jwt')
   @SuccessResponse('201', 'CREATED')
   public async createAircraft(@Body() request: CreateAircraftRequestDto): Promise<AircraftDto> {

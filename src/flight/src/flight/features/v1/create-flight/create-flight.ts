@@ -67,9 +67,9 @@ const createFlightValidations = Joi.object({
   durationMinutes: Joi.number().required()
 });
 
-@Route('/flight')
+@Route('/api/v1/flight')
 export class CreateFlightController extends Controller {
-  @Post('v1/create')
+  @Post('create')
   @Security('jwt')
   @SuccessResponse('201', 'CREATED')
   public async createFlight(@Body() request: CreateFlightRequestDto): Promise<FlightDto> {

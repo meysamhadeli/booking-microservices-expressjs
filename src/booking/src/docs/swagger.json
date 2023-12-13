@@ -108,7 +108,7 @@
 	},
 	"openapi": "3.0.0",
 	"paths": {
-		"/booking/v1/create": {
+		"/api/v1/booking/create": {
 			"post": {
 				"operationId": "CreateBooking",
 				"responses": {
