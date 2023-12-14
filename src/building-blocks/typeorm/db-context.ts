@@ -7,7 +7,7 @@ import {container, injectable, instanceCachingFactory} from 'tsyringe';
 let connection: Connection = null;
 
 export interface IDbContext {
-  initialize(options?: PostgresConnectionOptions): Promise<Connection>;
+  initializeTypeorm(dataSourceOptions: DataSourceOptions): Promise<Connection>;
 
   closeConnection(): Promise<void>;
 
@@ -22,19 +22,7 @@ export interface IDataSeeder {
 export class DbContext implements IDbContext {
   logger = container.resolve(Logger);
 
-  async initialize(options?: PostgresConnectionOptions): Promise<Connection> {
-    const dataSourceOptions: DataSourceOptions = {
-      type: 'postgres',
-      host: options?.host ?? config.postgres.host,
-      port: options?.port ?? config.postgres.port,
-      username: options?.username ?? config.postgres.username,
-      password: options?.password ?? config.postgres.password,
-      database: options?.database ?? config.postgres.database,
-      logging: options?.logging ?? false,
-      synchronize: options?.synchronize ?? config.postgres.synchronize,
-      entities: [options?.entities ?? config?.postgres?.entities],
-      migrations: options?.migrations ? [options?.migrations ?? config?.postgres?.migrations] : null
-    };
+  async initializeTypeorm(dataSourceOptions: DataSourceOptions): Promise<Connection> {
 
     try {
       connection = await createConnection(dataSourceOptions);

@@ -1,8 +1,7 @@
-import { Connection, DataSource } from 'typeorm';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { Connection, DataSource, DataSourceOptions } from 'typeorm';
 import { Logger } from '../logging/logger';
 export interface IDbContext {
-    initialize(options?: PostgresConnectionOptions): Promise<Connection>;
+    initializeTypeorm(dataSourceOptions: DataSourceOptions): Promise<Connection>;
     closeConnection(): Promise<void>;
     get connection(): Connection | null;
 }
@@ -11,7 +10,7 @@ export interface IDataSeeder {
 }
 export declare class DbContext implements IDbContext {
     logger: Logger;
-    initialize(options?: PostgresConnectionOptions): Promise<Connection>;
+    initializeTypeorm(dataSourceOptions: DataSourceOptions): Promise<Connection>;
     get connection(): Connection | null;
     closeConnection(): Promise<void>;
 }

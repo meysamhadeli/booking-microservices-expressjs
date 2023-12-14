@@ -18,7 +18,7 @@ describe('end-to-end test for create user', () => {
 
   it('should create user and retrieve 201 status code', async () => {
     const createUserResponse = await request(fixture.app)
-      .post('/user/v1/create')
+      .post('/api/v1/user/create')
       .send(FakeCreateUserRequestDto.generate())
       .expect(201);
   });

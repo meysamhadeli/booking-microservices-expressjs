@@ -3,6 +3,8 @@ import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { container } from 'tsyringe';
 import { Logger } from '../../../logging/logger';
+import {MixedList} from "typeorm/common/MixedList";
+import {EntitySchema} from "typeorm/entity-schema/EntitySchema";
 
 interface PostgresContainerOptions {
   imageName: string;
@@ -13,6 +15,7 @@ interface PostgresContainerOptions {
   username: string;
   password: string;
   synchronize: boolean;
+  entities: MixedList<Function | string | EntitySchema>;
 }
 
 export const postgresContainerStart = async (): Promise<
@@ -59,7 +62,8 @@ const getDefaultPostgresTestContainers = async (): Promise<PostgresContainerOpti
     username: 'testcontainers',
     password: 'testcontainers',
     imageName: 'postgres:latest',
-    synchronize: true
+    synchronize: true,
+    entities: ['src/**/entities/*.{js,ts}']
   };
 
   return postgresOptions;

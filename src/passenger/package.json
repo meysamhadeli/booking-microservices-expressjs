@@ -13,6 +13,10 @@
     "prettier": "prettier --check **/*.ts",
     "prettier:fix": "prettier --write **/*.ts",
     "generate:swagger": "tsoa routes && tsoa spec",
+    "typeorm": "npm run build && npx typeorm -d ./dist/passenger/src/data/data-source.js",
+    "migration:generate": "npm run typeorm -- migration:generate",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert",
     "test": "jest"
   },
   "devDependencies": {

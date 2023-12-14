@@ -17,6 +17,7 @@ import {initialRabbitmq} from "./extensions/rabbitmq.extensions";
 import {initialHttpClientServices} from "./extensions/http-client.extensions";
 import {registerMediatrHandlers} from "./extensions/mediatr.extensions";
 import {httpContextMiddleware} from "building-blocks/context/context";
+import {postgresOptions} from "./data/data-source";
 
 const startupApp = async () => {
   collectDefaultMetrics();
@@ -33,7 +34,7 @@ const startupApp = async () => {
 
   app.use(morganMiddleware);
 
-  const databaseConnection = await initialDbContext();
+  const databaseConnection = await initialDbContext(postgresOptions);
 
   app.use(helmet());
 

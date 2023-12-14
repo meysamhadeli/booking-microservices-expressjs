@@ -34,7 +34,8 @@ const getDefaultPostgresTestContainers = async () => {
         username: 'testcontainers',
         password: 'testcontainers',
         imageName: 'postgres:latest',
-        synchronize: true
+        synchronize: true,
+        entities: ['src/**/entities/*.{js,ts}']
     };
     return postgresOptions;
 };

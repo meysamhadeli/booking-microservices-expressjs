@@ -1,23 +1,23 @@
 import { container } from 'tsyringe';
-import { DbContext, IDbContext } from 'building-blocks/typeorm/db-context';
-import { Connection } from 'typeorm';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-import {FlightSeed} from "./seeds/flight.seed";
+import {Connection, DataSourceOptions} from 'typeorm';
 import {registerRepositories} from "../extensions/repository.extensions";
+import {DbContext, IDbContext} from "building-blocks/typeorm/db-context";
+import {FlightSeed} from "./seeds/flight.seed";
 
 export const initialDbContext = async (
-  options?: PostgresConnectionOptions
+  dataSourceOptions: DataSourceOptions
 ): Promise<Connection> => {
-  container.register<IDbContext>('IDbContext', DbContext);
+  container.registerSingleton<IDbContext>('IDbContext', DbContext);
 
   const dbContext = container.resolve(DbContext);
 
-  const connection = await dbContext.initialize(options);
-
-  await registerRepositories();
+  const connection = await dbContext.initializeTypeorm(dataSourceOptions);
 
   const flightSeed = container.resolve(FlightSeed);
+
   await flightSeed.seedData();
+
+  await registerRepositories();
 
   return connection;
 };
