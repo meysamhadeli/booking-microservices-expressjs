@@ -24,7 +24,7 @@ const startupApp = async () => {
   const app = express();
 
   app.get('/', function (req, res) {
-    res.end(config.serviceName);
+    res.send(config.serviceName);
   });
 
   const logger = await initialLogger();
