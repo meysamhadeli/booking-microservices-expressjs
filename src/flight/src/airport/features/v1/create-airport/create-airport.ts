@@ -4,12 +4,12 @@ import httpStatus from 'http-status';
 import Joi from 'joi';
 import ConflictException from 'building-blocks/types/exception/conflict.exception';
 import { inject, injectable } from 'tsyringe';
-import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import mapper from '../../../../aircraft/mappings';
 import { AirportCreated } from 'building-blocks/contracts/flight.contract';
 import {AirportDto} from "../../../dtos/airport.dto";
 import {IAirportRepository} from "../../../../data/repositories/airport.repository";
 import {Airport} from "../../../entities/airport.entity";
+import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
 
 export class CreateAirport implements IRequest<AirportDto> {
   code: string;

@@ -7,13 +7,12 @@ import { password } from 'building-blocks/utils/validation';
 import ConflictException from 'building-blocks/types/exception/conflict.exception';
 import { encryptPassword } from 'building-blocks/utils/encryption';
 import { inject, injectable } from 'tsyringe';
-import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import { UserCreated } from 'building-blocks/contracts/identity.contract';
-import {Role} from "../../../enums/role.enum";
-import {UserDto} from "../../../dtos/user.dto";
-import {IUserRepository} from "../../../../data/repositories/user.repository";
-import {User} from "../../../entities/user.entity";
-import {HttpContext} from "building-blocks/context/context";
+import { Role } from '../../../enums/role.enum';
+import { UserDto } from '../../../dtos/user.dto';
+import { IUserRepository } from '../../../../data/repositories/user.repository';
+import { User } from '../../../entities/user.entity';
+import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;
@@ -53,7 +52,6 @@ export class CreateUserController extends Controller {
   @Security('jwt')
   @SuccessResponse('201', 'CREATED')
   public async createUser(@Body() request: CreateUserRequestDto): Promise<UserDto> {
-
     const result = await mediatrJs.send<UserDto>(
       new CreateUser({
         email: request.email,

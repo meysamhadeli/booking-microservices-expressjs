@@ -8,11 +8,11 @@ import httpStatus from 'http-status';
 import Joi from 'joi';
 import { inject, injectable } from 'tsyringe';
 import { UserUpdated } from 'building-blocks/contracts/identity.contract';
-import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import {UserDto} from "../../../dtos/user.dto";
 import {Role} from "../../../enums/role.enum";
 import {IUserRepository} from "../../../../data/repositories/user.repository";
 import {User} from "../../../entities/user.entity";
+import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
 
 export class UpdateUser implements IRequest<UserDto> {
   id: number;

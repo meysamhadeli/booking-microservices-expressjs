@@ -3,13 +3,6 @@ import passport from 'passport';
 import { RegisterRoutes } from '../../../src/routes/routes';
 import { rabbitMqContainerStart } from 'building-blocks/test/container/rabbitmq/rabbitmq-container';
 import { DataSource } from 'typeorm';
-import {
-  Consumer,
-  IConsumer,
-  IPublisher,
-  Publisher,
-  RabbitMQConnection
-} from 'building-blocks/rabbitmq/rabbitmq';
 import { StartedTestContainer } from 'testcontainers';
 import { container } from 'tsyringe';
 import express, { Express } from 'express';
@@ -19,6 +12,10 @@ import {IUserRepository, UserRepository} from "../../../src/data/repositories/us
 import {initialRabbitmq} from "../../../src/extensions/rabbitmq.extensions";
 import {registerMediatrHandlers} from "../../../src/extensions/mediatr.extensions";
 import {initialDbContext} from "../../../src/data/db.context";
+import {RabbitMQConnection} from "building-blocks/rabbitmq/rabbitmq-connection";
+import {Consumer, IConsumer} from "building-blocks/rabbitmq/rabbitmq-consumer";
+import {IPublisher, Publisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
+
 
 export class Fixture {
   databaseConnection: DataSource;

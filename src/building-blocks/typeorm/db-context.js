@@ -21,17 +21,16 @@ let DbContext = class DbContext {
     }
     async initializeTypeorm(dataSourceOptions) {
         try {
-            connection = await (0, typeorm_1.createConnection)(dataSourceOptions);
+            connection = await new typeorm_1.DataSource(dataSourceOptions).initialize();
             this.logger.info('Data Source has been initialized!');
             if (config_1.default.env !== 'test') {
-                connection
-                    .runMigrations()
-                    .then(() => {
-                    this.logger.info('Migrations run successfully!');
-                })
-                    .catch((err) => {
+                try {
+                }
+                catch (error) {
                     this.logger.error('Error during running the Migrations!');
-                });
+                }
+                await connection.runMigrations();
+                this.logger.info('Migrations run successfully!');
             }
         }
         catch (error) {

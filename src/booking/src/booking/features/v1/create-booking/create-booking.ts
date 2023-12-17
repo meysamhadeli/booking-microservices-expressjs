@@ -5,13 +5,13 @@ import Joi from 'joi';
 import { inject, injectable } from 'tsyringe';
 import mapper from '../../../mappings';
 import notFoundException from 'building-blocks/types/exception/not-found.exception';
-import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import { BookingCreated } from 'building-blocks/contracts/booking.contract';
 import {BookingDto} from "../../../dtos/booking.dto";
 import {IBookingRepository} from "../../../../data/repositories/booking.repository";
 import {Booking} from "../../../entities/booking.entity";
 import {IFlightClient} from "../../../http-client/services/flight/flight.client";
 import {IPassengerClient} from "../../../http-client/services/passenger/passenger.client";
+import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
 
 export class CreateBooking implements IRequest<BookingDto> {
   passengerId: number;

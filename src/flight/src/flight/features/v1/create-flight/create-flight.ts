@@ -4,13 +4,13 @@ import httpStatus from 'http-status';
 import Joi from 'joi';
 import ConflictException from 'building-blocks/types/exception/conflict.exception';
 import { inject, injectable } from 'tsyringe';
-import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import mapper from '../../../../aircraft/mappings';
 import { FlightCreated } from 'building-blocks/contracts/flight.contract';
 import {FlightStatus} from "../../../enums/flight-status.enum";
 import {FlightDto} from "../../../dtos/flight.dto";
 import {IFlightRepository} from "../../../../data/repositories/flight.repository";
 import {Flight} from "../../../entities/flight.entity";
+import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
 
 export class CreateFlight implements IRequest<CreateFlight> {
   flightNumber: string;

@@ -6,10 +6,10 @@ import httpStatus from 'http-status';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
 import { inject, injectable } from 'tsyringe';
 import { UserDeleted } from 'building-blocks/contracts/identity.contract';
-import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq';
 import {UserDto} from "../../../dtos/user.dto";
 import {IUserRepository} from "../../../../data/repositories/user.repository";
 import {User} from "../../../entities/user.entity";
+import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
 
 export class DeleteUserById implements IRequest<UserDto> {
   id: number;

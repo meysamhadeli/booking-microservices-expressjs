@@ -7,7 +7,7 @@ import {OpenTelemetryTracer} from "building-blocks/open-telemetry/open-telemetry
 export const initialOpenTelemetry = async (app?: Express): Promise<OpenTelemetryTracer> => {
   // tracing
   const openTelemetryTracer = container.resolve(OpenTelemetryTracer);
-  await openTelemetryTracer.createTracer(config.serviceName);
+  await openTelemetryTracer.createTracer((x) => x.serviceName == x.serviceName);
 
   // monitoring
   if (app) {

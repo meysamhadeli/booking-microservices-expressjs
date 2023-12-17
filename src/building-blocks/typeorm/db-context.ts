@@ -1,17 +1,16 @@
-import {Connection, ConnectionManager, createConnection, DataSource, DataSourceOptions, useContainer} from 'typeorm';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import config from '../config/config';
 import { Logger } from '../logging/logger';
-import {container, injectable, instanceCachingFactory} from 'tsyringe';
+import { container, injectable, instanceCachingFactory } from 'tsyringe';
 
-let connection: Connection = null;
+let connection: DataSource = null;
 
 export interface IDbContext {
-  initializeTypeorm(dataSourceOptions: DataSourceOptions): Promise<Connection>;
+  initializeTypeorm(dataSourceOptions: DataSourceOptions): Promise<DataSource>;
 
   closeConnection(): Promise<void>;
 
-  get connection(): Connection | null;
+  get connection(): DataSource | null;
 }
 
 export interface IDataSeeder {
@@ -22,22 +21,19 @@ export interface IDataSeeder {
 export class DbContext implements IDbContext {
   logger = container.resolve(Logger);
 
-  async initializeTypeorm(dataSourceOptions: DataSourceOptions): Promise<Connection> {
-
+  async initializeTypeorm(dataSourceOptions: DataSourceOptions): Promise<DataSource> {
     try {
-      connection = await createConnection(dataSourceOptions);
+      connection = await new DataSource(dataSourceOptions).initialize();
 
       this.logger.info('Data Source has been initialized!');
 
       if (config.env !== 'test') {
-        connection
-          .runMigrations()
-          .then(() => {
-            this.logger.info('Migrations run successfully!');
-          })
-          .catch((err) => {
-            this.logger.error('Error during running the Migrations!');
-          });
+        try {
+        } catch (error) {
+          this.logger.error('Error during running the Migrations!');
+        }
+        await connection.runMigrations();
+        this.logger.info('Migrations run successfully!');
       }
     } catch (error) {
       throw new Error(`Error during database initialization: ${error.toString()}`);
@@ -46,7 +42,7 @@ export class DbContext implements IDbContext {
     return connection;
   }
 
-  get connection(): Connection | null {
+  get connection(): DataSource | null {
     return connection;
   }
 

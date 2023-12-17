@@ -1,8 +1,8 @@
 import 'reflect-metadata';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
-import { RabbitmqOptions } from '../../../rabbitmq/rabbitmq';
 import { container } from 'tsyringe';
 import { Logger } from '../../../logging/logger';
+import {RabbitmqOptions} from "../../../rabbitmq/rabbitmq-connection";
 
 interface RabbitmqContainerOptions {
   host: string;
