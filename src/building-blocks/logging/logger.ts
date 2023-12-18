@@ -1,4 +1,4 @@
-import winston, { format } from 'winston';
+import winston, { debug, format } from 'winston';
 import config from '../config/config';
 import { injectable } from 'tsyringe';
 
@@ -12,10 +12,10 @@ export interface ILogger {
 
 @injectable()
 export class Logger implements ILogger {
-  private logger: winston.Logger;
+  private static logger: winston.Logger;
 
   constructor() {
-    this.logger = winston.createLogger({
+    Logger.logger = winston.createLogger({
       level: config.env === 'development' ? 'debug' : 'info',
       format: format.combine(
         format.colorize(),
@@ -28,14 +28,26 @@ export class Logger implements ILogger {
     });
   }
   debug(message: string): void {
-    this.logger.debug(message);
+    Logger.logger.debug(message);
+  }
+
+  static debug(message: string): void {
+    Logger.logger.debug(message);
   }
 
   info(message: string): void {
-    this.logger.info(message);
+    Logger.logger.info(message);
+  }
+
+  static info(message: string): void {
+    Logger.logger.info(message);
   }
 
   error(message: string | Error): void {
-    this.logger.error(message);
+    Logger.logger.error(message);
+  }
+
+  static error(message: string | Error): void {
+    Logger.logger.error(message);
   }
 }

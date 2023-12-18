@@ -29,8 +29,6 @@ export interface IRabbitMQConnection {
 
 @injectable()
 export class RabbitMQConnection implements IRabbitMQConnection {
-  logger = container.resolve(Logger);
-
   async createConnection(
     rabbitmqOptionsBuilder?: (rabbitmqOptionsBuilder?: RabbitmqOptionsBuilder) => void
   ): Promise<amqp.Connection> {
@@ -51,7 +49,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
               password: options?.password ?? config.rabbitmq.password
             });
 
-            this.logger.info('RabbitMq connection created successfully');
+            Logger.info('RabbitMq connection created successfully');
           },
           {
             retries: config.retry.count,
@@ -62,7 +60,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
         );
 
         connection.on('error', async (error): Promise<void> => {
-          this.logger.error(`Error occurred on connection: ${error}`);
+          Logger.error(`Error occurred on connection: ${error}`);
           await this.closeConnection();
           await this.createConnection();
         });
@@ -83,7 +81,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
         await asyncRetry(
           async () => {
             channel = await connection.createChannel();
-            this.logger.info('Channel Created successfully');
+            Logger.info('Channel Created successfully');
           },
           {
             retries: config.retry.count,
@@ -95,14 +93,14 @@ export class RabbitMQConnection implements IRabbitMQConnection {
       }
 
       channel.on('error', async (error): Promise<void> => {
-        this.logger.error(`Error occurred on channel: ${error}`);
+        Logger.error(`Error occurred on channel: ${error}`);
         await this.closeChanel();
         await this.getChannel();
       });
 
       return channel;
     } catch (error) {
-      this.logger.error('Failed to get channel!');
+      Logger.error('Failed to get channel!');
     }
   }
 
@@ -110,10 +108,10 @@ export class RabbitMQConnection implements IRabbitMQConnection {
     try {
       if (channel) {
         await channel.close();
-        this.logger.info('Channel closed successfully');
+        Logger.info('Channel closed successfully');
       }
     } catch (error) {
-      this.logger.error('Channel close failed!');
+      Logger.error('Channel close failed!');
     }
   }
 
@@ -121,10 +119,10 @@ export class RabbitMQConnection implements IRabbitMQConnection {
     try {
       if (connection) {
         await connection.close();
-        this.logger.info('Connection closed successfully');
+        Logger.info('Connection closed successfully');
       }
     } catch (error) {
-      this.logger.error('Connection close failed!');
+      Logger.error('Connection close failed!');
     }
   }
 }

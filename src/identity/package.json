@@ -46,6 +46,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@godaddy/terminus": "^4.12.1",
     "@opentelemetry/sdk-trace-node": "^1.17.0",
     "@types/pg": "^8.10.2",
     "amqplib": "^0.10.3",

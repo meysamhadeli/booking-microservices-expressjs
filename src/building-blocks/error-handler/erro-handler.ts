@@ -13,8 +13,6 @@ import { Logger } from '../logging/logger';
 import HttpClientException from '../types/exception/http-client.exception';
 
 export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
-  const logger = container.resolve(Logger);
-
   if (err instanceof ApplicationException) {
     res.status(httpStatus.BAD_REQUEST).json(
       new ProblemDocument({
@@ -25,7 +23,7 @@ export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    logger.error(err);
+    Logger.error(err);
 
     return next;
   }
@@ -40,7 +38,7 @@ export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    logger.error(err);
+    Logger.error(err);
 
     return next;
   }
@@ -55,7 +53,7 @@ export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    logger.error(err);
+    Logger.error(err);
 
     return next;
   }
@@ -70,7 +68,7 @@ export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    logger.error(err);
+    Logger.error(err);
 
     return next;
   }
@@ -85,7 +83,7 @@ export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    logger.error(err);
+    Logger.error(err);
 
     return next;
   }
@@ -100,7 +98,7 @@ export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    logger.error(err);
+    Logger.error(err);
 
     return next;
   }
@@ -115,7 +113,7 @@ export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
       })
     );
 
-    logger.error(err);
+    Logger.error(err);
 
     return next;
   }
@@ -129,7 +127,7 @@ export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
     })
   );
 
-  logger.error(err);
+  Logger.error(err);
 
   return next;
 };

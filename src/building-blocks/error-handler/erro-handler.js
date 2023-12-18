@@ -13,11 +13,9 @@ const unauthorized_exception_1 = __importDefault(require("../types/exception/una
 const forbidden_exception_1 = __importDefault(require("../types/exception/forbidden.exception"));
 const not_found_exception_1 = __importDefault(require("../types/exception/not-found.exception"));
 const conflict_exception_1 = __importDefault(require("../types/exception/conflict.exception"));
-const tsyringe_1 = require("tsyringe");
 const logger_1 = require("../logging/logger");
 const http_client_exception_1 = __importDefault(require("../types/exception/http-client.exception"));
 const erroHandler = (err, req, res, next) => {
-    const logger = tsyringe_1.container.resolve(logger_1.Logger);
     if (err instanceof application_exception_1.default) {
         res.status(http_status_1.default.BAD_REQUEST).json(new http_problem_details_1.ProblemDocument({
             type: application_exception_2.default.name,
@@ -25,7 +23,7 @@ const erroHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger.error(err);
+        logger_1.Logger.error(err);
         return next;
     }
     if (err instanceof unauthorized_exception_1.default) {
@@ -35,7 +33,7 @@ const erroHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger.error(err);
+        logger_1.Logger.error(err);
         return next;
     }
     if (err instanceof forbidden_exception_1.default) {
@@ -45,7 +43,7 @@ const erroHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger.error(err);
+        logger_1.Logger.error(err);
         return next;
     }
     if (err instanceof not_found_exception_1.default) {
@@ -55,7 +53,7 @@ const erroHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger.error(err);
+        logger_1.Logger.error(err);
         return next;
     }
     if (err instanceof conflict_exception_1.default) {
@@ -65,7 +63,7 @@ const erroHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger.error(err);
+        logger_1.Logger.error(err);
         return next;
     }
     if (err instanceof http_client_exception_1.default) {
@@ -75,7 +73,7 @@ const erroHandler = (err, req, res, next) => {
             detail: err.stack,
             status: err.statusCode
         }));
-        logger.error(err);
+        logger_1.Logger.error(err);
         return next;
     }
     if (err instanceof joi_1.ValidationError) {
@@ -85,7 +83,7 @@ const erroHandler = (err, req, res, next) => {
             detail: err.stack,
             status: http_status_1.default.BAD_REQUEST
         }));
-        logger.error(err);
+        logger_1.Logger.error(err);
         return next;
     }
     res.status(http_status_1.default.INTERNAL_SERVER_ERROR).json(new http_problem_details_1.ProblemDocument({
@@ -94,7 +92,7 @@ const erroHandler = (err, req, res, next) => {
         detail: err.stack,
         status: err.statusCode || 500
     }));
-    logger.error(err);
+    logger_1.Logger.error(err);
     return next;
 };
 exports.erroHandler = erroHandler;

@@ -2,12 +2,11 @@ import { IDataSeeder } from 'building-blocks/typeorm/db-context';
 import { container } from 'tsyringe';
 import { encryptPassword } from 'building-blocks/utils/encryption';
 import { Logger } from 'building-blocks/logging/logger';
-import {User} from "../../user/entities/user.entity";
-import {Role} from "../../user/enums/role.enum";
-import {UserRepository} from "../repositories/user.repository";
+import { User } from '../../user/entities/user.entity';
+import { Role } from '../../user/enums/role.enum';
+import { UserRepository } from '../repositories/user.repository';
 
 export class UserSeed implements IDataSeeder {
-  logger = container.resolve(Logger);
   async seedData(): Promise<void> {
     const userRepository = container.resolve(UserRepository);
     if ((await userRepository.getAllUsers())?.length == 0) {
@@ -21,7 +20,7 @@ export class UserSeed implements IDataSeeder {
           passportNumber: '12345678'
         })
       );
-      this.logger.info('Seed users run successfully!');
+      Logger.info('Seed users run successfully!');
     }
   }
 }

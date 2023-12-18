@@ -9,14 +9,15 @@ import { RegisterRoutes } from './routes/routes';
 import config from 'building-blocks/config/config';
 import { collectDefaultMetrics } from 'prom-client';
 import { initialSwagger } from 'building-blocks/swagger/swagger';
-import {erroHandler} from "building-blocks/error-handler/erro-handler";
-import {initialLogger} from "./extensions/logger.extensions";
-import {initialDbContext} from "./data/db.context";
-import {initialOpenTelemetry} from "./extensions/otel.extensions";
-import {initialRabbitmq} from "./extensions/rabbitmq.extensions";
-import {registerMediatrHandlers} from "./extensions/mediatr.extensions";
-import {httpContextMiddleware} from "building-blocks/context/context";
-import {postgresOptions} from "./data/data-source";
+import { erroHandler } from 'building-blocks/error-handler/erro-handler';
+import { initialLogger } from './extensions/logger.extensions';
+import { initialDbContext } from './data/db.context';
+import { initialOpenTelemetry } from './extensions/otel.extensions';
+import { initialRabbitmq } from './extensions/rabbitmq.extensions';
+import { registerMediatrHandlers } from './extensions/mediatr.extensions';
+import { httpContextMiddleware } from 'building-blocks/context/context';
+import { postgresOptions } from './data/data-source';
+import { Logger } from 'building-blocks/logging/logger';
 
 const startupApp = async () => {
   collectDefaultMetrics();
@@ -54,7 +55,7 @@ const startupApp = async () => {
 
   app.use(erroHandler);
 
-  app.listen(config.port, () => {
+  const server = app.listen(config.port, () => {
     logger.info(`Listening to http://localhost:${config.port}`);
   });
 
@@ -66,9 +67,13 @@ const startupApp = async () => {
     await initialSwagger(app);
   }
 
-  process.on('SIGTERM', async () => {
+  process.on('SIGINT', async () => {
     await databaseConnection.destroy();
     await rabbitmq.closeConnection();
+    server.close(function () {
+      process.exit(0);
+    });
+    Logger.info('Application shutdown gracefully.');
   });
 };
 

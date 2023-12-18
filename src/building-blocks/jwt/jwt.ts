@@ -1,8 +1,8 @@
 import * as express from 'express';
 import * as jwt from 'jsonwebtoken';
-import config from "../config/config";
-import {generateFakeJwt} from "../utils/encryption";
-import UnauthorizedException from "../types/exception/unauthorized.exception";
+import config from '../config/config';
+import { generateFakeJwt } from '../utils/encryption';
+import UnauthorizedException from '../types/exception/unauthorized.exception';
 
 export async function expressAuthentication(
   request: express.Request,

@@ -19,21 +19,19 @@ export interface IDataSeeder {
 
 @injectable()
 export class DbContext implements IDbContext {
-  logger = container.resolve(Logger);
-
   async initializeTypeorm(dataSourceOptions: DataSourceOptions): Promise<DataSource> {
     try {
       connection = await new DataSource(dataSourceOptions).initialize();
 
-      this.logger.info('Data Source has been initialized!');
+      Logger.info('Data Source has been initialized!');
 
       if (config.env !== 'test') {
         try {
         } catch (error) {
-          this.logger.error('Error during running the Migrations!');
+          Logger.error('Error during running the Migrations!');
         }
         await connection.runMigrations();
-        this.logger.info('Migrations run successfully!');
+        Logger.info('Migrations run successfully!');
       }
     } catch (error) {
       throw new Error(`Error during database initialization: ${error.toString()}`);

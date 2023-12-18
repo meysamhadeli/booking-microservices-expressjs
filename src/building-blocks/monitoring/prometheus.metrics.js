@@ -37,7 +37,6 @@ const logger_1 = require("../logging/logger");
 const tsyringe_1 = require("tsyringe");
 let PrometheusMetrics = class PrometheusMetrics {
     static registerMetricsEndpoint(app) {
-        const logger = tsyringe_1.container.resolve(logger_1.Logger);
         app.use('/metrics', async (req, res) => {
             try {
                 const metrics = await Prometheus.register.metrics();
@@ -45,7 +44,7 @@ let PrometheusMetrics = class PrometheusMetrics {
                 res.end(metrics);
             }
             catch (error) {
-                logger.error(error);
+                logger_1.Logger.error(error);
                 res.status(500).end();
             }
         });

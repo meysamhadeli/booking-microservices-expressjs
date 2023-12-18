@@ -1,16 +1,17 @@
-import {IDataSeeder} from "building-blocks/typeorm/db-context";
-import {container} from "tsyringe";
-import {AircraftRepository} from "../repositories/aircraft.repository";
-import {Aircraft} from "../../aircraft/entities/aircraft.entity";
-import {AirportRepository} from "../repositories/airport.repository";
-import {Airport} from "../../airport/entities/airport.entity";
-import {FlightRepository} from "../repositories/flight.repository";
-import {FlightStatus} from "../../flight/enums/flight-status.enum";
-import {Flight} from "../../flight/entities/flight.entity";
-import {SeatRepository} from "../repositories/seat.repository";
-import {Seat} from "../../seat/entities/seat.entity";
-import {SeatClass} from "../../seat/enums/seat-class.enum";
-import {SeatType} from "../../seat/enums/seat-type.enum";
+import { IDataSeeder } from 'building-blocks/typeorm/db-context';
+import { container } from 'tsyringe';
+import { AircraftRepository } from '../repositories/aircraft.repository';
+import { Aircraft } from '../../aircraft/entities/aircraft.entity';
+import { AirportRepository } from '../repositories/airport.repository';
+import { Airport } from '../../airport/entities/airport.entity';
+import { FlightRepository } from '../repositories/flight.repository';
+import { FlightStatus } from '../../flight/enums/flight-status.enum';
+import { Flight } from '../../flight/entities/flight.entity';
+import { SeatRepository } from '../repositories/seat.repository';
+import { Seat } from '../../seat/entities/seat.entity';
+import { SeatClass } from '../../seat/enums/seat-class.enum';
+import { SeatType } from '../../seat/enums/seat-type.enum';
+import {Logger} from "building-blocks/logging/logger";
 
 export class FlightSeed implements IDataSeeder {
   public async seedData(): Promise<void> {
@@ -36,12 +37,14 @@ export class FlightSeed implements IDataSeeder {
           name: 'fokker',
           manufacturingYear: 2002,
           model: '2200'
-        }),
+        })
       ];
 
       for (const aircraft of aircrafts) {
         await aircraftRepository.createAircraft(aircraft);
       }
+
+      Logger.info('Seed aircrafts run successfully!');
     }
   }
 
@@ -49,25 +52,25 @@ export class FlightSeed implements IDataSeeder {
     const airportRepository = container.resolve(AirportRepository);
 
     if ((await airportRepository.getAll())?.length == 0) {
-      const airports =
-        [
-          new Airport({
-            id: 1,
-            name: 'mehrabad',
-            code: '1422',
-            address: 'tehran'
-          }),
-          new Airport({
-            id: 2,
-            name: 'kish airport',
-            code: '1222',
-            address: 'kish'
-          })
-        ];
+      const airports = [
+        new Airport({
+          id: 1,
+          name: 'mehrabad',
+          code: '1422',
+          address: 'tehran'
+        }),
+        new Airport({
+          id: 2,
+          name: 'kish airport',
+          code: '1222',
+          address: 'kish'
+        })
+      ];
 
       for (const airport of airports) {
         await airportRepository.createAirport(airport);
       }
+      Logger.info('Seed airports run successfully!');
     }
   }
 
@@ -90,6 +93,7 @@ export class FlightSeed implements IDataSeeder {
           durationMinutes: 1000
         })
       );
+      Logger.info('Seed flights run successfully!');
     }
   }
 
@@ -115,7 +119,8 @@ export class FlightSeed implements IDataSeeder {
       for (const seat of seats) {
         await seatRepository.createSeat(seat);
       }
+
+      Logger.info('Seed seats run successfully!');
     }
   }
 }
-

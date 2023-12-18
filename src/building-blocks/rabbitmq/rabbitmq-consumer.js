@@ -22,13 +22,10 @@ const open_telemetry_1 = require("../open-telemetry/open-telemetry");
 const rabbitmq_connection_1 = require("./rabbitmq-connection");
 const consumedMessages = [];
 let Consumer = class Consumer {
-    constructor() {
-        this.logger = tsyringe_1.container.resolve(logger_1.Logger);
-    }
     async consumeMessage(type, handler) {
         const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_connection_1.RabbitMQConnection);
         const openTelemetryTracer = tsyringe_1.container.resolve(open_telemetry_1.OpenTelemetryTracer);
-        const tracer = await openTelemetryTracer.createTracer(x => x.serviceName = 'rabbitmq-consumer');
+        const tracer = await openTelemetryTracer.createTracer((x) => (x.serviceName = 'rabbitmq-consumer'));
         try {
             await (0, async_retry_1.default)(async () => {
                 const channel = await rabbitMQConnection.getChannel();
@@ -36,7 +33,7 @@ let Consumer = class Consumer {
                 await channel.assertExchange(exchangeName, 'fanout', { durable: false });
                 const q = await channel.assertQueue('', { exclusive: true });
                 await channel.bindQueue(q.queue, exchangeName, '');
-                this.logger.info(`Waiting for messages with exchange name "${exchangeName}". To exit, press CTRL+C`);
+                logger_1.Logger.info(`Waiting for messages with exchange name "${exchangeName}". To exit, press CTRL+C`);
                 await channel.consume(q.queue, (message) => {
                     var _a;
                     if (message !== null) {
@@ -44,7 +41,7 @@ let Consumer = class Consumer {
                         const messageContent = (_a = message === null || message === void 0 ? void 0 : message.content) === null || _a === void 0 ? void 0 : _a.toString();
                         const headers = message.properties.headers || {};
                         handler(q.queue, (0, serialization_1.deserializeObject)(messageContent));
-                        this.logger.info(`Message: ${messageContent} delivered to queue: ${q.queue} with exchange name ${exchangeName}`);
+                        logger_1.Logger.info(`Message: ${messageContent} delivered to queue: ${q.queue} with exchange name ${exchangeName}`);
                         channel.ack(message);
                         consumedMessages.push(exchangeName);
                         span.setAttributes(headers);
@@ -59,7 +56,7 @@ let Consumer = class Consumer {
             });
         }
         catch (error) {
-            this.logger.error(error);
+            logger_1.Logger.error(error);
             await rabbitMQConnection.closeChanel();
         }
         const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));

@@ -16,21 +16,18 @@ const logger_1 = require("../logging/logger");
 const tsyringe_1 = require("tsyringe");
 let connection = null;
 let DbContext = class DbContext {
-    constructor() {
-        this.logger = tsyringe_1.container.resolve(logger_1.Logger);
-    }
     async initializeTypeorm(dataSourceOptions) {
         try {
             connection = await new typeorm_1.DataSource(dataSourceOptions).initialize();
-            this.logger.info('Data Source has been initialized!');
+            logger_1.Logger.info('Data Source has been initialized!');
             if (config_1.default.env !== 'test') {
                 try {
                 }
                 catch (error) {
-                    this.logger.error('Error during running the Migrations!');
+                    logger_1.Logger.error('Error during running the Migrations!');
                 }
                 await connection.runMigrations();
-                this.logger.info('Migrations run successfully!');
+                logger_1.Logger.info('Migrations run successfully!');
             }
         }
         catch (error) {

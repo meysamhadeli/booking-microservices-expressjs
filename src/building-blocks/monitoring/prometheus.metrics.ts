@@ -3,12 +3,11 @@ import * as Prometheus from 'prom-client';
 import { requestCounterMiddleware } from './request-counter.middleware';
 import { requestDurationMiddleware } from './request-duration.middleware';
 import { Logger } from '../logging/logger';
-import { container, injectable } from 'tsyringe';
+import { injectable } from 'tsyringe';
 
 @injectable()
 export class PrometheusMetrics {
   static registerMetricsEndpoint(app: any) {
-    const logger = container.resolve(Logger);
 
     app.use('/metrics', async (req: Request, res: Response) => {
       try {
@@ -16,7 +15,7 @@ export class PrometheusMetrics {
         res.set('Content-Type', Prometheus.register.contentType);
         res.end(metrics);
       } catch (error) {
-        logger.error(error);
+        Logger.error(error);
         res.status(500).end();
       }
     });

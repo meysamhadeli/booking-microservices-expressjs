@@ -23,13 +23,10 @@ const StringUtils_1 = require("typeorm/util/StringUtils");
 const uuid_1 = require("uuid");
 const publishedMessages = [];
 let Publisher = class Publisher {
-    constructor() {
-        this.logger = tsyringe_1.container.resolve(logger_1.Logger);
-    }
     async publishMessage(message) {
         const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_connection_1.RabbitMQConnection);
         const openTelemetryTracer = tsyringe_1.container.resolve(open_telemetry_1.OpenTelemetryTracer);
-        const tracer = await openTelemetryTracer.createTracer(x => x.serviceName = 'rabbitmq-publisher');
+        const tracer = await openTelemetryTracer.createTracer((x) => (x.serviceName = 'rabbitmq-publisher'));
         try {
             await (0, async_retry_1.default)(async () => {
                 const channel = await rabbitMQConnection.getChannel();
@@ -47,7 +44,7 @@ let Publisher = class Publisher {
                 channel.publish(exchangeName, '', Buffer.from(serializedMessage), {
                     headers: messageProperties
                 });
-                this.logger.info(`Message: ${serializedMessage} sent with exchange name "${exchangeName}"`);
+                logger_1.Logger.info(`Message: ${serializedMessage} sent with exchange name "${exchangeName}"`);
                 publishedMessages.push(exchangeName);
                 span.setAttributes(messageProperties);
                 span.end();
@@ -59,7 +56,7 @@ let Publisher = class Publisher {
             });
         }
         catch (error) {
-            this.logger.error(error);
+            logger_1.Logger.error(error);
             await rabbitMQConnection.closeChanel();
         }
     }

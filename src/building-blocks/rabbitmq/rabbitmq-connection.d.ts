@@ -1,4 +1,3 @@
-import { Logger } from '../logging/logger';
 import { RabbitmqOptionsBuilder } from './rabbitmq-options-builder';
 import * as amqp from 'amqplib';
 export declare class RabbitmqOptions {
@@ -14,7 +13,6 @@ export interface IRabbitMQConnection {
     closeConnection(): Promise<void>;
 }
 export declare class RabbitMQConnection implements IRabbitMQConnection {
-    logger: Logger;
     createConnection(rabbitmqOptionsBuilder?: (rabbitmqOptionsBuilder?: RabbitmqOptionsBuilder) => void): Promise<amqp.Connection>;
     getChannel(): Promise<amqp.Channel>;
     closeChanel(): Promise<void>;

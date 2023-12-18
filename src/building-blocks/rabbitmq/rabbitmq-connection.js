@@ -45,9 +45,6 @@ exports.RabbitmqOptions = RabbitmqOptions;
 let connection = null;
 let channel = null;
 let RabbitMQConnection = class RabbitMQConnection {
-    constructor() {
-        this.logger = tsyringe_1.container.resolve(logger_1.Logger);
-    }
     async createConnection(rabbitmqOptionsBuilder) {
         var _a, _b;
         if (!connection || !connection == undefined) {
@@ -63,7 +60,7 @@ let RabbitMQConnection = class RabbitMQConnection {
                         username: (_a = options === null || options === void 0 ? void 0 : options.username) !== null && _a !== void 0 ? _a : config_1.default.rabbitmq.username,
                         password: (_b = options === null || options === void 0 ? void 0 : options.password) !== null && _b !== void 0 ? _b : config_1.default.rabbitmq.password
                     });
-                    this.logger.info('RabbitMq connection created successfully');
+                    logger_1.Logger.info('RabbitMq connection created successfully');
                 }, {
                     retries: config_1.default.retry.count,
                     factor: config_1.default.retry.factor,
@@ -71,7 +68,7 @@ let RabbitMQConnection = class RabbitMQConnection {
                     maxTimeout: config_1.default.retry.maxTimeout
                 });
                 connection.on('error', async (error) => {
-                    this.logger.error(`Error occurred on connection: ${error}`);
+                    logger_1.Logger.error(`Error occurred on connection: ${error}`);
                     await this.closeConnection();
                     await this.createConnection();
                 });
@@ -90,7 +87,7 @@ let RabbitMQConnection = class RabbitMQConnection {
             if ((connection && !channel) || !channel) {
                 await (0, async_retry_1.default)(async () => {
                     channel = await connection.createChannel();
-                    this.logger.info('Channel Created successfully');
+                    logger_1.Logger.info('Channel Created successfully');
                 }, {
                     retries: config_1.default.retry.count,
                     factor: config_1.default.retry.factor,
@@ -99,36 +96,36 @@ let RabbitMQConnection = class RabbitMQConnection {
                 });
             }
             channel.on('error', async (error) => {
-                this.logger.error(`Error occurred on channel: ${error}`);
+                logger_1.Logger.error(`Error occurred on channel: ${error}`);
                 await this.closeChanel();
                 await this.getChannel();
             });
             return channel;
         }
         catch (error) {
-            this.logger.error('Failed to get channel!');
+            logger_1.Logger.error('Failed to get channel!');
         }
     }
     async closeChanel() {
         try {
             if (channel) {
                 await channel.close();
-                this.logger.info('Channel closed successfully');
+                logger_1.Logger.info('Channel closed successfully');
             }
         }
         catch (error) {
-            this.logger.error('Channel close failed!');
+            logger_1.Logger.error('Channel close failed!');
         }
     }
     async closeConnection() {
         try {
             if (connection) {
                 await connection.close();
-                this.logger.info('Connection closed successfully');
+                logger_1.Logger.info('Connection closed successfully');
             }
         }
         catch (error) {
-            this.logger.error('Connection close failed!');
+            logger_1.Logger.error('Connection close failed!');
         }
     }
 };

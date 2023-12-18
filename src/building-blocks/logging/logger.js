@@ -34,31 +34,41 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var Logger_1;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Logger = void 0;
 const winston_1 = __importStar(require("winston"));
 const config_1 = __importDefault(require("../config/config"));
 const tsyringe_1 = require("tsyringe");
-let Logger = class Logger {
+let Logger = Logger_1 = class Logger {
     constructor() {
-        this.logger = winston_1.default.createLogger({
+        Logger_1.logger = winston_1.default.createLogger({
             level: config_1.default.env === 'development' ? 'debug' : 'info',
             format: winston_1.format.combine(winston_1.format.colorize(), winston_1.format.errors({ stack: true }), winston_1.format.timestamp(), winston_1.format.align(), winston_1.format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)),
             transports: [new winston_1.default.transports.Console()]
         });
     }
     debug(message) {
-        this.logger.debug(message);
+        Logger_1.logger.debug(message);
+    }
+    static debug(message) {
+        Logger_1.logger.debug(message);
     }
     info(message) {
-        this.logger.info(message);
+        Logger_1.logger.info(message);
+    }
+    static info(message) {
+        Logger_1.logger.info(message);
     }
     error(message) {
-        this.logger.error(message);
+        Logger_1.logger.error(message);
+    }
+    static error(message) {
+        Logger_1.logger.error(message);
     }
 };
 exports.Logger = Logger;
-exports.Logger = Logger = __decorate([
+exports.Logger = Logger = Logger_1 = __decorate([
     (0, tsyringe_1.injectable)(),
     __metadata("design:paramtypes", [])
 ], Logger);
