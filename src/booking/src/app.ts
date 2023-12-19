@@ -35,7 +35,7 @@ const startupApp = async () => {
 
   app.use(morganMiddleware);
 
-  const databaseConnection = await initialDbContext(postgresOptions);
+  await initialDbContext(postgresOptions);
 
   app.use(helmet());
 
@@ -60,7 +60,7 @@ const startupApp = async () => {
     logger.info(`Listening to http://localhost:${config.port}`);
   });
 
-  const rabbitmq = await initialRabbitmq();
+  await initialRabbitmq();
 
   await initialHttpClientServices();
 
@@ -71,11 +71,7 @@ const startupApp = async () => {
   }
 
   process.on('SIGINT', async () => {
-    await databaseConnection.destroy();
-    await rabbitmq.closeConnection();
-    server.close(function () {
-      process.exit(0);
-    });
+    server.close();
     Logger.info('Application shutdown gracefully.');
   });
 };

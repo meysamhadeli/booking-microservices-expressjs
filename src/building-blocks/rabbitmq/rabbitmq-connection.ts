@@ -42,7 +42,13 @@ export class RabbitMQConnection implements IRabbitMQConnection {
               password: options?.password ?? config.rabbitmq.password
             });
 
-            Logger.info('RabbitMq connection created successfully');
+            Logger.info('Rabbitmq connection created successfully');
+
+            process.on('SIGINT', async () => {
+              if (connection) {
+                await this.closeConnection();
+              }
+            });
           },
           {
             retries: config.retry.count,
@@ -112,10 +118,10 @@ export class RabbitMQConnection implements IRabbitMQConnection {
     try {
       if (connection) {
         await connection.close();
-        Logger.info('Connection closed successfully');
+        Logger.info('Connection rabbitmq closed gracefully!');
       }
     } catch (error) {
-      Logger.error('Connection close failed!');
+      Logger.error('Connection rabbitmq close failed!');
     }
   }
 }

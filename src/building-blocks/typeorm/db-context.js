@@ -20,6 +20,11 @@ let DbContext = class DbContext {
         try {
             connection = await new typeorm_1.DataSource(dataSourceOptions).initialize();
             logger_1.Logger.info('Data Source has been initialized!');
+            process.on('SIGINT', async () => {
+                if (connection) {
+                    await this.closeConnection();
+                }
+            });
             if (config_1.default.env !== 'test') {
                 try {
                 }
@@ -31,7 +36,7 @@ let DbContext = class DbContext {
             }
         }
         catch (error) {
-            throw new Error(`Error during database initialization: ${error.toString()}`);
+            throw new Error(error);
         }
         return connection;
     }
@@ -40,6 +45,7 @@ let DbContext = class DbContext {
     }
     async closeConnection() {
         await connection.destroy();
+        logger_1.Logger.info('Connection postgres destroyed gracefully!');
     }
 };
 exports.DbContext = DbContext;

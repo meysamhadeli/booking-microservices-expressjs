@@ -57,7 +57,12 @@ let RabbitMQConnection = class RabbitMQConnection {
                         username: (_a = options === null || options === void 0 ? void 0 : options.username) !== null && _a !== void 0 ? _a : config_1.default.rabbitmq.username,
                         password: (_b = options === null || options === void 0 ? void 0 : options.password) !== null && _b !== void 0 ? _b : config_1.default.rabbitmq.password
                     });
-                    logger_1.Logger.info('RabbitMq connection created successfully');
+                    logger_1.Logger.info('Rabbitmq connection created successfully');
+                    process.on('SIGINT', async () => {
+                        if (connection) {
+                            await this.closeConnection();
+                        }
+                    });
                 }, {
                     retries: config_1.default.retry.count,
                     factor: config_1.default.retry.factor,
@@ -118,11 +123,11 @@ let RabbitMQConnection = class RabbitMQConnection {
         try {
             if (connection) {
                 await connection.close();
-                logger_1.Logger.info('Connection closed successfully');
+                logger_1.Logger.info('Connection rabbitmq closed gracefully!');
             }
         }
         catch (error) {
-            logger_1.Logger.error('Connection close failed!');
+            logger_1.Logger.error('Connection rabbitmq close failed!');
         }
     }
 };

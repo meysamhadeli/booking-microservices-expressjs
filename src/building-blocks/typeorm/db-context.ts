@@ -25,6 +25,12 @@ export class DbContext implements IDbContext {
 
       Logger.info('Data Source has been initialized!');
 
+      process.on('SIGINT', async () => {
+        if (connection) {
+          await this.closeConnection();
+        }
+      });
+
       if (config.env !== 'test') {
         try {
         } catch (error) {
@@ -34,7 +40,7 @@ export class DbContext implements IDbContext {
         Logger.info('Migrations run successfully!');
       }
     } catch (error) {
-      throw new Error(`Error during database initialization: ${error.toString()}`);
+      throw new Error(error);
     }
 
     return connection;
@@ -46,5 +52,6 @@ export class DbContext implements IDbContext {
 
   async closeConnection(): Promise<void> {
     await connection.destroy();
+    Logger.info('Connection postgres destroyed gracefully!');
   }
 }
