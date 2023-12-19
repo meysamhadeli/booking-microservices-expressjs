@@ -5,13 +5,6 @@ import * as amqp from 'amqplib';
 import config from '../config/config';
 import asyncRetry from 'async-retry';
 
-export class RabbitmqOptions {
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-}
-
 let connection: amqp.Connection = null;
 let channel: amqp.Channel = null;
 

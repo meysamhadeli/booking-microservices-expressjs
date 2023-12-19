@@ -1,11 +1,10 @@
 import { BatchSpanProcessor, Tracer } from '@opentelemetry/sdk-trace-node';
-import { injectable, singleton } from 'tsyringe';
+import { injectable } from 'tsyringe';
 import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
 import config from '../config/config';
 import { ZipkinExporter } from '@opentelemetry/exporter-zipkin';
 import { Resource } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
-import { RabbitmqOptionsBuilder } from '../rabbitmq/rabbitmq-options-builder';
 import { OpenTelemetryOptionsBuilder } from './open-telemetry-options-builder';
 
 const { NodeTracerProvider } = require('@opentelemetry/node');
@@ -14,12 +13,6 @@ const { registerInstrumentations } = require('@opentelemetry/instrumentation');
 const { AmqplibInstrumentation } = require('@opentelemetry/instrumentation-amqplib');
 const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
-
-export class OpenTelemetryOptions {
-  jaegerEndpoint: string;
-  zipkinEndpoint: string;
-  serviceName: string;
-}
 
 export interface IOpenTelemetryTracer {
   createTracer(

@@ -1,4 +1,8 @@
-import { OpenTelemetryOptions } from './open-telemetry';
+export class OpenTelemetryOptions {
+  jaegerEndpoint: string;
+  zipkinEndpoint: string;
+  serviceName: string;
+}
 
 export class OpenTelemetryOptionsBuilder {
   private _options: OpenTelemetryOptions = new OpenTelemetryOptions();
