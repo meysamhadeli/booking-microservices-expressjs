@@ -2,11 +2,11 @@ import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediat
 import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
-import mapper from '../../../mappings';
 import { inject, injectable } from 'tsyringe';
-import {PassengerDto} from "../../../dtos/passenger.dto";
-import {IPassengerRepository} from "../../../../data/repositories/passenger.repository";
-import {Passenger} from "../../../entities/passenger.entity";
+import { PassengerDto } from '../../../dtos/passenger.dto';
+import { IPassengerRepository } from '../../../../data/repositories/passenger.repository';
+import { Passenger } from '../../../entities/passenger.entity';
+import mapper from '../../../mappings';
 
 export class GetPassengerById implements IRequest<PassengerDto> {
   id: number;

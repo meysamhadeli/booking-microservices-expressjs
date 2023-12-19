@@ -3,14 +3,14 @@ import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
 import httpStatus from 'http-status';
 import Joi from 'joi';
 import { inject, injectable } from 'tsyringe';
-import mapper from '../../../../aircraft/mappings';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
 import { SeatReserved } from 'building-blocks/contracts/flight.contract';
-import {SeatDto} from "../../../dtos/seat.dto";
-import {Seat} from "../../../entities/seat.entity";
-import {IFlightRepository} from "../../../../data/repositories/flight.repository";
-import {ISeatRepository} from "../../../../data/repositories/seat.repository";
-import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
+import { SeatDto } from '../../../dtos/seat.dto';
+import { Seat } from '../../../entities/seat.entity';
+import { IFlightRepository } from '../../../../data/repositories/flight.repository';
+import { ISeatRepository } from '../../../../data/repositories/seat.repository';
+import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
+import mapper from '../../../mappings';
 
 export class ReserveSeat implements IRequest<SeatDto> {
   seatNumber: string;

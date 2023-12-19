@@ -3,10 +3,10 @@ import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
 import { inject, injectable } from 'tsyringe';
+import { FlightDto } from '../../../dtos/flight.dto';
+import { IFlightRepository } from '../../../../data/repositories/flight.repository';
+import { Flight } from '../../../entities/flight.entity';
 import mapper from '../../../mappings';
-import {FlightDto} from "../../../dtos/flight.dto";
-import {IFlightRepository} from "../../../../data/repositories/flight.repository";
-import {Flight} from "../../../entities/flight.entity";
 
 export class GetFlightById implements IRequest<FlightDto> {
   id: number;

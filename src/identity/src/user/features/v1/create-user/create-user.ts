@@ -1,5 +1,4 @@
 import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
-import mapper from '../../../mapping';
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
 import httpStatus from 'http-status';
 import Joi from 'joi';
@@ -12,7 +11,8 @@ import { Role } from '../../../enums/role.enum';
 import { UserDto } from '../../../dtos/user.dto';
 import { IUserRepository } from '../../../../data/repositories/user.repository';
 import { User } from '../../../entities/user.entity';
-import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
+import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
+import mapper from "../../../mapping";
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;

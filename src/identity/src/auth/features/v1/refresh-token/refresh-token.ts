@@ -4,11 +4,11 @@ import Joi from 'joi';
 import { AuthDto } from '../../../dtos/auth.dto';
 import UnauthorizedException from 'building-blocks/types/exception/unauthorized.exception';
 import { inject, injectable } from 'tsyringe';
-import {IAuthRepository} from "../../../../data/repositories/auth.repository";
-import {Token} from "../../../entities/token.entity";
-import {ValidateToken} from "../validate-token/validate-token";
-import {TokenType} from "../../../enums/token-type.enum";
-import {GenerateToken} from "../generate-token/generate-token";
+import { IAuthRepository } from '../../../../data/repositories/auth.repository';
+import { Token } from '../../../entities/token.entity';
+import { ValidateToken } from '../validate-token/validate-token';
+import { TokenType } from '../../../enums/token-type.enum';
+import { GenerateToken } from '../generate-token/generate-token';
 
 export class RefreshToken implements IRequest<RefreshToken> {
   refreshToken: string;
@@ -26,7 +26,7 @@ const refreshTokenValidations = {
 
 @Route('/api/v1/identity')
 export class RefreshTokenController extends Controller {
-  @Post('refreshToken')
+  @Post('refresh-token')
   @SuccessResponse('200', 'OK')
   public async refreshToken(@BodyProp() refreshToken: string): Promise<AuthDto> {
     const result = await mediatrJs.send<AuthDto>(new RefreshToken({ refreshToken: refreshToken }));
@@ -49,11 +49,11 @@ export class RefreshTokenHandler implements IHandler<RefreshToken, AuthDto> {
           type: TokenType.REFRESH
         })
       );
-      const {userId} = refreshTokenData;
+      const { userId } = refreshTokenData;
 
       await this.authRepository.removeToken(refreshTokenData);
 
-      const result = await mediatrJs.send<AuthDto>(new GenerateToken({userId: userId}));
+      const result = await mediatrJs.send<AuthDto>(new GenerateToken({ userId: userId }));
 
       return result;
     } catch (error) {

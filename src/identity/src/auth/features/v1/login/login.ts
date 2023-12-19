@@ -6,8 +6,8 @@ import { password } from 'building-blocks/utils/validation';
 import { isPasswordMatch } from 'building-blocks/utils/encryption';
 import { inject, injectable } from 'tsyringe';
 import ApplicationException from 'building-blocks/types/exception/application.exception';
-import {IUserRepository} from "../../../../data/repositories/user.repository";
-import {GenerateToken} from "../generate-token/generate-token";
+import { IUserRepository } from '../../../../data/repositories/user.repository';
+import { GenerateToken } from '../generate-token/generate-token';
 
 export class Login implements IRequest<AuthDto> {
   email: string;

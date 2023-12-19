@@ -1,12 +1,12 @@
 import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
-import mapper from '../../../mapping';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
 import { inject, injectable } from 'tsyringe';
-import {UserDto} from "../../../dtos/user.dto";
-import {IUserRepository} from "../../../../data/repositories/user.repository";
-import {User} from "../../../entities/user.entity";
+import { UserDto } from '../../../dtos/user.dto';
+import { IUserRepository } from '../../../../data/repositories/user.repository';
+import { User } from '../../../entities/user.entity';
+import mapper from '../../../mapping';
 
 export class GetUserById implements IRequest<UserDto> {
   id: number;

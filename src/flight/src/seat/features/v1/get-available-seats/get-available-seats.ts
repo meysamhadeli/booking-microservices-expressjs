@@ -2,10 +2,10 @@ import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediat
 import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import { inject, injectable } from 'tsyringe';
+import { SeatDto } from '../../../dtos/seat.dto';
+import { ISeatRepository } from '../../../../data/repositories/seat.repository';
+import { Seat } from '../../../entities/seat.entity';
 import mapper from '../../../mappings';
-import {SeatDto} from "../../../dtos/seat.dto";
-import {ISeatRepository} from "../../../../data/repositories/seat.repository";
-import {Seat} from "../../../entities/seat.entity";
 
 export class GetAvailableSeats implements IRequest<SeatDto[]> {
   flightId: number;

@@ -4,12 +4,12 @@ import httpStatus from 'http-status';
 import Joi from 'joi';
 import ConflictException from 'building-blocks/types/exception/conflict.exception';
 import { inject, injectable } from 'tsyringe';
-import mapper from '../../../mappings';
 import { AircraftCreated } from 'building-blocks/contracts/flight.contract';
-import {AircraftDto} from "../../../dtos/aircraft.dto";
-import {IAircraftRepository} from "../../../../data/repositories/aircraft.repository";
-import {Aircraft} from "../../../entities/aircraft.entity";
-import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
+import { AircraftDto } from '../../../dtos/aircraft.dto';
+import { IAircraftRepository } from '../../../../data/repositories/aircraft.repository';
+import { Aircraft } from '../../../entities/aircraft.entity';
+import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
+import mapper from '../../../mappings';
 
 export class CreateAircraft implements IRequest<AircraftDto> {
   model: string;

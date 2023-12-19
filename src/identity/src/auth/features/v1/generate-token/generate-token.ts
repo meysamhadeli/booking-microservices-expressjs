@@ -5,9 +5,9 @@ import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 import config from 'building-blocks/config/config';
 import { inject, injectable } from 'tsyringe';
-import {TokenType} from "../../../enums/token-type.enum";
-import {IAuthRepository} from "../../../../data/repositories/auth.repository";
-import {Token} from "../../../entities/token.entity";
+import { TokenType } from '../../../enums/token-type.enum';
+import { IAuthRepository } from '../../../../data/repositories/auth.repository';
+import { Token } from '../../../entities/token.entity';
 
 export class GenerateToken implements IRequest<AuthDto> {
   userId: number;

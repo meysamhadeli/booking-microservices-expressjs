@@ -1,5 +1,4 @@
 import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
-import mapper from '../../../mapping';
 import { Body, Controller, Put, Query, Route, Security, SuccessResponse } from 'tsoa';
 import { password } from 'building-blocks/utils/validation';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
@@ -8,11 +7,11 @@ import httpStatus from 'http-status';
 import Joi from 'joi';
 import { inject, injectable } from 'tsyringe';
 import { UserUpdated } from 'building-blocks/contracts/identity.contract';
-import {UserDto} from "../../../dtos/user.dto";
-import {Role} from "../../../enums/role.enum";
-import {IUserRepository} from "../../../../data/repositories/user.repository";
-import {User} from "../../../entities/user.entity";
-import {IPublisher} from "building-blocks/rabbitmq/rabbitmq-publisher";
+import { UserDto } from '../../../dtos/user.dto';
+import { Role } from '../../../enums/role.enum';
+import { IUserRepository } from '../../../../data/repositories/user.repository';
+import { User } from '../../../entities/user.entity';
+import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 
 export class UpdateUser implements IRequest<UserDto> {
   id: number;
@@ -87,7 +86,7 @@ export class UpdateUserHandler implements IHandler<UpdateUser, any> {
       throw new NotFoundException('User not found');
     }
 
-    const updateUserEntity =  new User({
+    const updateUserEntity = new User({
       id: command.id,
       email: command.email,
       name: command.name,

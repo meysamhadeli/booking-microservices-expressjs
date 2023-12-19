@@ -436,14 +436,7 @@
 				"operationId": "UpdateUser",
 				"responses": {
 					"204": {
-						"description": "NO_CONTENT",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/UserDto"
-								}
-							}
-						}
+						"description": "NO_CONTENT"
 					}
 				},
 				"security": [
@@ -474,7 +467,7 @@
 				}
 			}
 		},
-		"/api/v1/identity/refreshToken": {
+		"/api/v1/identity/refresh-token": {
 			"post": {
 				"operationId": "RefreshToken",
 				"responses": {

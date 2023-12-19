@@ -39,7 +39,7 @@ Content-Type: application/json
 
 ###
 # @name Refresh_Token
-POST {{identity-api}}/api/v1/identity/refreshToken
+POST {{identity-api}}/api/v1/identity/refresh-token
 accept: application/json
 Content-Type: application/json
 
