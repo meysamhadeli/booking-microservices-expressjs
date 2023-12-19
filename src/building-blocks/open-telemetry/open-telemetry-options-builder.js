@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OpenTelemetryOptionsBuilder = void 0;
-const open_telemetry_1 = require("./open-telemetry");
+exports.OpenTelemetryOptionsBuilder = exports.OpenTelemetryOptions = void 0;
+class OpenTelemetryOptions {
+}
+exports.OpenTelemetryOptions = OpenTelemetryOptions;
 class OpenTelemetryOptionsBuilder {
     constructor() {
-        this._options = new open_telemetry_1.OpenTelemetryOptions();
+        this._options = new OpenTelemetryOptions();
     }
     get jaegerEndpoint() {
         return this._options.jaegerEndpoint;

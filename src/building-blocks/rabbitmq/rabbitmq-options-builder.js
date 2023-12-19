@@ -1,10 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RabbitmqOptionsBuilder = void 0;
-const rabbitmq_connection_1 = require("./rabbitmq-connection");
+exports.RabbitmqOptionsBuilder = exports.RabbitmqOptions = void 0;
+class RabbitmqOptions {
+}
+exports.RabbitmqOptions = RabbitmqOptions;
 class RabbitmqOptionsBuilder {
     constructor() {
-        this._options = new rabbitmq_connection_1.RabbitmqOptions();
+        this._options = new RabbitmqOptions();
     }
     get host() {
         return this._options.host;

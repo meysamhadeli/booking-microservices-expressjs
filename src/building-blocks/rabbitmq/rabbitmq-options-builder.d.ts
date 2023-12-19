@@ -1,4 +1,9 @@
-import { RabbitmqOptions } from './rabbitmq-connection';
+export declare class RabbitmqOptions {
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+}
 export declare class RabbitmqOptionsBuilder {
     private _options;
     get host(): string;

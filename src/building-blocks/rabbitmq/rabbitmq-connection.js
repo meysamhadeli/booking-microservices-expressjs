@@ -32,16 +32,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RabbitMQConnection = exports.RabbitmqOptions = void 0;
+exports.RabbitMQConnection = void 0;
 const tsyringe_1 = require("tsyringe");
 const logger_1 = require("../logging/logger");
 const rabbitmq_options_builder_1 = require("./rabbitmq-options-builder");
 const amqp = __importStar(require("amqplib"));
 const config_1 = __importDefault(require("../config/config"));
 const async_retry_1 = __importDefault(require("async-retry"));
-class RabbitmqOptions {
-}
-exports.RabbitmqOptions = RabbitmqOptions;
 let connection = null;
 let channel = null;
 let RabbitMQConnection = class RabbitMQConnection {

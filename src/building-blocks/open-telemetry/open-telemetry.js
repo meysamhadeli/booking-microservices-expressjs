@@ -9,7 +9,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OpenTelemetryTracer = exports.OpenTelemetryOptions = void 0;
+exports.OpenTelemetryTracer = void 0;
 const sdk_trace_node_1 = require("@opentelemetry/sdk-trace-node");
 const tsyringe_1 = require("tsyringe");
 const exporter_jaeger_1 = require("@opentelemetry/exporter-jaeger");
@@ -24,9 +24,6 @@ const { registerInstrumentations } = require('@opentelemetry/instrumentation');
 const { AmqplibInstrumentation } = require('@opentelemetry/instrumentation-amqplib');
 const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
-class OpenTelemetryOptions {
-}
-exports.OpenTelemetryOptions = OpenTelemetryOptions;
 let OpenTelemetryTracer = class OpenTelemetryTracer {
     async createTracer(openTelemetryOptionsBuilder) {
         var _a, _b, _c, _d, _e;
