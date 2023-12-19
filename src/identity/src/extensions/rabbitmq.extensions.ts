@@ -1,6 +1,7 @@
-import { RabbitMQConnection, RabbitmqOptions } from 'building-blocks/rabbitmq/rabbitmq-connection';
+import { RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq-connection';
 import { container } from 'tsyringe';
 import { IPublisher, Publisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
+import {RabbitmqOptions} from "building-blocks/rabbitmq/rabbitmq-options-builder";
 
 export const initialRabbitmq = async (options?: RabbitmqOptions): Promise<RabbitMQConnection> => {
   const rabbitMQConnection = container.resolve(RabbitMQConnection);

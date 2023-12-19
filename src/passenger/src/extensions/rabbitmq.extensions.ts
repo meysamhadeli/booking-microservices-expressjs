@@ -1,9 +1,10 @@
-import { RabbitMQConnection, RabbitmqOptions } from 'building-blocks/rabbitmq/rabbitmq-connection';
+import { RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq-connection';
 import { container } from 'tsyringe';
 import { IPublisher, Publisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import { Consumer, IConsumer } from 'building-blocks/rabbitmq/rabbitmq-consumer';
 import { UserCreated } from 'building-blocks/contracts/identity.contract';
 import { createUserConsumerHandler } from '../user/consumers/create-user';
+import { RabbitmqOptions } from 'building-blocks/rabbitmq/rabbitmq-options-builder';
 
 export const initialRabbitmq = async (options?: RabbitmqOptions): Promise<RabbitMQConnection> => {
   const rabbitMQConnection = container.resolve(RabbitMQConnection);
