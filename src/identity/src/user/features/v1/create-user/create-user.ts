@@ -12,7 +12,7 @@ import { UserDto } from '../../../dtos/user.dto';
 import { IUserRepository } from '../../../../data/repositories/user.repository';
 import { User } from '../../../entities/user.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
-import mapper from "../../../mapping";
+import mapper from '../../../mapping';
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;

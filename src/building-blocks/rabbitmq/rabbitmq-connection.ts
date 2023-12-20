@@ -1,17 +1,17 @@
-import { container, injectable } from 'tsyringe';
+import { injectable } from 'tsyringe';
 import { Logger } from '../logging/logger';
-import { RabbitmqOptionsBuilder } from './rabbitmq-options-builder';
 import * as amqp from 'amqplib';
 import config from '../config/config';
 import asyncRetry from 'async-retry';
+import {RabbitmqConnectionOptions} from "./rabbitmq-connection-options-builder";
 
 let connection: amqp.Connection = null;
 let channel: amqp.Channel = null;
 
 export interface IRabbitMQConnection {
-  createConnection(
-    rabbitmqOptionsBuilder?: (rabbitmqOptionsBuilder?: RabbitmqOptionsBuilder) => void
-  ): Promise<amqp.Connection>;
+  createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.Connection>;
+
+  getConnection(): Promise<amqp.Connection>;
 
   getChannel(): Promise<amqp.Channel>;
 
@@ -22,16 +22,9 @@ export interface IRabbitMQConnection {
 
 @injectable()
 export class RabbitMQConnection implements IRabbitMQConnection {
-  async createConnection(
-    rabbitmqOptionsBuilder?: (rabbitmqOptionsBuilder?: RabbitmqOptionsBuilder) => void
-  ): Promise<amqp.Connection> {
+  async createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.Connection> {
     if (!connection || !connection == undefined) {
       try {
-        const builder = new RabbitmqOptionsBuilder();
-        rabbitmqOptionsBuilder(builder);
-
-        const options = builder.build();
-
         const host = options?.host ?? config.rabbitmq.host;
         const port = options?.port ?? config.rabbitmq.port;
 
@@ -67,6 +60,10 @@ export class RabbitMQConnection implements IRabbitMQConnection {
         throw new Error('Rabbitmq connection is failed!');
       }
     }
+    return connection;
+  }
+
+  async getConnection(): Promise<amqp.Connection> {
     return connection;
   }
 

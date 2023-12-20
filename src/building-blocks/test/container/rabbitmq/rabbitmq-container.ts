@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { container } from 'tsyringe';
 import { Logger } from '../../../logging/logger';
-import {RabbitmqOptions} from "../../../rabbitmq/rabbitmq-options-builder";
+import {RabbitmqConnectionOptions} from "../../../rabbitmq/rabbitmq-connection-options-builder";
 
 interface RabbitmqContainerOptions {
   host: string;
@@ -13,7 +13,7 @@ interface RabbitmqContainerOptions {
 }
 
 export const rabbitMqContainerStart = async (): Promise<
-  [RabbitmqOptions, StartedTestContainer]
+  [RabbitmqConnectionOptions, StartedTestContainer]
 > => {
   const logger = container.resolve(Logger);
 
@@ -23,7 +23,7 @@ export const rabbitMqContainerStart = async (): Promise<
 
   const containerPort = rabbitmqContainerStarted.getMappedPort(defaultRabbitmqOptions.port);
 
-  const rabbitmqOptions: RabbitmqOptions = {
+  const rabbitmqOptions: RabbitmqConnectionOptions = {
     ...defaultRabbitmqOptions,
     port: containerPort
   };

@@ -5,11 +5,8 @@ export declare class OpenTelemetryOptions {
 }
 export declare class OpenTelemetryOptionsBuilder {
     private _options;
-    get jaegerEndpoint(): string;
-    set jaegerEndpoint(value: string);
-    get zipkinEndpoint(): string;
-    set zipkinEndpoint(value: string);
-    get serviceName(): string;
-    set serviceName(value: string);
+    jaegerEndpoint(value: string): OpenTelemetryOptionsBuilder;
+    zipkinEndpoint(value: string): OpenTelemetryOptionsBuilder;
+    serviceName(value: string): OpenTelemetryOptionsBuilder;
     build(): OpenTelemetryOptions;
 }

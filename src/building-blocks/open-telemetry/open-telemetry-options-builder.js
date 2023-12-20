@@ -8,23 +8,17 @@ class OpenTelemetryOptionsBuilder {
     constructor() {
         this._options = new OpenTelemetryOptions();
     }
-    get jaegerEndpoint() {
-        return this._options.jaegerEndpoint;
-    }
-    set jaegerEndpoint(value) {
+    jaegerEndpoint(value) {
         this._options.jaegerEndpoint = value;
+        return this;
     }
-    get zipkinEndpoint() {
-        return this._options.zipkinEndpoint;
-    }
-    set zipkinEndpoint(value) {
+    zipkinEndpoint(value) {
         this._options.zipkinEndpoint = value;
+        return this;
     }
-    get serviceName() {
-        return this._options.serviceName;
-    }
-    set serviceName(value) {
+    serviceName(value) {
         this._options.serviceName = value;
+        return this;
     }
     build() {
         return this._options;

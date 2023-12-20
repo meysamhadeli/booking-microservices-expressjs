@@ -35,20 +35,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RabbitMQConnection = void 0;
 const tsyringe_1 = require("tsyringe");
 const logger_1 = require("../logging/logger");
-const rabbitmq_options_builder_1 = require("./rabbitmq-options-builder");
 const amqp = __importStar(require("amqplib"));
 const config_1 = __importDefault(require("../config/config"));
 const async_retry_1 = __importDefault(require("async-retry"));
 let connection = null;
 let channel = null;
 let RabbitMQConnection = class RabbitMQConnection {
-    async createConnection(rabbitmqOptionsBuilder) {
+    async createConnection(options) {
         var _a, _b;
         if (!connection || !connection == undefined) {
             try {
-                const builder = new rabbitmq_options_builder_1.RabbitmqOptionsBuilder();
-                rabbitmqOptionsBuilder(builder);
-                const options = builder.build();
                 const host = (_a = options === null || options === void 0 ? void 0 : options.host) !== null && _a !== void 0 ? _a : config_1.default.rabbitmq.host;
                 const port = (_b = options === null || options === void 0 ? void 0 : options.port) !== null && _b !== void 0 ? _b : config_1.default.rabbitmq.port;
                 await (0, async_retry_1.default)(async () => {
@@ -79,6 +75,9 @@ let RabbitMQConnection = class RabbitMQConnection {
                 throw new Error('Rabbitmq connection is failed!');
             }
         }
+        return connection;
+    }
+    async getConnection() {
         return connection;
     }
     async getChannel() {

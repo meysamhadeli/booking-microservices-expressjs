@@ -8,23 +8,24 @@ import { sleep } from '../utils/time';
 import { Logger } from '../logging/logger';
 import { OpenTelemetryTracer } from '../open-telemetry/open-telemetry';
 import { RabbitMQConnection } from './rabbitmq-connection';
+import { RabbitmqConsumerOptions } from './rabbitmq-consumer-options-builder';
 
 const consumedMessages: string[] = [];
-type handlerFunc<T> = (queue: string, message: T) => void;
+export type handlerFunc<T> = (queue: string, message: T) => void;
 
 export interface IConsumer {
-  consumeMessage<T>(type: T, handler: handlerFunc<T>): Promise<void>;
+  addConsumer<T>(consumerOptions: RabbitmqConsumerOptions): Promise<void>;
 
   isConsumed<T>(message: T): Promise<boolean>;
 }
 
 @injectable()
 export class Consumer implements IConsumer {
-  async consumeMessage<T>(type: T, handler: handlerFunc<T>): Promise<void> {
+  async addConsumer<T>(consumerOptions: RabbitmqConsumerOptions): Promise<void> {
     const rabbitMQConnection = container.resolve(RabbitMQConnection);
     const openTelemetryTracer = container.resolve(OpenTelemetryTracer);
-    const tracer = await openTelemetryTracer.createTracer(
-      (x) => (x.serviceName = 'rabbitmq-consumer')
+    const tracer = await openTelemetryTracer.createTracer((x) =>
+      x.serviceName('rabbitmq-consumer')
     );
 
     try {
@@ -32,7 +33,7 @@ export class Consumer implements IConsumer {
         async () => {
           const channel = await rabbitMQConnection.getChannel();
 
-          const exchangeName = snakeCase(getTypeName(type));
+          const exchangeName = snakeCase(consumerOptions.exchangeName);
 
           await channel.assertExchange(exchangeName, 'fanout', { durable: false });
 
@@ -53,7 +54,7 @@ export class Consumer implements IConsumer {
                 const messageContent = message?.content?.toString();
                 const headers = message.properties.headers || {};
 
-                handler(q.queue, deserializeObject<T>(messageContent));
+                consumerOptions.handler(q.queue, deserializeObject<T>(messageContent));
                 Logger.info(
                   `Message: ${messageContent} delivered to queue: ${q.queue} with exchange name ${exchangeName}`
                 );

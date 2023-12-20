@@ -26,7 +26,7 @@ let Publisher = class Publisher {
     async publishMessage(message) {
         const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_connection_1.RabbitMQConnection);
         const openTelemetryTracer = tsyringe_1.container.resolve(open_telemetry_1.OpenTelemetryTracer);
-        const tracer = await openTelemetryTracer.createTracer((x) => (x.serviceName = 'rabbitmq-publisher'));
+        const tracer = await openTelemetryTracer.createTracer((x) => x.serviceName('rabbitmq-publisher'));
         try {
             await (0, async_retry_1.default)(async () => {
                 const channel = await rabbitMQConnection.getChannel();

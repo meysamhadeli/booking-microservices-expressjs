@@ -22,14 +22,14 @@ const open_telemetry_1 = require("../open-telemetry/open-telemetry");
 const rabbitmq_connection_1 = require("./rabbitmq-connection");
 const consumedMessages = [];
 let Consumer = class Consumer {
-    async consumeMessage(type, handler) {
+    async addConsumer(consumerOptions) {
         const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_connection_1.RabbitMQConnection);
         const openTelemetryTracer = tsyringe_1.container.resolve(open_telemetry_1.OpenTelemetryTracer);
-        const tracer = await openTelemetryTracer.createTracer((x) => (x.serviceName = 'rabbitmq-consumer'));
+        const tracer = await openTelemetryTracer.createTracer((x) => x.serviceName('rabbitmq-consumer'));
         try {
             await (0, async_retry_1.default)(async () => {
                 const channel = await rabbitMQConnection.getChannel();
-                const exchangeName = (0, lodash_1.snakeCase)((0, reflection_1.getTypeName)(type));
+                const exchangeName = (0, lodash_1.snakeCase)(consumerOptions.exchangeName);
                 await channel.assertExchange(exchangeName, 'fanout', { durable: false });
                 const q = await channel.assertQueue('', { exclusive: true });
                 await channel.bindQueue(q.queue, exchangeName, '');
@@ -40,7 +40,7 @@ let Consumer = class Consumer {
                         const span = tracer.startSpan(`receive_message_${exchangeName}`);
                         const messageContent = (_a = message === null || message === void 0 ? void 0 : message.content) === null || _a === void 0 ? void 0 : _a.toString();
                         const headers = message.properties.headers || {};
-                        handler(q.queue, (0, serialization_1.deserializeObject)(messageContent));
+                        consumerOptions.handler(q.queue, (0, serialization_1.deserializeObject)(messageContent));
                         logger_1.Logger.info(`Message: ${messageContent} delivered to queue: ${q.queue} with exchange name ${exchangeName}`);
                         channel.ack(message);
                         consumedMessages.push(exchangeName);

@@ -23,8 +23,8 @@ export class Publisher implements IPublisher {
   async publishMessage<T>(message: T) {
     const rabbitMQConnection = container.resolve(RabbitMQConnection);
     const openTelemetryTracer = container.resolve(OpenTelemetryTracer);
-    const tracer = await openTelemetryTracer.createTracer(
-      (x) => (x.serviceName = 'rabbitmq-publisher')
+    const tracer = await openTelemetryTracer.createTracer((x) =>
+      x.serviceName('rabbitmq-publisher')
     );
 
     try {

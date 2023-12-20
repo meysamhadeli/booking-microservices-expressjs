@@ -1,19 +1,20 @@
-import { RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq-connection';
 import { container } from 'tsyringe';
+import { Rabbitmq } from 'building-blocks/rabbitmq/rabbitmq';
+import { RabbitmqConnectionOptions } from 'building-blocks/rabbitmq/rabbitmq-connection-options-builder';
 import { IPublisher, Publisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
-import { RabbitmqOptions } from 'building-blocks/rabbitmq/rabbitmq-options-builder';
 
-export const initialRabbitmq = async (options?: RabbitmqOptions): Promise<RabbitMQConnection> => {
-  const rabbitMQConnection = container.resolve(RabbitMQConnection);
+export const initialRabbitmq = async (options?: RabbitmqConnectionOptions): Promise<void> => {
+  const rabbitmq = container.resolve(Rabbitmq);
 
-  await rabbitMQConnection.createConnection((optionsBuilder) => {
-    optionsBuilder.host = options?.host;
-    optionsBuilder.port = options?.port;
-    optionsBuilder.username = options?.username;
-    optionsBuilder.password = options?.password;
-  });
-
-  container.register<IPublisher>('IPublisher', Publisher);
-
-  return rabbitMQConnection;
+  await rabbitmq
+    .createConnection((builder) => {
+      builder
+        .host(options?.host)
+        .port(options?.port)
+        .username(options?.username)
+        .password(options?.password);
+    })
+    .then((c) => {
+      container.register<IPublisher>('IPublisher', Publisher);
+    });
 };

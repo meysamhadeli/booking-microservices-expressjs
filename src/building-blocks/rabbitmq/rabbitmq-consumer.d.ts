@@ -1,10 +1,10 @@
-type handlerFunc<T> = (queue: string, message: T) => void;
+import { RabbitmqConsumerOptions } from './rabbitmq-consumer-options-builder';
+export type handlerFunc<T> = (queue: string, message: T) => void;
 export interface IConsumer {
-    consumeMessage<T>(type: T, handler: handlerFunc<T>): Promise<void>;
+    addConsumer<T>(consumerOptions: RabbitmqConsumerOptions): Promise<void>;
     isConsumed<T>(message: T): Promise<boolean>;
 }
 export declare class Consumer implements IConsumer {
-    consumeMessage<T>(type: T, handler: handlerFunc<T>): Promise<void>;
+    addConsumer<T>(consumerOptions: RabbitmqConsumerOptions): Promise<void>;
     isConsumed<T>(message: T): Promise<boolean>;
 }
-export {};

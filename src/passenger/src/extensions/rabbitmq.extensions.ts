@@ -1,27 +1,25 @@
-import { RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq-connection';
 import { container } from 'tsyringe';
-import { IPublisher, Publisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
-import { Consumer, IConsumer } from 'building-blocks/rabbitmq/rabbitmq-consumer';
-import { UserCreated } from 'building-blocks/contracts/identity.contract';
+import { Rabbitmq } from 'building-blocks/rabbitmq/rabbitmq';
 import { createUserConsumerHandler } from '../user/consumers/create-user';
-import { RabbitmqOptions } from 'building-blocks/rabbitmq/rabbitmq-options-builder';
+import { RabbitmqConnectionOptions } from 'building-blocks/rabbitmq/rabbitmq-connection-options-builder';
+import { IPublisher, Publisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 
-export const initialRabbitmq = async (options?: RabbitmqOptions): Promise<RabbitMQConnection> => {
-  const rabbitMQConnection = container.resolve(RabbitMQConnection);
+export const initialRabbitmq = async (options?: RabbitmqConnectionOptions): Promise<void> => {
+  const rabbitmq = container.resolve(Rabbitmq);
 
-  await rabbitMQConnection.createConnection((optionsBuilder) => {
-    optionsBuilder.host = options?.host;
-    optionsBuilder.port = options?.port;
-    optionsBuilder.username = options?.username;
-    optionsBuilder.password = options?.password;
-  });
+  await rabbitmq
+    .createConnection((builder) => {
+      builder
+        .host(options?.host)
+        .port(options?.port)
+        .username(options?.username)
+        .password(options?.password);
+    })
+    .then((c) => {
+      container.register<IPublisher>('IPublisher', Publisher);
 
-  container.register<IPublisher>('IPublisher', Publisher);
-  container.register<IConsumer>('IConsumer', Consumer);
-
-  const consumers = container.resolve(Consumer);
-
-  await consumers.consumeMessage(new UserCreated(), createUserConsumerHandler);
-
-  return rabbitMQConnection;
+      c.addConsumer((x) => {
+        x.exchangeName('UserCreated'), x.handler(createUserConsumerHandler);
+      });
+    });
 };
