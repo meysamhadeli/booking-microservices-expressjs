@@ -1,14 +1,12 @@
 export interface IRequestHandler<TRequest, TResponse> {
   handle(request: TRequest): Promise<TResponse>;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IRequest<TResponse> {}
 
 class MediatrJs {
   private requestHandlersRegistrations: Record<string, any> = {};
 
-  registerRequestHandler<TRequest, TResponse>(request: new () => TRequest, handler: any) {
+  registerRequestHandler<TRequest, TResponse>(request: TRequest, handler: any) {
     const requestTypeName = this.GetTypeName(request);
 
     this.requestHandlersRegistrations[requestTypeName] = handler;
@@ -28,7 +26,7 @@ class MediatrJs {
   }
 
   private GetTypeName(request: any): string {
-    return request?.name ?? request.constructor.name;
+    return request.constructor.name;
   }
 }
 

@@ -24,11 +24,14 @@ import {
 import { mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export const registerMediatrHandlers = () => {
-  mediatrJs.registerRequestHandler(CreateAircraft, container.resolve(CreateAircraftHandler));
-  mediatrJs.registerRequestHandler(CreateAirport, container.resolve(CreateAirportHandler));
-  mediatrJs.registerRequestHandler(CreateFlight, container.resolve(CreateFlightHandler));
-  mediatrJs.registerRequestHandler(GetFlightById, container.resolve(GetFlightByIdHandler));
-  mediatrJs.registerRequestHandler(CreateSeat, container.resolve(CreateSeatHandler));
-  mediatrJs.registerRequestHandler(ReserveSeat, container.resolve(ReserveSeatHandler));
-  mediatrJs.registerRequestHandler(GetAvailableSeats, container.resolve(GetAvailableSeatsHandler));
+  mediatrJs.registerRequestHandler(new CreateAircraft(), container.resolve(CreateAircraftHandler));
+  mediatrJs.registerRequestHandler(new CreateAirport(), container.resolve(CreateAirportHandler));
+  mediatrJs.registerRequestHandler(new CreateFlight(), container.resolve(CreateFlightHandler));
+  mediatrJs.registerRequestHandler(new GetFlightById(), container.resolve(GetFlightByIdHandler));
+  mediatrJs.registerRequestHandler(new CreateSeat(), container.resolve(CreateSeatHandler));
+  mediatrJs.registerRequestHandler(new ReserveSeat(), container.resolve(ReserveSeatHandler));
+  mediatrJs.registerRequestHandler(
+    new GetAvailableSeats(),
+    container.resolve(GetAvailableSeatsHandler)
+  );
 };

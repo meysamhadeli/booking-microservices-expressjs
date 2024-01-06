@@ -21,8 +21,7 @@ class MediatrJs {
         }
     }
     GetTypeName(request) {
-        var _a;
-        return (_a = request === null || request === void 0 ? void 0 : request.name) !== null && _a !== void 0 ? _a : request.constructor.name;
+        return request.constructor.name;
     }
 }
 exports.mediatrJs = new MediatrJs();

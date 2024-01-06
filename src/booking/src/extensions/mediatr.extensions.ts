@@ -6,5 +6,5 @@ import {
 import { mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export const registerMediatrHandlers = () => {
-  mediatrJs.registerRequestHandler(CreateBooking, container.resolve(CreateBookingHandler));
+  mediatrJs.registerRequestHandler(new CreateBooking(), container.resolve(CreateBookingHandler));
 };
