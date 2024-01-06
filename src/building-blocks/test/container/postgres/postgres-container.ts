@@ -3,8 +3,8 @@ import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { container } from 'tsyringe';
 import { Logger } from '../../../logging/logger';
-import {MixedList} from "typeorm/common/MixedList";
-import {EntitySchema} from "typeorm/entity-schema/EntitySchema";
+import { MixedList } from 'typeorm/common/MixedList';
+import { EntitySchema } from 'typeorm/entity-schema/EntitySchema';
 
 interface PostgresContainerOptions {
   imageName: string;

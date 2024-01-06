@@ -1,5 +1,5 @@
 import * as amqp from 'amqplib';
-import { RabbitmqConnectionOptions } from "./rabbitmq-connection-options-builder";
+import { RabbitmqConnectionOptions } from './rabbitmq-connection-options-builder';
 export interface IRabbitMQConnection {
     createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.Connection>;
     getConnection(): Promise<amqp.Connection>;

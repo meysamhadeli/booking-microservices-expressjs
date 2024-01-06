@@ -8,11 +8,10 @@ import UnauthorizedException from '../types/exception/unauthorized.exception';
 import ForbiddenException from '../types/exception/forbidden.exception';
 import NotFoundException from '../types/exception/not-found.exception';
 import ConflictException from '../types/exception/conflict.exception';
-import { container } from 'tsyringe';
 import { Logger } from '../logging/logger';
 import HttpClientException from '../types/exception/http-client.exception';
 
-export const erroHandler: ErrorRequestHandler = (err, req, res, next) => {
+export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   if (err instanceof ApplicationException) {
     res.status(httpStatus.BAD_REQUEST).json(
       new ProblemDocument({

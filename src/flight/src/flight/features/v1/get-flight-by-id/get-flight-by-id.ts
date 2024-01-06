@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
@@ -7,6 +6,7 @@ import { FlightDto } from '../../../dtos/flight.dto';
 import { IFlightRepository } from '../../../../data/repositories/flight.repository';
 import { Flight } from '../../../entities/flight.entity';
 import mapper from '../../../mappings';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class GetFlightById implements IRequest<FlightDto> {
   id: number;
@@ -42,7 +42,7 @@ export class GetUserByIdController extends Controller {
 }
 
 @injectable()
-export class GetFlightByIdHandler implements IHandler<GetFlightById, FlightDto> {
+export class GetFlightByIdHandler implements IRequestHandler<GetFlightById, FlightDto> {
   constructor(@inject('IFlightRepository') private flightRepository: IFlightRepository) {}
   async handle(request: GetFlightById): Promise<FlightDto> {
     await getFlightByIdValidations.params.validateAsync(request);

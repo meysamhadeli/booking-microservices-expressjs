@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Body, Controller, Post, Route, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import { AuthDto } from '../../../dtos/auth.dto';
@@ -8,6 +7,7 @@ import { inject, injectable } from 'tsyringe';
 import ApplicationException from 'building-blocks/types/exception/application.exception';
 import { IUserRepository } from '../../../../data/repositories/user.repository';
 import { GenerateToken } from '../generate-token/generate-token';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class Login implements IRequest<AuthDto> {
   email: string;
@@ -44,7 +44,7 @@ export class LoginController extends Controller {
 }
 
 @injectable()
-export class LoginHandler implements IHandler<Login, AuthDto> {
+export class LoginHandler implements IRequestHandler<Login, AuthDto> {
   constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
   async handle(request: Login): Promise<AuthDto> {
     await loginValidations.validateAsync(request);

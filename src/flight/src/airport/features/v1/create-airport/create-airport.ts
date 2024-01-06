@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
 import httpStatus from 'http-status';
 import Joi from 'joi';
@@ -10,6 +9,7 @@ import { IAirportRepository } from '../../../../data/repositories/airport.reposi
 import { Airport } from '../../../entities/airport.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mappings';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class CreateAirport implements IRequest<AirportDto> {
   code: string;
@@ -57,7 +57,7 @@ export class CreateAirportController extends Controller {
 }
 
 @injectable()
-export class CreateAirportHandler implements IHandler<CreateAirport, AirportDto> {
+export class CreateAirportHandler implements IRequestHandler<CreateAirport, AirportDto> {
   constructor(
     @inject('IPublisher') private publisher: IPublisher,
     @inject('IAirportRepository') private airportRepository: IAirportRepository

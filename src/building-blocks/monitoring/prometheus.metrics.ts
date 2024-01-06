@@ -8,7 +8,6 @@ import { injectable } from 'tsyringe';
 @injectable()
 export class PrometheusMetrics {
   static registerMetricsEndpoint(app: any) {
-
     app.use('/metrics', async (req: Request, res: Response) => {
       try {
         const metrics = await Prometheus.register.metrics();

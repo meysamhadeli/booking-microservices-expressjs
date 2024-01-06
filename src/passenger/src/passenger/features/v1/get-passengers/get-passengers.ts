@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import { inject, injectable } from 'tsyringe';
 import Joi from 'joi';
@@ -7,6 +6,7 @@ import { PassengerDto } from '../../../dtos/passenger.dto';
 import { IPassengerRepository } from '../../../../data/repositories/passenger.repository';
 import { Passenger } from '../../../entities/passenger.entity';
 import mapper from '../../../mappings';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class GetPassengers implements IRequest<PagedResult<PassengerDto[]>> {
   page = 1;
@@ -55,7 +55,9 @@ export class GetPassengersController extends Controller {
 }
 
 @injectable()
-export class GetPassengersHandler implements IHandler<GetPassengers, PagedResult<PassengerDto[]>> {
+export class GetPassengersHandler
+  implements IRequestHandler<GetPassengers, PagedResult<PassengerDto[]>>
+{
   constructor(@inject('IPassengerRepository') private passengerRepository: IPassengerRepository) {}
 
   async handle(request: GetPassengers): Promise<PagedResult<PassengerDto[]>> {

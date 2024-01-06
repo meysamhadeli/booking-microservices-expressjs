@@ -17,7 +17,7 @@ export class OpenTelemetryOptionsBuilder {
     return this;
   }
 
-  serviceName(value: string) : OpenTelemetryOptionsBuilder{
+  serviceName(value: string): OpenTelemetryOptionsBuilder {
     this._options.serviceName = value;
     return this;
   }

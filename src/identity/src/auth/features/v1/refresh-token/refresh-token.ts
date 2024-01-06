@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { BodyProp, Controller, Post, Route, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import { AuthDto } from '../../../dtos/auth.dto';
@@ -9,6 +8,7 @@ import { Token } from '../../../entities/token.entity';
 import { ValidateToken } from '../validate-token/validate-token';
 import { TokenType } from '../../../enums/token-type.enum';
 import { GenerateToken } from '../generate-token/generate-token';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class RefreshToken implements IRequest<RefreshToken> {
   refreshToken: string;
@@ -36,7 +36,7 @@ export class RefreshTokenController extends Controller {
 }
 
 @injectable()
-export class RefreshTokenHandler implements IHandler<RefreshToken, AuthDto> {
+export class RefreshTokenHandler implements IRequestHandler<RefreshToken, AuthDto> {
   constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
   async handle(command: RefreshToken): Promise<AuthDto> {

@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
 import httpStatus from 'http-status';
 import Joi from 'joi';
@@ -11,6 +10,7 @@ import { IFlightRepository } from '../../../../data/repositories/flight.reposito
 import { Flight } from '../../../entities/flight.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mappings';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class CreateFlight implements IRequest<CreateFlight> {
   flightNumber: string;
@@ -94,7 +94,7 @@ export class CreateFlightController extends Controller {
 }
 
 @injectable()
-export class CreateFlightHandler implements IHandler<CreateFlight, FlightDto> {
+export class CreateFlightHandler implements IRequestHandler<CreateFlight, FlightDto> {
   constructor(
     @inject('IPublisher') private publisher: IPublisher,
     @inject('IFlightRepository') private flightRepository: IFlightRepository

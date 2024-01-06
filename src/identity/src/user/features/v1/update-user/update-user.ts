@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Body, Controller, Put, Query, Route, Security, SuccessResponse } from 'tsoa';
 import { password } from 'building-blocks/utils/validation';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
@@ -12,6 +11,7 @@ import { Role } from '../../../enums/role.enum';
 import { IUserRepository } from '../../../../data/repositories/user.repository';
 import { User } from '../../../entities/user.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class UpdateUser implements IRequest<UserDto> {
   id: number;
@@ -71,7 +71,7 @@ export class UpdateUserController extends Controller {
 }
 
 @injectable()
-export class UpdateUserHandler implements IHandler<UpdateUser, any> {
+export class UpdateUserHandler implements IRequestHandler<UpdateUser, any> {
   constructor(
     @inject('IUserRepository') private userRepository: IUserRepository,
     @inject('IPublisher') private publisher: IPublisher

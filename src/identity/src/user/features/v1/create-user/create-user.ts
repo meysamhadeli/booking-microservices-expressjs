@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
 import httpStatus from 'http-status';
 import Joi from 'joi';
@@ -13,6 +12,7 @@ import { IUserRepository } from '../../../../data/repositories/user.repository';
 import { User } from '../../../entities/user.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mapping';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;
@@ -68,7 +68,7 @@ export class CreateUserController extends Controller {
 }
 
 @injectable()
-export class CreateUserHandler implements IHandler<CreateUser, UserDto> {
+export class CreateUserHandler implements IRequestHandler<CreateUser, UserDto> {
   constructor(
     @inject('IPublisher') private publisher: IPublisher,
     @inject('IUserRepository') private userRepository: IUserRepository

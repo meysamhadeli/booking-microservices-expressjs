@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Controller, Delete, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import httpStatus from 'http-status';
@@ -10,6 +9,7 @@ import { IUserRepository } from '../../../../data/repositories/user.repository';
 import { User } from '../../../entities/user.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mapping';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class DeleteUserById implements IRequest<UserDto> {
   id: number;
@@ -46,7 +46,7 @@ export class DeleteUserByIdController extends Controller {
 }
 
 @injectable()
-export class DeleteUserByIdHandler implements IHandler<DeleteUserById, UserDto> {
+export class DeleteUserByIdHandler implements IRequestHandler<DeleteUserById, UserDto> {
   constructor(
     @inject('IUserRepository') private userRepository: IUserRepository,
     @inject('IPublisher') private publisher: IPublisher

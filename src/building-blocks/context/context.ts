@@ -1,4 +1,4 @@
-import {IncomingHttpHeaders} from "http";
+import { IncomingHttpHeaders } from 'http';
 
 export class HttpContext {
   static request: Request;

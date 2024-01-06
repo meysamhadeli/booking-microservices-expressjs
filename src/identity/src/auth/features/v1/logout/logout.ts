@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { BodyProp, Controller, Post, Route, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import httpStatus from 'http-status';
@@ -6,6 +5,7 @@ import NotFoundException from 'building-blocks/types/exception/not-found.excepti
 import { inject, injectable } from 'tsyringe';
 import { IAuthRepository } from '../../../../data/repositories/auth.repository';
 import { TokenType } from '../../../enums/token-type.enum';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class Logout implements IRequest<number> {
   accessToken: string;
@@ -33,7 +33,7 @@ export class LogoutController extends Controller {
 }
 
 @injectable()
-export class LogoutHandler implements IHandler<Logout, number> {
+export class LogoutHandler implements IRequestHandler<Logout, number> {
   constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
   async handle(command: Logout): Promise<number> {

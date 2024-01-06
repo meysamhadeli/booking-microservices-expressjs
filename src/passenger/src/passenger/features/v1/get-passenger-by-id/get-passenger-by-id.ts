@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
@@ -7,6 +6,7 @@ import { PassengerDto } from '../../../dtos/passenger.dto';
 import { IPassengerRepository } from '../../../../data/repositories/passenger.repository';
 import { Passenger } from '../../../entities/passenger.entity';
 import mapper from '../../../mappings';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class GetPassengerById implements IRequest<PassengerDto> {
   id: number;
@@ -42,7 +42,7 @@ export class GetPassengerByIdController extends Controller {
 }
 
 @injectable()
-export class GetPassengerByIdHandler implements IHandler<GetPassengerById, PassengerDto> {
+export class GetPassengerByIdHandler implements IRequestHandler<GetPassengerById, PassengerDto> {
   constructor(@inject('IPassengerRepository') private passengerRepository: IPassengerRepository) {}
 
   async handle(request: GetPassengerById): Promise<PassengerDto> {

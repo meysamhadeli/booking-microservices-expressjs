@@ -1,8 +1,10 @@
 import { container } from 'tsyringe';
-import { mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
-import {CreateBooking, CreateBookingHandler} from "../booking/features/v1/create-booking/create-booking";
-
+import {
+  CreateBooking,
+  CreateBookingHandler
+} from '../booking/features/v1/create-booking/create-booking';
+import { mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export const registerMediatrHandlers = () => {
-  mediatrJs.registerHandler(CreateBooking, container.resolve(CreateBookingHandler));
+  mediatrJs.registerRequestHandler(CreateBooking, container.resolve(CreateBookingHandler));
 };

@@ -9,7 +9,6 @@ import { RegisterRoutes } from './routes/routes';
 import config from 'building-blocks/config/config';
 import { collectDefaultMetrics } from 'prom-client';
 import { initialSwagger } from 'building-blocks/swagger/swagger';
-import { erroHandler } from 'building-blocks/error-handler/erro-handler';
 import { initialLogger } from './extensions/logger.extensions';
 import { initialDbContext } from './data/db.context';
 import { initialOpenTelemetry } from './extensions/otel.extensions';
@@ -18,6 +17,7 @@ import { registerMediatrHandlers } from './extensions/mediatr.extensions';
 import { httpContextMiddleware } from 'building-blocks/context/context';
 import { postgresOptions } from './data/data-source';
 import { Logger } from 'building-blocks/logging/logger';
+import {errorHandler} from "building-blocks/error-handler/error-handler";
 
 const startupApp = async () => {
   collectDefaultMetrics();
@@ -53,7 +53,7 @@ const startupApp = async () => {
 
   RegisterRoutes(app);
 
-  app.use(erroHandler);
+  app.use(errorHandler);
 
   const server = app.listen(config.port, () => {
     logger.info(`Listening http://localhost:${config.port}`);

@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import { PagedResult } from 'building-blocks/types/pagination/paged-result';
@@ -7,6 +6,7 @@ import { UserDto } from '../../../dtos/user.dto';
 import { IUserRepository } from '../../../../data/repositories/user.repository';
 import { User } from '../../../entities/user.entity';
 import mapper from '../../../mapping';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class GetUsers implements IRequest<PagedResult<UserDto[]>> {
   page = 1;
@@ -55,7 +55,7 @@ export class GetUsersController extends Controller {
 }
 
 @injectable()
-export class GetUsersHandler implements IHandler<GetUsers, PagedResult<UserDto[]>> {
+export class GetUsersHandler implements IRequestHandler<GetUsers, PagedResult<UserDto[]>> {
   constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
 
   async handle(request: GetUsers): Promise<PagedResult<UserDto[]>> {

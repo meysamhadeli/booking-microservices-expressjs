@@ -6,7 +6,6 @@ import { DataSource } from 'typeorm';
 import { StartedTestContainer } from 'testcontainers';
 import { container } from 'tsyringe';
 import express, { Express } from 'express';
-import { erroHandler } from 'building-blocks/error-handler/erro-handler';
 import { AuthRepository, IAuthRepository } from '../../../src/data/repositories/auth.repository';
 import { IUserRepository, UserRepository } from '../../../src/data/repositories/user.repository';
 import { initialRabbitmq } from '../../../src/extensions/rabbitmq.extensions';
@@ -15,6 +14,7 @@ import { initialDbContext } from '../../../src/data/db.context';
 import { RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq-connection';
 import { Consumer, IConsumer } from 'building-blocks/rabbitmq/rabbitmq-consumer';
 import { IPublisher, Publisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
+import {errorHandler} from "building-blocks/error-handler/error-handler";
 
 export class Fixture {
   databaseConnection: DataSource;
@@ -50,7 +50,7 @@ export class IntegrationTestFixture {
 
     RegisterRoutes(this.fixture.app);
 
-    this.fixture.app.use(erroHandler);
+    this.fixture.app.use(errorHandler);
 
     await initialRabbitmq(rabbitOptions);
 

@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
 import httpStatus from 'http-status';
 import Joi from 'joi';
@@ -10,6 +9,7 @@ import { IAircraftRepository } from '../../../../data/repositories/aircraft.repo
 import { Aircraft } from '../../../entities/aircraft.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mappings';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class CreateAircraft implements IRequest<AircraftDto> {
   model: string;
@@ -57,7 +57,7 @@ export class CreateAircraftController extends Controller {
 }
 
 @injectable()
-export class CreateAircraftHandler implements IHandler<CreateAircraft, AircraftDto> {
+export class CreateAircraftHandler implements IRequestHandler<CreateAircraft, AircraftDto> {
   constructor(
     @inject('IPublisher') private publisher: IPublisher,
     @inject('IAircraftRepository') private aircraftRepository: IAircraftRepository

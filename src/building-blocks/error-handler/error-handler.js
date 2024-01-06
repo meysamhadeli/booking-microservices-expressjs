@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.erroHandler = void 0;
+exports.errorHandler = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const joi_1 = require("joi");
 const http_problem_details_1 = require("http-problem-details");
@@ -15,7 +15,7 @@ const not_found_exception_1 = __importDefault(require("../types/exception/not-fo
 const conflict_exception_1 = __importDefault(require("../types/exception/conflict.exception"));
 const logger_1 = require("../logging/logger");
 const http_client_exception_1 = __importDefault(require("../types/exception/http-client.exception"));
-const erroHandler = (err, req, res, next) => {
+const errorHandler = (err, req, res, next) => {
     if (err instanceof application_exception_1.default) {
         res.status(http_status_1.default.BAD_REQUEST).json(new http_problem_details_1.ProblemDocument({
             type: application_exception_2.default.name,
@@ -95,5 +95,5 @@ const erroHandler = (err, req, res, next) => {
     logger_1.Logger.error(err);
     return next;
 };
-exports.erroHandler = erroHandler;
-//# sourceMappingURL=erro-handler.js.map
+exports.errorHandler = errorHandler;
+//# sourceMappingURL=error-handler.js.map

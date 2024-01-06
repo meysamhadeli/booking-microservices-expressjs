@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Controller, Get, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
@@ -7,6 +6,7 @@ import { UserDto } from '../../../dtos/user.dto';
 import { IUserRepository } from '../../../../data/repositories/user.repository';
 import { User } from '../../../entities/user.entity';
 import mapper from '../../../mapping';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class GetUserById implements IRequest<UserDto> {
   id: number;
@@ -42,7 +42,7 @@ export class GetUserByIdController extends Controller {
 }
 
 @injectable()
-export class GetUserByIdHandler implements IHandler<GetUserById, UserDto> {
+export class GetUserByIdHandler implements IRequestHandler<GetUserById, UserDto> {
   constructor(@inject('IUserRepository') private userRepository: IUserRepository) {}
   async handle(request: GetUserById): Promise<UserDto> {
     await getUserByIdValidations.params.validateAsync(request);

@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
 import httpStatus from 'http-status';
 import Joi from 'joi';
@@ -12,6 +11,7 @@ import { IFlightClient } from '../../../http-client/services/flight/flight.clien
 import { IPassengerClient } from '../../../http-client/services/passenger/passenger.client';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mappings';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class CreateBooking implements IRequest<BookingDto> {
   passengerId: number;
@@ -59,7 +59,7 @@ export class CreateBookingController extends Controller {
 }
 
 @injectable()
-export class CreateBookingHandler implements IHandler<CreateBooking, BookingDto> {
+export class CreateBookingHandler implements IRequestHandler<CreateBooking, BookingDto> {
   constructor(
     @inject('IBookingRepository') private bookingRepository: IBookingRepository,
     @inject('IFlightClient') private flightClientService: IFlightClient,

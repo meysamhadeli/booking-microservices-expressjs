@@ -1,4 +1,3 @@
-import { IHandler, IRequest } from 'building-blocks/mediatr-js/mediatr.js';
 import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 import config from 'building-blocks/config/config';
@@ -7,6 +6,7 @@ import { Token } from '../../../entities/token.entity';
 import { TokenType } from '../../../enums/token-type.enum';
 import { IAuthRepository } from '../../../../data/repositories/auth.repository';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
+import { IRequest, IRequestHandler } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class ValidateToken implements IRequest<Token> {
   token: string;
@@ -23,7 +23,7 @@ const validateTokenValidations = Joi.object({
 });
 
 @injectable()
-export class ValidateTokenHandler implements IHandler<ValidateToken, Token> {
+export class ValidateTokenHandler implements IRequestHandler<ValidateToken, Token> {
   constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
   async handle(command: ValidateToken): Promise<Token> {

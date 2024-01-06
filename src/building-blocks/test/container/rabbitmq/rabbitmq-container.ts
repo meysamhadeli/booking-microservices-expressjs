@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { container } from 'tsyringe';
 import { Logger } from '../../../logging/logger';
-import {RabbitmqConnectionOptions} from "../../../rabbitmq/rabbitmq-connection-options-builder";
+import { RabbitmqConnectionOptions } from '../../../rabbitmq/rabbitmq-connection-options-builder';
 
 interface RabbitmqContainerOptions {
   host: string;

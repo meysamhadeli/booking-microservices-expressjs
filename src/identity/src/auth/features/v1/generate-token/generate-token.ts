@@ -1,5 +1,4 @@
 import moment from 'moment';
-import { IHandler, IRequest } from 'building-blocks/mediatr-js/mediatr.js';
 import { AuthDto } from '../../../dtos/auth.dto';
 import Joi from 'joi';
 import jwt from 'jsonwebtoken';
@@ -8,6 +7,7 @@ import { inject, injectable } from 'tsyringe';
 import { TokenType } from '../../../enums/token-type.enum';
 import { IAuthRepository } from '../../../../data/repositories/auth.repository';
 import { Token } from '../../../entities/token.entity';
+import { IRequest, IRequestHandler } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class GenerateToken implements IRequest<AuthDto> {
   userId: number;
@@ -39,7 +39,7 @@ const generateJwtToken = (
 };
 
 @injectable()
-export class GenerateTokenHandler implements IHandler<GenerateToken, AuthDto> {
+export class GenerateTokenHandler implements IRequestHandler<GenerateToken, AuthDto> {
   constructor(@inject('IAuthRepository') private authRepository: IAuthRepository) {}
 
   async handle(command: GenerateToken): Promise<AuthDto> {

@@ -3,7 +3,7 @@ import { Logger } from '../logging/logger';
 import * as amqp from 'amqplib';
 import config from '../config/config';
 import asyncRetry from 'async-retry';
-import {RabbitmqConnectionOptions} from "./rabbitmq-connection-options-builder";
+import { RabbitmqConnectionOptions } from './rabbitmq-connection-options-builder';
 
 let connection: amqp.Connection = null;
 let channel: amqp.Channel = null;

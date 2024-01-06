@@ -1,4 +1,3 @@
-import { IHandler, IRequest, mediatrJs } from 'building-blocks/mediatr-js/mediatr.js';
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
 import httpStatus from 'http-status';
 import Joi from 'joi';
@@ -11,6 +10,7 @@ import { IFlightRepository } from '../../../../data/repositories/flight.reposito
 import { ISeatRepository } from '../../../../data/repositories/seat.repository';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mappings';
+import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
 
 export class ReserveSeat implements IRequest<SeatDto> {
   seatNumber: string;
@@ -55,7 +55,7 @@ export class ReserveSeatController extends Controller {
 }
 
 @injectable()
-export class ReserveSeatHandler implements IHandler<ReserveSeat, SeatDto> {
+export class ReserveSeatHandler implements IRequestHandler<ReserveSeat, SeatDto> {
   constructor(
     @inject('IPublisher') private publisher: IPublisher,
     @inject('ISeatRepository') private seatRepository: ISeatRepository,
