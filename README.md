@@ -5,8 +5,10 @@
                        <a href="https://github.com/meysamhadeli/booking-microservices-express-js/blob/main/LICENSE"><img src="https://img.shields.io/github/license/meysamhadeli/booking-microservices-express-js?color=%234275f5&style=flat-square"/></a>
     </div>
 </div>
-           
-> **The main idea of creating this project is implementing an infrastructure for up and running distributed system with the latest technology and architecture like Vertical Slice Architecture, Event Driven Architecture, CQRS, Postgres, RabbitMq and Express in Node.Js, and we will not deal mainly with business.** 🚀
+
+> **A practical and imaginary microservices for implementing an infrastructure for up and running distributed system with the latest technology and architecture like Vertical Slice Architecture, Event Driven Architecture, CQRS, Postgres, RabbitMq and Express in Node.Js.** 🚀
+
+> 💡 **This project not business oriented and most of my focus was in the thechnical part for implement a distributed system with a sample project. In this project I implemented some concept in microservices like Messaging, Tracing, Event Driven Architecture, Vertical Slice Architecture, CQRS and DDD.**
 
 
 > **You can find `Nestjs` ported of this project in this link:**
