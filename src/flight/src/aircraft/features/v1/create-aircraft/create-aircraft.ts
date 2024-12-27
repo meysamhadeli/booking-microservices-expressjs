@@ -1,5 +1,4 @@
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
-import httpStatus from 'http-status';
 import Joi from 'joi';
 import ConflictException from 'building-blocks/types/exception/conflict.exception';
 import { inject, injectable } from 'tsyringe';
@@ -10,6 +9,7 @@ import { Aircraft } from '../../../entities/aircraft.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mappings';
 import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
+import { StatusCodes } from 'http-status-codes';
 
 export class CreateAircraft implements IRequest<AircraftDto> {
   model: string;
@@ -51,7 +51,7 @@ export class CreateAircraftController extends Controller {
       })
     );
 
-    this.setStatus(httpStatus.CREATED);
+    this.setStatus(StatusCodes.CREATED);
     return result;
   }
 }

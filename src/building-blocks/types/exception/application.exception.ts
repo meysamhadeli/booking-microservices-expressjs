@@ -1,4 +1,4 @@
-import httpStatus from 'http-status';
+import { StatusCodes } from 'http-status-codes';
 
 class ApplicationException extends Error {
   statusCode: number;
@@ -6,7 +6,7 @@ class ApplicationException extends Error {
 
   constructor(
     message: string | undefined,
-    statusCode: number = httpStatus.BAD_REQUEST,
+    statusCode: number = StatusCodes.BAD_REQUEST,
     isOperational = true,
     stack = ''
   ) {

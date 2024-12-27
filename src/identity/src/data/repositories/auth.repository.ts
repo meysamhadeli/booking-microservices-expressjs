@@ -1,19 +1,15 @@
-import { Repository } from 'typeorm';
+import { Repository } from 'building-blocks/typeorm';
 import { container } from 'tsyringe';
 import { DbContext } from 'building-blocks/typeorm/db-context';
-import {Token} from "../../auth/entities/token.entity";
-import {TokenType} from "../../auth/enums/token-type.enum";
+import { Token } from '../../auth/entities/token.entity';
+import { TokenType } from '../../auth/enums/token-type.enum';
 
 export interface IAuthRepository {
   createToken(token: Token): Promise<void>;
 
   findToken(token: string, tokenType: TokenType): Promise<Token>;
 
-  findTokenByUserId(
-    token: string,
-    userId: number,
-    blacklisted: boolean
-  ): Promise<Token>;
+  findTokenByUserId(token: string, userId: number, blacklisted: boolean): Promise<Token>;
 
   findRefreshTokenByUserId(
     refreshToken: string,
@@ -42,11 +38,7 @@ export class AuthRepository implements IAuthRepository {
     });
   }
 
-  async findTokenByUserId(
-    token: string,
-    userId: number,
-    blacklisted: boolean
-  ): Promise<Token> {
+  async findTokenByUserId(token: string, userId: number, blacklisted: boolean): Promise<Token> {
     return await this.ormRepository.findOneBy({
       token: token,
       userId: userId,

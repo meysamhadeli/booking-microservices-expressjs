@@ -1,5 +1,4 @@
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
-import httpStatus from 'http-status';
 import Joi from 'joi';
 import { password } from 'building-blocks/utils/validation';
 import ConflictException from 'building-blocks/types/exception/conflict.exception';
@@ -13,6 +12,7 @@ import { User } from '../../../entities/user.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mapping';
 import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
+import { StatusCodes } from 'http-status-codes';
 
 export class CreateUser implements IRequest<UserDto> {
   email: string;
@@ -62,7 +62,7 @@ export class CreateUserController extends Controller {
       })
     );
 
-    this.setStatus(httpStatus.CREATED);
+    this.setStatus(StatusCodes.CREATED);
     return result;
   }
 }

@@ -1,4 +1,4 @@
-import httpStatus from 'http-status';
+import { StatusCodes } from 'http-status-codes';
 
 class ConflictException extends Error {
   statusCode: number;
@@ -6,7 +6,7 @@ class ConflictException extends Error {
 
   constructor(
     message: string | undefined,
-    statusCode: number = httpStatus.CONFLICT,
+    statusCode: number = StatusCodes.CONFLICT,
     isOperational = true,
     stack = ''
   ) {

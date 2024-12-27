@@ -1,7 +1,7 @@
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'building-blocks/typeorm';
 import { DbContext } from 'building-blocks/typeorm/db-context';
 import { container } from 'tsyringe';
-import {Passenger} from "../../passenger/entities/passenger.entity";
+import { Passenger } from '../../passenger/entities/passenger.entity';
 
 export interface IPassengerRepository {
   createPassenger(passenger: Passenger): Promise<Passenger>;

@@ -1,7 +1,6 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import {TokenType} from "../enums/token-type.enum";
-import {User} from "../../user/entities/user.entity";
-
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'building-blocks/typeorm';
+import { TokenType } from '../enums/token-type.enum';
+import { User } from '../../user/entities/user.entity';
 
 @Entity()
 export class Token {

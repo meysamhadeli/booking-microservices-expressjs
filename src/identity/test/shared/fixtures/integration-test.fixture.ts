@@ -2,7 +2,7 @@ import { postgresContainerStart } from 'building-blocks/test/container/postgres/
 import passport from 'passport';
 import { RegisterRoutes } from '../../../src/routes/routes';
 import { rabbitMqContainerStart } from 'building-blocks/test/container/rabbitmq/rabbitmq-container';
-import { DataSource } from 'typeorm';
+import { DataSource } from 'building-blocks/typeorm';
 import { StartedTestContainer } from 'testcontainers';
 import { container } from 'tsyringe';
 import express, { Express } from 'express';
@@ -14,7 +14,7 @@ import { initialDbContext } from '../../../src/data/db.context';
 import { RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq-connection';
 import { Consumer, IConsumer } from 'building-blocks/rabbitmq/rabbitmq-consumer';
 import { IPublisher, Publisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
-import {errorHandler} from "building-blocks/error-handler/error-handler";
+import { errorHandler } from 'building-blocks/error-handler/error-handler';
 
 export class Fixture {
   databaseConnection: DataSource;

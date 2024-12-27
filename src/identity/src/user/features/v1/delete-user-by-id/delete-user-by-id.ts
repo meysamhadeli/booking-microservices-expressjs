@@ -1,6 +1,5 @@
 import { Controller, Delete, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
-import httpStatus from 'http-status';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
 import { inject, injectable } from 'tsyringe';
 import { UserDeleted } from 'building-blocks/contracts/identity.contract';
@@ -10,6 +9,7 @@ import { User } from '../../../entities/user.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mapping';
 import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
+import { StatusCodes } from 'http-status-codes';
 
 export class DeleteUserById implements IRequest<UserDto> {
   id: number;
@@ -40,7 +40,7 @@ export class DeleteUserByIdController extends Controller {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    this.setStatus(httpStatus.NO_CONTENT);
+    this.setStatus(StatusCodes.NO_CONTENT);
     return user;
   }
 }

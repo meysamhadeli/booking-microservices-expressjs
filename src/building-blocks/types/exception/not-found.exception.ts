@@ -1,4 +1,4 @@
-import httpStatus from 'http-status';
+import { StatusCodes } from 'http-status-codes';
 
 class NotFoundException extends Error {
   statusCode: number;
@@ -6,7 +6,7 @@ class NotFoundException extends Error {
 
   constructor(
     message: string | undefined,
-    statusCode: number = httpStatus.NOT_FOUND,
+    statusCode: number = StatusCodes.NOT_FOUND,
     isOperational = true,
     stack = ''
   ) {

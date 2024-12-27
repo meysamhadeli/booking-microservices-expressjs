@@ -2,7 +2,6 @@ import { Body, Controller, Put, Query, Route, Security, SuccessResponse } from '
 import { password } from 'building-blocks/utils/validation';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
 import { encryptPassword } from 'building-blocks/utils/encryption';
-import httpStatus from 'http-status';
 import Joi from 'joi';
 import { inject, injectable } from 'tsyringe';
 import { UserUpdated } from 'building-blocks/contracts/identity.contract';
@@ -12,6 +11,7 @@ import { IUserRepository } from '../../../../data/repositories/user.repository';
 import { User } from '../../../entities/user.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
+import { StatusCodes } from 'http-status-codes';
 
 export class UpdateUser implements IRequest<UserDto> {
   id: number;
@@ -66,7 +66,7 @@ export class UpdateUserController extends Controller {
       })
     );
 
-    this.setStatus(httpStatus.NO_CONTENT);
+    this.setStatus(StatusCodes.NO_CONTENT);
   }
 }
 

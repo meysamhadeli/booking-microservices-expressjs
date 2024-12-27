@@ -36,8 +36,8 @@ var __decorate =
         c < 3
           ? target
           : desc === null
-          ? (desc = Object.getOwnPropertyDescriptor(target, key))
-          : desc,
+            ? (desc = Object.getOwnPropertyDescriptor(target, key))
+            : desc,
       d;
     if (typeof Reflect === 'object' && typeof Reflect.decorate === 'function')
       r = Reflect.decorate(decorators, target, key, desc);
@@ -49,16 +49,27 @@ var __decorate =
   };
 var __importStar =
   (this && this.__importStar) ||
-  function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null)
-      for (var k in mod)
-        if (k !== 'default' && Object.prototype.hasOwnProperty.call(mod, k))
-          __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-  };
+  (function () {
+    var ownKeys = function (o) {
+      ownKeys =
+        Object.getOwnPropertyNames ||
+        function (o) {
+          var ar = [];
+          for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+          return ar;
+        };
+      return ownKeys(o);
+    };
+    return function (mod) {
+      if (mod && mod.__esModule) return mod;
+      var result = {};
+      if (mod != null)
+        for (var k = ownKeys(mod), i = 0; i < k.length; i++)
+          if (k[i] !== 'default') __createBinding(result, mod, k[i]);
+      __setModuleDefault(result, mod);
+      return result;
+    };
+  })();
 var __metadata =
   (this && this.__metadata) ||
   function (k, v) {
@@ -76,7 +87,11 @@ exports.Logger = void 0;
 const winston_1 = __importStar(require('winston'));
 const config_1 = __importDefault(require('../config/config'));
 const tsyringe_1 = require('tsyringe');
-let Logger = (Logger_1 = class Logger {
+let Logger = class Logger {
+  static {
+    Logger_1 = this;
+  }
+  static logger;
   constructor() {
     Logger_1.logger = winston_1.default.createLogger({
       level: config_1.default.env === 'development' ? 'debug' : 'info',
@@ -108,7 +123,7 @@ let Logger = (Logger_1 = class Logger {
   static error(message) {
     Logger_1.logger.error(message);
   }
-});
+};
 exports.Logger = Logger;
 exports.Logger =
   Logger =

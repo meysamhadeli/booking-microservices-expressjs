@@ -1,4 +1,4 @@
-import httpStatus from 'http-status';
+import { StatusCodes } from 'http-status-codes';
 
 class UnauthorizedException extends Error {
   statusCode: number;
@@ -6,7 +6,7 @@ class UnauthorizedException extends Error {
 
   constructor(
     message: string | undefined,
-    statusCode: number = httpStatus.UNAUTHORIZED,
+    statusCode: number = StatusCodes.UNAUTHORIZED,
     isOperational = true,
     stack = ''
   ) {

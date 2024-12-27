@@ -1,5 +1,4 @@
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
-import httpStatus from 'http-status';
 import Joi from 'joi';
 import { inject, injectable } from 'tsyringe';
 import notFoundException from 'building-blocks/types/exception/not-found.exception';
@@ -12,6 +11,7 @@ import { IPassengerClient } from '../../../http-client/services/passenger/passen
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mappings';
 import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
+import { StatusCodes } from 'http-status-codes';
 
 export class CreateBooking implements IRequest<BookingDto> {
   passengerId: number;
@@ -53,7 +53,7 @@ export class CreateBookingController extends Controller {
       })
     );
 
-    this.setStatus(httpStatus.CREATED);
+    this.setStatus(StatusCodes.CREATED);
     return result;
   }
 }

@@ -1,5 +1,5 @@
 import { container } from 'tsyringe';
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'building-blocks/typeorm';
 import { registerRepositories } from '../extensions/repository.extensions';
 import { DbContext, IDbContext } from 'building-blocks/typeorm/db-context';
 

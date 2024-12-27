@@ -11,7 +11,7 @@ import { SeatRepository } from '../repositories/seat.repository';
 import { Seat } from '../../seat/entities/seat.entity';
 import { SeatClass } from '../../seat/enums/seat-class.enum';
 import { SeatType } from '../../seat/enums/seat-type.enum';
-import {Logger} from "building-blocks/logging/logger";
+import { Logger } from 'building-blocks/logging/logger';
 
 export class FlightSeed implements IDataSeeder {
   public async seedData(): Promise<void> {

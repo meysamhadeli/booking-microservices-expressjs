@@ -1,5 +1,5 @@
-import { ErrorRequestHandler } from 'express';
-import httpStatus from 'http-status';
+import { ValidateError } from 'tsoa';
+
 import { ValidationError } from 'joi';
 import { ProblemDocument } from 'http-problem-details';
 import ApplicationException from '../types/exception/application.exception';
@@ -10,10 +10,26 @@ import NotFoundException from '../types/exception/not-found.exception';
 import ConflictException from '../types/exception/conflict.exception';
 import { Logger } from '../logging/logger';
 import HttpClientException from '../types/exception/http-client.exception';
+import { StatusCodes } from 'http-status-codes';
 
-export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, next) => {
+  if (err instanceof ValidateError) {
+    res.status(StatusCodes.BAD_REQUEST).json(
+      new ProblemDocument({
+        type: applicationException.name,
+        title: err.message,
+        detail: err.stack,
+        status: err.status
+      })
+    );
+
+    Logger.error(err);
+
+    return next;
+  }
+
   if (err instanceof ApplicationException) {
-    res.status(httpStatus.BAD_REQUEST).json(
+    res.status(StatusCodes.BAD_REQUEST).json(
       new ProblemDocument({
         type: applicationException.name,
         title: err.message,
@@ -28,7 +44,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   if (err instanceof UnauthorizedException) {
-    res.status(httpStatus.UNAUTHORIZED).json(
+    res.status(StatusCodes.UNAUTHORIZED).json(
       new ProblemDocument({
         type: UnauthorizedException.name,
         title: err.message,
@@ -43,7 +59,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   if (err instanceof ForbiddenException) {
-    res.status(httpStatus.FORBIDDEN).json(
+    res.status(StatusCodes.FORBIDDEN).json(
       new ProblemDocument({
         type: ForbiddenException.name,
         title: err.message,
@@ -58,7 +74,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   if (err instanceof NotFoundException) {
-    res.status(httpStatus.NOT_FOUND).json(
+    res.status(StatusCodes.NOT_FOUND).json(
       new ProblemDocument({
         type: NotFoundException.name,
         title: err.message,
@@ -73,7 +89,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   if (err instanceof ConflictException) {
-    res.status(httpStatus.CONFLICT).json(
+    res.status(StatusCodes.CONFLICT).json(
       new ProblemDocument({
         type: ConflictException.name,
         title: err.message,
@@ -88,7 +104,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   if (err instanceof HttpClientException) {
-    res.status(httpStatus.CONFLICT).json(
+    res.status(StatusCodes.CONFLICT).json(
       new ProblemDocument({
         type: HttpClientException.name,
         title: err.message,
@@ -103,12 +119,12 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   if (err instanceof ValidationError) {
-    res.status(httpStatus.BAD_REQUEST).json(
+    res.status(StatusCodes.BAD_REQUEST).json(
       new ProblemDocument({
         type: ValidationError.name,
         title: err.message,
         detail: err.stack,
-        status: httpStatus.BAD_REQUEST
+        status: StatusCodes.BAD_REQUEST
       })
     );
 
@@ -117,7 +133,7 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     return next;
   }
 
-  res.status(httpStatus.INTERNAL_SERVER_ERROR).json(
+  res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
     new ProblemDocument({
       type: 'INTERNAL_SERVER_ERROR',
       title: err.message,
@@ -127,6 +143,4 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   );
 
   Logger.error(err);
-
-  return next;
 };

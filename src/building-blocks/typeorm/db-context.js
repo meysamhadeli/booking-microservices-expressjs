@@ -7,8 +7,8 @@ var __decorate =
         c < 3
           ? target
           : desc === null
-          ? (desc = Object.getOwnPropertyDescriptor(target, key))
-          : desc,
+            ? (desc = Object.getOwnPropertyDescriptor(target, key))
+            : desc,
       d;
     if (typeof Reflect === 'object' && typeof Reflect.decorate === 'function')
       r = Reflect.decorate(decorators, target, key, desc);
@@ -25,10 +25,10 @@ var __importDefault =
   };
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.DbContext = void 0;
-const typeorm_1 = require('typeorm');
 const config_1 = __importDefault(require('../config/config'));
 const logger_1 = require('../logging/logger');
 const tsyringe_1 = require('tsyringe');
+const typeorm_1 = require('typeorm');
 let connection = null;
 let DbContext = class DbContext {
   async initializeTypeorm(dataSourceOptions) {
@@ -42,7 +42,7 @@ let DbContext = class DbContext {
       });
       if (config_1.default.env !== 'test') {
         try {
-        } catch (error) {
+        } catch {
           logger_1.Logger.error('Error during running the Migrations!');
         }
         await connection.runMigrations();

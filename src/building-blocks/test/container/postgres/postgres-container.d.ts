@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { StartedTestContainer } from 'testcontainers';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
-export declare const postgresContainerStart: () => Promise<[
-    PostgresConnectionOptions,
-    StartedTestContainer
-]>;
+import { DataSourceOptions } from 'typeorm';
+export declare const postgresContainerStart: () => Promise<
+  [DataSourceOptions, StartedTestContainer]
+>;

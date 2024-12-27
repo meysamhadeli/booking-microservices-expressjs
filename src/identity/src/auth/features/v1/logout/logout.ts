@@ -1,11 +1,11 @@
 import { BodyProp, Controller, Post, Route, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
-import httpStatus from 'http-status';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
 import { inject, injectable } from 'tsyringe';
 import { IAuthRepository } from '../../../../data/repositories/auth.repository';
 import { TokenType } from '../../../enums/token-type.enum';
 import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
+import { StatusCodes } from 'http-status-codes';
 
 export class Logout implements IRequest<number> {
   accessToken: string;
@@ -28,7 +28,7 @@ export class LogoutController extends Controller {
   public async logout(@BodyProp() accessToken: string): Promise<void> {
     await mediatrJs.send<number>(new Logout({ accessToken: accessToken }));
 
-    this.setStatus(httpStatus.NO_CONTENT);
+    this.setStatus(StatusCodes.NO_CONTENT);
   }
 }
 
