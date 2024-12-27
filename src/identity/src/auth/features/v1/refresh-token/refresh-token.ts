@@ -56,7 +56,7 @@ export class RefreshTokenHandler implements IRequestHandler<RefreshToken, AuthDt
       const result = await mediatrJs.send<AuthDto>(new GenerateToken({ userId: userId }));
 
       return result;
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Please authenticate');
     }
   }

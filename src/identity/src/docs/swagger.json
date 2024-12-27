@@ -1,4 +1,5 @@
 {
+	"openapi": "3.0.0",
 	"components": {
 		"examples": {},
 		"headers": {},
@@ -197,7 +198,6 @@
 			"name": "Meysam Hadeli"
 		}
 	},
-	"openapi": "3.0.0",
 	"paths": {
 		"/api/v1/identity/login": {
 			"post": {

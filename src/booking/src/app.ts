@@ -18,7 +18,7 @@ import { registerMediatrHandlers } from './extensions/mediatr.extensions';
 import { httpContextMiddleware } from 'building-blocks/context/context';
 import { postgresOptions } from './data/data-source';
 import { Logger } from 'building-blocks/logging/logger';
-import {errorHandler} from "building-blocks/error-handler/error-handler";
+import { errorHandler } from 'building-blocks/error-handler/error-handler';
 
 const startupApp = async () => {
   collectDefaultMetrics();

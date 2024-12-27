@@ -1,5 +1,6 @@
-import { ErrorRequestHandler } from 'express';
-import httpStatus from 'http-status';
+import { ValidateError } from 'tsoa';
+
+const { httpStatus } = require('http-status');
 import { ValidationError } from 'joi';
 import { ProblemDocument } from 'http-problem-details';
 import ApplicationException from '../types/exception/application.exception';
@@ -11,7 +12,22 @@ import ConflictException from '../types/exception/conflict.exception';
 import { Logger } from '../logging/logger';
 import HttpClientException from '../types/exception/http-client.exception';
 
-export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+export const errorHandler = (err, req, res, next) => {
+  if (err instanceof ValidateError) {
+    res.status(httpStatus.UnprocessableEntity).json(
+      new ProblemDocument({
+        type: applicationException.name,
+        title: err.message,
+        detail: err.stack,
+        status: err.status
+      })
+    );
+
+    Logger.error(err);
+
+    return next;
+  }
+
   if (err instanceof ApplicationException) {
     res.status(httpStatus.BAD_REQUEST).json(
       new ProblemDocument({
@@ -127,6 +143,4 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   );
 
   Logger.error(err);
-
-  return next;
 };

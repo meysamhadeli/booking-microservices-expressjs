@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
-import httpStatus from 'http-status';
+const { httpStatus } = require('http-status');
 import Joi from 'joi';
 import { password } from 'building-blocks/utils/validation';
 import ConflictException from 'building-blocks/types/exception/conflict.exception';

@@ -1,7 +1,7 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
 import config from '../config/config';
 import { Logger } from '../logging/logger';
-import { container, injectable, instanceCachingFactory } from 'tsyringe';
+import { injectable } from 'tsyringe';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
 let connection: DataSource = null;
 
@@ -33,7 +33,7 @@ export class DbContext implements IDbContext {
 
       if (config.env !== 'test') {
         try {
-        } catch (error) {
+        } catch {
           Logger.error('Error during running the Migrations!');
         }
         await connection.runMigrations();

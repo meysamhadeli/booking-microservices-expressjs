@@ -1,5 +1,5 @@
 import config from 'building-blocks/config/config';
-import {DataSource, DataSourceOptions} from 'typeorm';
+import { DataSource, DataSourceOptions } from 'building-blocks/typeorm';
 
 // use this file for running migration
 export const postgresOptions: DataSourceOptions = {
@@ -13,7 +13,7 @@ export const postgresOptions: DataSourceOptions = {
   entities: [__dirname + config.postgres.entities],
   migrations: [__dirname + config.postgres.migrations],
   logging: config.postgres.logging
-};
+} as DataSourceOptions;
 
 const dataSource = new DataSource(postgresOptions);
 

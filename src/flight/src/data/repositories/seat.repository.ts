@@ -1,7 +1,7 @@
-import { Repository } from 'typeorm';
+import { Repository } from 'building-blocks/typeorm';
 import { container } from 'tsyringe';
 import { DbContext } from 'building-blocks/typeorm/db-context';
-import {Seat} from "../../seat/entities/seat.entity";
+import { Seat } from '../../seat/entities/seat.entity';
 
 export interface ISeatRepository {
   createSeat(seat: Seat): Promise<Seat>;

@@ -1,10 +1,10 @@
 import 'reflect-metadata';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
-import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import { container } from 'tsyringe';
 import { Logger } from '../../../logging/logger';
 import { MixedList } from 'typeorm/common/MixedList';
 import { EntitySchema } from 'typeorm/entity-schema/EntitySchema';
+import { DataSourceOptions } from 'typeorm';
 
 interface PostgresContainerOptions {
   imageName: string;
@@ -15,11 +15,11 @@ interface PostgresContainerOptions {
   username: string;
   password: string;
   synchronize: boolean;
-  entities: MixedList<Function | string | EntitySchema>;
+  entities: MixedList<string | Function | EntitySchema<any>>;
 }
 
 export const postgresContainerStart = async (): Promise<
-  [PostgresConnectionOptions, StartedTestContainer]
+  [DataSourceOptions, StartedTestContainer]
 > => {
   const logger = container.resolve(Logger);
 
@@ -29,7 +29,7 @@ export const postgresContainerStart = async (): Promise<
 
   const containerPort = pgContainerStarted.getMappedPort(defaultPostgresOptions.port);
 
-  const postgresConnectionOption: PostgresConnectionOptions = {
+  const postgresConnectionOption: DataSourceOptions = {
     ...defaultPostgresOptions,
     type: 'postgres',
     port: containerPort

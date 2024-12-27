@@ -1,4 +1,4 @@
-import httpStatus from 'http-status';
+const { httpStatus } = require('http-status');
 
 class ApplicationException extends Error {
   statusCode: number;

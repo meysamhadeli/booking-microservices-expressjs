@@ -1,7 +1,7 @@
-import { Repository } from 'typeorm';
+import { Repository } from 'building-blocks/typeorm';
 import { container } from 'tsyringe';
 import { DbContext } from 'building-blocks/typeorm/db-context';
-import {Booking} from "../../booking/entities/booking.entity";
+import { Booking } from '../../booking/entities/booking.entity';
 
 export interface IBookingRepository {
   createBooking(booking: Booking): Promise<Booking>;

@@ -1,12 +1,13 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.RabbitmqConsumerOptionsBuilder = exports.RabbitmqConsumerOptions = void 0;
-class RabbitmqConsumerOptions {}
+class RabbitmqConsumerOptions {
+  exchangeName;
+  handler;
+}
 exports.RabbitmqConsumerOptions = RabbitmqConsumerOptions;
 class RabbitmqConsumerOptionsBuilder {
-  constructor() {
-    this._options = new RabbitmqConsumerOptions();
-  }
+  _options = new RabbitmqConsumerOptions();
   exchangeName(exchangeName) {
     this._options.exchangeName = exchangeName;
     return this;

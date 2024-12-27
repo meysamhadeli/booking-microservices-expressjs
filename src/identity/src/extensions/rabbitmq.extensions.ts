@@ -14,7 +14,7 @@ export const initialRabbitmq = async (options?: RabbitmqConnectionOptions): Prom
         .username(options?.username)
         .password(options?.password);
     })
-    .then((c) => {
+    .then(() => {
       container.register<IPublisher>('IPublisher', Publisher);
     });
 };

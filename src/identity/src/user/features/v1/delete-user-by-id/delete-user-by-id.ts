@@ -1,6 +1,6 @@
 import { Controller, Delete, Query, Route, Security, SuccessResponse } from 'tsoa';
 import Joi from 'joi';
-import httpStatus from 'http-status';
+const { httpStatus } = require('http-status');
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
 import { inject, injectable } from 'tsyringe';
 import { UserDeleted } from 'building-blocks/contracts/identity.contract';

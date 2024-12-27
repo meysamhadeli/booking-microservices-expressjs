@@ -1,2 +1,1 @@
-import { ErrorRequestHandler } from 'express';
-export declare const errorHandler: ErrorRequestHandler;
+export declare const errorHandler: (err: any, req: any, res: any, next: any) => any;

@@ -1,5 +1,5 @@
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
-import httpStatus from 'http-status';
+const { httpStatus } = require('http-status');
 import Joi from 'joi';
 import ConflictException from 'building-blocks/types/exception/conflict.exception';
 import { inject, injectable } from 'tsyringe';

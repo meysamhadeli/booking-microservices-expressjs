@@ -1,4 +1,4 @@
-import httpStatus from 'http-status';
+const { httpStatus } = require('http-status');
 
 class ConflictException extends Error {
   statusCode: number;

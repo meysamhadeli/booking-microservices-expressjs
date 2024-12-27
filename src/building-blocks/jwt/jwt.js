@@ -30,23 +30,34 @@ var __setModuleDefault =
       });
 var __importStar =
   (this && this.__importStar) ||
-  function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null)
-      for (var k in mod)
-        if (k !== 'default' && Object.prototype.hasOwnProperty.call(mod, k))
-          __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-  };
+  (function () {
+    var ownKeys = function (o) {
+      ownKeys =
+        Object.getOwnPropertyNames ||
+        function (o) {
+          var ar = [];
+          for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+          return ar;
+        };
+      return ownKeys(o);
+    };
+    return function (mod) {
+      if (mod && mod.__esModule) return mod;
+      var result = {};
+      if (mod != null)
+        for (var k = ownKeys(mod), i = 0; i < k.length; i++)
+          if (k[i] !== 'default') __createBinding(result, mod, k[i]);
+      __setModuleDefault(result, mod);
+      return result;
+    };
+  })();
 var __importDefault =
   (this && this.__importDefault) ||
   function (mod) {
     return mod && mod.__esModule ? mod : { default: mod };
   };
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.expressAuthentication = void 0;
+exports.expressAuthentication = expressAuthentication;
 const jwt = __importStar(require('jsonwebtoken'));
 const config_1 = __importDefault(require('../config/config'));
 const encryption_1 = require('../utils/encryption');
@@ -77,18 +88,12 @@ async function expressAuthentication(request, securityName, scopes) {
         reject(new unauthorized_exception_1.default('Unauthorized'));
       }
       jwt.verify(token, config_1.default.jwt.secret, function (err, decoded) {
-        var _a;
         if (err) {
           reject(new unauthorized_exception_1.default('Unauthorized'));
         } else {
           if (scopes != undefined) {
             for (const scope of scopes) {
-              if (
-                !((_a = decoded === null || decoded === void 0 ? void 0 : decoded.scopes) ===
-                  null || _a === void 0
-                  ? void 0
-                  : _a.includes(scope))
-              ) {
+              if (!decoded?.scopes?.includes(scope)) {
                 reject(
                   new unauthorized_exception_1.default(
                     'Unauthorized: JWT does not contain required scope.'
@@ -104,5 +109,4 @@ async function expressAuthentication(request, securityName, scopes) {
   }
   return Promise.reject(new unauthorized_exception_1.default('Unauthorized'));
 }
-exports.expressAuthentication = expressAuthentication;
 //# sourceMappingURL=jwt.js.map

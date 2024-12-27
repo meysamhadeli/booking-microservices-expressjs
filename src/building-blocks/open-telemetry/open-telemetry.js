@@ -7,8 +7,8 @@ var __decorate =
         c < 3
           ? target
           : desc === null
-          ? (desc = Object.getOwnPropertyDescriptor(target, key))
-          : desc,
+            ? (desc = Object.getOwnPropertyDescriptor(target, key))
+            : desc,
       d;
     if (typeof Reflect === 'object' && typeof Reflect.decorate === 'function')
       r = Reflect.decorate(decorators, target, key, desc);
@@ -41,37 +41,21 @@ const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-expre
 const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
 let OpenTelemetryTracer = class OpenTelemetryTracer {
   async createTracer(openTelemetryOptionsBuilder) {
-    var _a, _b, _c, _d, _e;
     const builder = new open_telemetry_options_builder_1.OpenTelemetryOptionsBuilder();
     openTelemetryOptionsBuilder(builder);
     const options = builder.build();
     const provider = new NodeTracerProvider({
       resource: new resources_1.Resource({
         [semantic_conventions_1.SemanticResourceAttributes.SERVICE_NAME]:
-          (_a = options === null || options === void 0 ? void 0 : options.serviceName) !== null &&
-          _a !== void 0
-            ? _a
-            : config_1.default.serviceName
+          options?.serviceName ?? config_1.default.serviceName
       })
     });
     const jaegerExporter = new exporter_jaeger_1.JaegerExporter({
-      endpoint:
-        (_b = options === null || options === void 0 ? void 0 : options.jaegerEndpoint) !== null &&
-        _b !== void 0
-          ? _b
-          : config_1.default.monitoring.jaegerEndpoint
+      endpoint: options?.jaegerEndpoint ?? config_1.default.monitoring.jaegerEndpoint
     });
     const zipkinExporter = new exporter_zipkin_1.ZipkinExporter({
-      url:
-        (_c = options === null || options === void 0 ? void 0 : options.zipkinEndpoint) !== null &&
-        _c !== void 0
-          ? _c
-          : config_1.default.monitoring.zipkinEndpoint,
-      serviceName:
-        (_d = options === null || options === void 0 ? void 0 : options.serviceName) !== null &&
-        _d !== void 0
-          ? _d
-          : config_1.default.serviceName
+      url: options?.zipkinEndpoint ?? config_1.default.monitoring.zipkinEndpoint,
+      serviceName: options?.serviceName ?? config_1.default.serviceName
     });
     provider.addSpanProcessor(new SimpleSpanProcessor(jaegerExporter));
     provider.addSpanProcessor(new sdk_trace_node_1.BatchSpanProcessor(zipkinExporter));
@@ -83,12 +67,7 @@ let OpenTelemetryTracer = class OpenTelemetryTracer {
         new AmqplibInstrumentation()
       ]
     });
-    const tracer = provider.getTracer(
-      (_e = options === null || options === void 0 ? void 0 : options.serviceName) !== null &&
-        _e !== void 0
-        ? _e
-        : config_1.default.serviceName
-    );
+    const tracer = provider.getTracer(options?.serviceName ?? config_1.default.serviceName);
     return tracer;
   }
 };

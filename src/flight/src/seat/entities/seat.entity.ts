@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import {SeatClass} from "../enums/seat-class.enum";
-import {SeatType} from "../enums/seat-type.enum";
-import {Flight} from "../../flight/entities/flight.entity";
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'building-blocks/typeorm';
+import { SeatClass } from '../enums/seat-class.enum';
+import { SeatType } from '../enums/seat-type.enum';
+import { Flight } from '../../flight/entities/flight.entity';
 
 @Entity()
 export class Seat {

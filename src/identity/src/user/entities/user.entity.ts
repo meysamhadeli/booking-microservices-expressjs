@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import {Role} from "../enums/role.enum";
-import {Token} from "../../auth/entities/token.entity";
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'building-blocks/typeorm';
+import { Role } from '../enums/role.enum';
+import { Token } from '../../auth/entities/token.entity';
 
 @Entity()
 export class User {

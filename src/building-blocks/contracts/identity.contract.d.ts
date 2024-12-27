@@ -1,38 +1,38 @@
 import { IEvent } from '../types/core/event';
 export declare class UserCreated implements IEvent {
-    id: number;
-    email: string;
-    name: string;
-    isEmailVerified: boolean;
-    role: Role;
-    passportNumber: string;
-    createdAt: Date;
-    updatedAt?: Date;
-    constructor(partial?: Partial<UserCreated>);
+  id: number;
+  email: string;
+  name: string;
+  isEmailVerified: boolean;
+  role: Role;
+  passportNumber: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  constructor(partial?: Partial<UserCreated>);
 }
 export declare class UserDeleted implements IEvent {
-    id: number;
-    email: string;
-    name: string;
-    isEmailVerified: boolean;
-    role: Role;
-    passportNumber: string;
-    createdAt: Date;
-    updatedAt?: Date;
-    constructor(partial?: Partial<UserDeleted>);
+  id: number;
+  email: string;
+  name: string;
+  isEmailVerified: boolean;
+  role: Role;
+  passportNumber: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  constructor(partial?: Partial<UserDeleted>);
 }
 export declare class UserUpdated implements IEvent {
-    id: number;
-    email: string;
-    name: string;
-    isEmailVerified: boolean;
-    role: Role;
-    passportNumber: string;
-    createdAt: Date;
-    updatedAt?: Date;
-    constructor(partial?: Partial<UserUpdated>);
+  id: number;
+  email: string;
+  name: string;
+  isEmailVerified: boolean;
+  role: Role;
+  passportNumber: string;
+  createdAt: Date;
+  updatedAt?: Date;
+  constructor(partial?: Partial<UserUpdated>);
 }
 export declare enum Role {
-    USER = 0,
-    ADMIN = 1
+  USER = 0,
+  ADMIN = 1
 }

@@ -1,7 +1,7 @@
-import { Repository } from 'typeorm';
+import { Repository } from 'building-blocks/typeorm';
 import { container } from 'tsyringe';
 import { DbContext } from 'building-blocks/typeorm/db-context';
-import {Flight} from "../../flight/entities/flight.entity";
+import { Flight } from '../../flight/entities/flight.entity';
 
 export interface IFlightRepository {
   createFlight(flight: Flight): Promise<Flight>;
