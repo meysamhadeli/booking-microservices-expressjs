@@ -1,5 +1,4 @@
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
-const { httpStatus } = require('http-status');
 import Joi from 'joi';
 import ConflictException from 'building-blocks/types/exception/conflict.exception';
 import { inject, injectable } from 'tsyringe';
@@ -11,6 +10,7 @@ import { Flight } from '../../../entities/flight.entity';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mappings';
 import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
+import { StatusCodes } from 'http-status-codes';
 
 export class CreateFlight implements IRequest<CreateFlight> {
   flightNumber: string;
@@ -88,7 +88,7 @@ export class CreateFlightController extends Controller {
       })
     );
 
-    this.setStatus(httpStatus.CREATED);
+    this.setStatus(StatusCodes.CREATED);
     return result;
   }
 }

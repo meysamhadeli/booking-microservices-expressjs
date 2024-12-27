@@ -1,10 +1,15 @@
 'use strict';
 Object.defineProperty(exports, '__esModule', { value: true });
-const { httpStatus } = require('http-status');
+const http_status_codes_1 = require('http-status-codes');
 class HttpClientException extends Error {
   statusCode;
   isOperational;
-  constructor(message, statusCode = httpStatus.BAD_REQUEST, isOperational = true, stack = '') {
+  constructor(
+    message,
+    statusCode = http_status_codes_1.StatusCodes.BAD_REQUEST,
+    isOperational = true,
+    stack = ''
+  ) {
     super(message);
     this.statusCode = statusCode;
     this.isOperational = isOperational;

@@ -1,4 +1,4 @@
-const { httpStatus } = require('http-status');
+import { StatusCodes } from 'http-status-codes';
 
 class ForbiddenException extends Error {
   statusCode: number;
@@ -6,7 +6,7 @@ class ForbiddenException extends Error {
 
   constructor(
     message: string | undefined,
-    statusCode: number = httpStatus.FORBIDDEN,
+    statusCode: number = StatusCodes.FORBIDDEN,
     isOperational = true,
     stack = ''
   ) {

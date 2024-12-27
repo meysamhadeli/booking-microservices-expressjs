@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'building-blocks/typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne
+} from 'building-blocks/typeorm';
 import { FlightStatus } from '../enums/flight-status.enum';
 import { Aircraft } from '../../aircraft/entities/aircraft.entity';
 import { Airport } from '../../airport/entities/airport.entity';

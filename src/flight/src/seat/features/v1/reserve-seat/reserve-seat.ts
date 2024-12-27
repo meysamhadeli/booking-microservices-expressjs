@@ -1,5 +1,4 @@
 import { Body, Controller, Post, Route, Security, SuccessResponse } from 'tsoa';
-const { httpStatus } = require('http-status');
 import Joi from 'joi';
 import { inject, injectable } from 'tsyringe';
 import NotFoundException from 'building-blocks/types/exception/not-found.exception';
@@ -11,6 +10,7 @@ import { ISeatRepository } from '../../../../data/repositories/seat.repository';
 import { IPublisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import mapper from '../../../mappings';
 import { IRequest, IRequestHandler, mediatrJs } from 'building-blocks/mediatr-js/mediatr-js';
+import { StatusCodes } from 'http-status-codes';
 
 export class ReserveSeat implements IRequest<SeatDto> {
   seatNumber: string;
@@ -48,7 +48,7 @@ export class ReserveSeatController extends Controller {
       })
     );
 
-    this.setStatus(httpStatus.NO_CONTENT);
+    this.setStatus(StatusCodes.NO_CONTENT);
 
     return result;
   }

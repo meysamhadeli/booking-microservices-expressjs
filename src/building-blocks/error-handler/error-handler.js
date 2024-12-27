@@ -7,7 +7,6 @@ var __importDefault =
 Object.defineProperty(exports, '__esModule', { value: true });
 exports.errorHandler = void 0;
 const tsoa_1 = require('tsoa');
-const { httpStatus } = require('http-status');
 const joi_1 = require('joi');
 const http_problem_details_1 = require('http-problem-details');
 const application_exception_1 = __importDefault(
@@ -26,9 +25,10 @@ const logger_1 = require('../logging/logger');
 const http_client_exception_1 = __importDefault(
   require('../types/exception/http-client.exception')
 );
+const http_status_codes_1 = require('http-status-codes');
 const errorHandler = (err, req, res, next) => {
   if (err instanceof tsoa_1.ValidateError) {
-    res.status(httpStatus.UnprocessableEntity).json(
+    res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json(
       new http_problem_details_1.ProblemDocument({
         type: application_exception_2.default.name,
         title: err.message,
@@ -40,7 +40,7 @@ const errorHandler = (err, req, res, next) => {
     return next;
   }
   if (err instanceof application_exception_1.default) {
-    res.status(httpStatus.BAD_REQUEST).json(
+    res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json(
       new http_problem_details_1.ProblemDocument({
         type: application_exception_2.default.name,
         title: err.message,
@@ -52,7 +52,7 @@ const errorHandler = (err, req, res, next) => {
     return next;
   }
   if (err instanceof unauthorized_exception_1.default) {
-    res.status(httpStatus.UNAUTHORIZED).json(
+    res.status(http_status_codes_1.StatusCodes.UNAUTHORIZED).json(
       new http_problem_details_1.ProblemDocument({
         type: unauthorized_exception_1.default.name,
         title: err.message,
@@ -64,7 +64,7 @@ const errorHandler = (err, req, res, next) => {
     return next;
   }
   if (err instanceof forbidden_exception_1.default) {
-    res.status(httpStatus.FORBIDDEN).json(
+    res.status(http_status_codes_1.StatusCodes.FORBIDDEN).json(
       new http_problem_details_1.ProblemDocument({
         type: forbidden_exception_1.default.name,
         title: err.message,
@@ -76,7 +76,7 @@ const errorHandler = (err, req, res, next) => {
     return next;
   }
   if (err instanceof not_found_exception_1.default) {
-    res.status(httpStatus.NOT_FOUND).json(
+    res.status(http_status_codes_1.StatusCodes.NOT_FOUND).json(
       new http_problem_details_1.ProblemDocument({
         type: not_found_exception_1.default.name,
         title: err.message,
@@ -88,7 +88,7 @@ const errorHandler = (err, req, res, next) => {
     return next;
   }
   if (err instanceof conflict_exception_1.default) {
-    res.status(httpStatus.CONFLICT).json(
+    res.status(http_status_codes_1.StatusCodes.CONFLICT).json(
       new http_problem_details_1.ProblemDocument({
         type: conflict_exception_1.default.name,
         title: err.message,
@@ -100,7 +100,7 @@ const errorHandler = (err, req, res, next) => {
     return next;
   }
   if (err instanceof http_client_exception_1.default) {
-    res.status(httpStatus.CONFLICT).json(
+    res.status(http_status_codes_1.StatusCodes.CONFLICT).json(
       new http_problem_details_1.ProblemDocument({
         type: http_client_exception_1.default.name,
         title: err.message,
@@ -112,18 +112,18 @@ const errorHandler = (err, req, res, next) => {
     return next;
   }
   if (err instanceof joi_1.ValidationError) {
-    res.status(httpStatus.BAD_REQUEST).json(
+    res.status(http_status_codes_1.StatusCodes.BAD_REQUEST).json(
       new http_problem_details_1.ProblemDocument({
         type: joi_1.ValidationError.name,
         title: err.message,
         detail: err.stack,
-        status: httpStatus.BAD_REQUEST
+        status: http_status_codes_1.StatusCodes.BAD_REQUEST
       })
     );
     logger_1.Logger.error(err);
     return next;
   }
-  res.status(httpStatus.INTERNAL_SERVER_ERROR).json(
+  res.status(http_status_codes_1.StatusCodes.INTERNAL_SERVER_ERROR).json(
     new http_problem_details_1.ProblemDocument({
       type: 'INTERNAL_SERVER_ERROR',
       title: err.message,
