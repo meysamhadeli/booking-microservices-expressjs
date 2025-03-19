@@ -4,14 +4,15 @@ import * as amqp from 'amqplib';
 import config from '../config/config';
 import asyncRetry from 'async-retry';
 import { RabbitmqConnectionOptions } from './rabbitmq-connection-options-builder';
+import {ChannelModel} from "amqplib";
 
-let connection: amqp.Connection = null;
+let connection: ChannelModel = null;
 let channel: amqp.Channel = null;
 
 export interface IRabbitMQConnection {
-  createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.Connection>;
+  createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.ChannelModel>;
 
-  getConnection(): Promise<amqp.Connection>;
+  getConnection(): Promise<amqp.ChannelModel>;
 
   getChannel(): Promise<amqp.Channel>;
 
@@ -22,7 +23,7 @@ export interface IRabbitMQConnection {
 
 @injectable()
 export class RabbitMQConnection implements IRabbitMQConnection {
-  async createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.Connection> {
+  async createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.ChannelModel> {
     if (!connection || !connection == undefined) {
       try {
         const host = options?.host ?? config.rabbitmq.host;
@@ -63,7 +64,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
     return connection;
   }
 
-  async getConnection(): Promise<amqp.Connection> {
+  async getConnection(): Promise< amqp.ChannelModel> {
     return connection;
   }
 
@@ -114,7 +115,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
   async closeConnection(): Promise<void> {
     try {
       if (connection) {
-        await connection.close();
+        await connection;
         Logger.info('Connection rabbitmq closed gracefully!');
       }
     } catch (error) {

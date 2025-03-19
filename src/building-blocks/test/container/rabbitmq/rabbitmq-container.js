@@ -32,7 +32,7 @@ const getDefaultRabbitmqTestContainers = async () => {
         host: 'localhost',
         username: 'guest',
         password: 'guest',
-        imageName: 'rabbitmq:3-management'
+        imageName: 'rabbitmq:management'
     };
     return rabbitmqOptions;
 };

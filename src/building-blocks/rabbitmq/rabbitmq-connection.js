@@ -129,7 +129,7 @@ let RabbitMQConnection = class RabbitMQConnection {
     async closeConnection() {
         try {
             if (connection) {
-                await connection.close();
+                await connection;
                 logger_1.Logger.info('Connection rabbitmq closed gracefully!');
             }
         }
