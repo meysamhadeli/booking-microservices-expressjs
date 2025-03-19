@@ -5,12 +5,14 @@ services:
     #  Rabbitmq
     #######################################################
   rabbitmq:
-    image: rabbitmq:3-management
     container_name: rabbitmq
+    image: rabbitmq:management
     restart: unless-stopped
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
+      # volumes:
+      #   - rabbitmq:/var/lib/rabbitmq
     networks:
       - booking
 
