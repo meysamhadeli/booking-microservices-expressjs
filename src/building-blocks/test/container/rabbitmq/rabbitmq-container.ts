@@ -51,7 +51,7 @@ const getDefaultRabbitmqTestContainers = async (): Promise<RabbitmqContainerOpti
     host: 'localhost',
     username: 'guest',
     password: 'guest',
-    imageName: 'rabbitmq:management'
+    imageName: 'rabbitmq:3-management'
   };
 
   return rabbitmqOptions;
