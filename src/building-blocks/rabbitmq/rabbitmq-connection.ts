@@ -5,25 +5,21 @@ import config from '../config/config';
 import asyncRetry from 'async-retry';
 import { RabbitmqConnectionOptions } from './rabbitmq-connection-options-builder';
 
-let connection: amqp.Connection = null;
-let channel: amqp.Channel = null;
+let connection: amqp.Connection | null = null;
+let channel: amqp.Channel | null = null;
 
 export interface IRabbitMQConnection {
   createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.Connection>;
-
-  getConnection(): Promise<amqp.Connection>;
-
-  getChannel(): Promise<amqp.Channel>;
-
+  getConnection(): Promise<amqp.Connection | null>;
+  getChannel(): Promise<amqp.Channel | null>;
   closeChanel(): Promise<void>;
-
   closeConnection(): Promise<void>;
 }
 
 @injectable()
 export class RabbitMQConnection implements IRabbitMQConnection {
   async createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.Connection> {
-    if (!connection || !connection == undefined) {
+    if (!connection) {
       try {
         const host = options?.host ?? config.rabbitmq.host;
         const port = options?.port ?? config.rabbitmq.port;
@@ -63,17 +59,17 @@ export class RabbitMQConnection implements IRabbitMQConnection {
     return connection;
   }
 
-  async getConnection(): Promise<amqp.Connection> {
+  async getConnection(): Promise<amqp.Connection | null> {
     return connection;
   }
 
-  async getChannel(): Promise<amqp.Channel> {
+  async getChannel(): Promise<amqp.Channel | null> {
     try {
       if (!connection) {
         throw new Error('Rabbitmq connection is failed!');
       }
 
-      if ((connection && !channel) || !channel) {
+      if (!channel) {
         await asyncRetry(
           async () => {
             channel = await connection.createChannel();
@@ -97,6 +93,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
       return channel;
     } catch (error) {
       Logger.error('Failed to get channel!');
+      return null;
     }
   }
 
@@ -104,6 +101,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
     try {
       if (channel) {
         await channel.close();
+        channel = null;
         Logger.info('Channel closed successfully');
       }
     } catch (error) {
@@ -115,6 +113,7 @@ export class RabbitMQConnection implements IRabbitMQConnection {
     try {
       if (connection) {
         await connection.close();
+        connection = null;
         Logger.info('Connection rabbitmq closed gracefully!');
       }
     } catch (error) {
