@@ -26,15 +26,19 @@ export class RabbitMQConnection implements IRabbitMQConnection {
   async createConnection(options?: RabbitmqConnectionOptions): Promise<amqp.ChannelModel> {
     if (!connection || !connection == undefined) {
       try {
-        const host = options?.host ?? config.rabbitmq.host;
-        const port = options?.port ?? config.rabbitmq.port;
+
+        const rabbitConfig = {
+          protocol: 'amqp',
+          hostname: options?.host ?? config.rabbitmq.host,
+          port: options?.port ?? config.rabbitmq.port,
+          username: options?.username ?? config.rabbitmq.username,
+          password: options?.password ?? config.rabbitmq.password,
+        };
 
         await asyncRetry(
           async () => {
-            connection = await amqp.connect(`amqp://${host}:${port}`, {
-              username: options?.username ?? config.rabbitmq.username,
-              password: options?.password ?? config.rabbitmq.password
-            });
+
+            connection = await amqp.connect(rabbitConfig);
 
             Logger.info('Rabbitmq connection created successfully');
 
