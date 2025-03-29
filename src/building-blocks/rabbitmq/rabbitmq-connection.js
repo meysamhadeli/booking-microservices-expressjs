@@ -54,13 +54,15 @@ let RabbitMQConnection = class RabbitMQConnection {
     async createConnection(options) {
         if (!connection || !connection == undefined) {
             try {
-                const host = options?.host ?? config_1.default.rabbitmq.host;
-                const port = options?.port ?? config_1.default.rabbitmq.port;
+                const rabbitConfig = {
+                    protocol: 'amqp',
+                    hostname: options?.host ?? config_1.default.rabbitmq.host,
+                    port: options?.port ?? config_1.default.rabbitmq.port,
+                    username: options?.username ?? config_1.default.rabbitmq.username,
+                    password: options?.password ?? config_1.default.rabbitmq.password,
+                };
                 await (0, async_retry_1.default)(async () => {
-                    connection = await amqp.connect(`amqp://${host}:${port}`, {
-                        username: options?.username ?? config_1.default.rabbitmq.username,
-                        password: options?.password ?? config_1.default.rabbitmq.password
-                    });
+                    connection = await amqp.connect(rabbitConfig);
                     logger_1.Logger.info('Rabbitmq connection created successfully');
                     process.on('SIGINT', async () => {
                         if (connection) {
