@@ -15,6 +15,7 @@ import { RabbitMQConnection } from 'building-blocks/rabbitmq/rabbitmq-connection
 import { Consumer, IConsumer } from 'building-blocks/rabbitmq/rabbitmq-consumer';
 import { IPublisher, Publisher } from 'building-blocks/rabbitmq/rabbitmq-publisher';
 import { errorHandler } from 'building-blocks/error-handler/error-handler';
+import { initialOpenTelemetry } from '../../../src/extensions/otel.extensions';
 
 export class Fixture {
   databaseConnection: DataSource;
