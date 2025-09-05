@@ -1,6 +1,5 @@
 import { container, injectable } from 'tsyringe';
 import { Logger } from '../logging/logger';
-import { OpenTelemetryTracer } from '../open-telemetry/open-telemetry';
 import { getTypeName } from '../utils/reflection';
 import { serializeObject } from '../utils/serialization';
 import { getUnixTime } from 'date-fns';
@@ -9,6 +8,7 @@ import { RabbitMQConnection } from './rabbitmq-connection';
 import asyncRetry from 'async-retry';
 import { snakeCase } from 'typeorm/util/StringUtils';
 import { v4 as uuidv4 } from 'uuid';
+import { OtelDiagnosticsProvider } from '../open-telemetry/otel-diagnostics-provider';
 
 const publishedMessages: string[] = [];
 
@@ -22,10 +22,8 @@ export interface IPublisher {
 export class Publisher implements IPublisher {
   async publishMessage<T>(message: T) {
     const rabbitMQConnection = container.resolve(RabbitMQConnection);
-    const openTelemetryTracer = container.resolve(OpenTelemetryTracer);
-    const tracer = await openTelemetryTracer.createTracer((x) =>
-      x.serviceName('rabbitmq-publisher')
-    );
+    const otelDiagnosticsProvider = container.resolve(OtelDiagnosticsProvider);
+    const tracer = otelDiagnosticsProvider.getTracer();
 
     try {
       await asyncRetry(

@@ -19,8 +19,13 @@ import { httpContextMiddleware } from 'building-blocks/context/context';
 import { postgresOptions } from './data/data-source';
 import { Logger } from 'building-blocks/logging/logger';
 import { errorHandler } from 'building-blocks/error-handler/error-handler';
+import { OpenTelemetry } from 'building-blocks/open-telemetry/open-telemetry';
 
 const startupApp = async () => {
+  const logger = await initialLogger();
+
+  OpenTelemetry.start();
+
   collectDefaultMetrics();
 
   const app = express();
@@ -28,8 +33,6 @@ const startupApp = async () => {
   app.get('/', function (req, res) {
     res.send(config.serviceName);
   });
-
-  const logger = await initialLogger();
 
   app.use(httpContextMiddleware);
 

@@ -18,14 +18,14 @@ const serialization_1 = require("../utils/serialization");
 const lodash_1 = require("lodash");
 const time_1 = require("../utils/time");
 const logger_1 = require("../logging/logger");
-const open_telemetry_1 = require("../open-telemetry/open-telemetry");
 const rabbitmq_connection_1 = require("./rabbitmq-connection");
+const otel_diagnostics_provider_1 = require("../open-telemetry/otel-diagnostics-provider");
 const consumedMessages = [];
 let Consumer = class Consumer {
     async addConsumer(consumerOptions) {
         const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_connection_1.RabbitMQConnection);
-        const openTelemetryTracer = tsyringe_1.container.resolve(open_telemetry_1.OpenTelemetryTracer);
-        const tracer = await openTelemetryTracer.createTracer((x) => x.serviceName('rabbitmq-consumer'));
+        const otelDiagnosticsProvider = tsyringe_1.container.resolve(otel_diagnostics_provider_1.OtelDiagnosticsProvider);
+        const tracer = otelDiagnosticsProvider.getTracer();
         try {
             await (0, async_retry_1.default)(async () => {
                 const channel = await rabbitMQConnection.getChannel();

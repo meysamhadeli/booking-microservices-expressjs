@@ -19,7 +19,7 @@ export const initialRabbitmq = async (options?: RabbitmqConnectionOptions): Prom
       container.register<IPublisher>('IPublisher', Publisher);
 
       c.addConsumer((x) => {
-        x.exchangeName('UserCreated'), x.handler(createUserConsumerHandler);
+        (x.exchangeName('UserCreated'), x.handler(createUserConsumerHandler));
       });
     });
 };

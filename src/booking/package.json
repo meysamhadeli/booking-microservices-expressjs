@@ -6,7 +6,7 @@
   "author": "Meysam Hadeli",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc && nodemon src/app.ts --watch",
+    "dev": "tsc && nodemon  src/app.ts --watch",
     "build": "tsc",
     "format": "prettier --write \"**/*.{ts,js}\"",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -43,6 +43,7 @@
     "swagger-ui-express": "^5.0.1",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.18.2"
   },

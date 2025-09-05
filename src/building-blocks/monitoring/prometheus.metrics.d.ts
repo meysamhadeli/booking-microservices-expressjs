@@ -1,3 +1,3 @@
 export declare class PrometheusMetrics {
-  static registerMetricsEndpoint(app: any): void;
+    static registerMetricsEndpoint(app: any): void;
 }

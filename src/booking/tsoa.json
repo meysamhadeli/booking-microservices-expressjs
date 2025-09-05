@@ -9,5 +9,11 @@
   "routes": {
     "routesDir": "./src/routes",
     "authenticationModule": "./../building-blocks/jwt/jwt.ts"
+  },
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["*"]
+    }
   }
 }
