@@ -8,6 +8,10 @@
     // Modules and Output
     "moduleResolution": "node",             // Use Node.js module resolution
     "baseUrl": "./",                        // Base directory for paths
+    "paths": {
+      "@/*": ["*"],
+      "jquery": ["node_modules/jquery/dist/jquery"] // This mapping is relative to "baseUrl"
+    },
     "outDir": "./dist",                     // Output directory
     "removeComments": true,                 // Remove comments in output
 
@@ -27,6 +31,7 @@
     // Advanced
     "incremental": true,                   // Enable incremental compilation
     "preserveConstEnums": true,            // Keep const enums in output
-    "resolveJsonModule": true              // Allow importing JSON files
+    "resolveJsonModule": true,              // Allow importing JSON files
+    "sourceMap": true
   }
 }

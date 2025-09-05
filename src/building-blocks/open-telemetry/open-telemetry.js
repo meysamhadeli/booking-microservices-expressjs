@@ -1,79 +1,53 @@
-'use strict';
-var __decorate =
-  (this && this.__decorate) ||
-  function (decorators, target, key, desc) {
-    var c = arguments.length,
-      r =
-        c < 3
-          ? target
-          : desc === null
-            ? (desc = Object.getOwnPropertyDescriptor(target, key))
-            : desc,
-      d;
-    if (typeof Reflect === 'object' && typeof Reflect.decorate === 'function')
-      r = Reflect.decorate(decorators, target, key, desc);
-    else
-      for (var i = decorators.length - 1; i >= 0; i--)
-        if ((d = decorators[i]))
-          r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-  };
-var __importDefault =
-  (this && this.__importDefault) ||
-  function (mod) {
-    return mod && mod.__esModule ? mod : { default: mod };
-  };
-Object.defineProperty(exports, '__esModule', { value: true });
-exports.OpenTelemetryTracer = void 0;
-const sdk_trace_node_1 = require('@opentelemetry/sdk-trace-node');
-const tsyringe_1 = require('tsyringe');
-const exporter_jaeger_1 = require('@opentelemetry/exporter-jaeger');
-const config_1 = __importDefault(require('../config/config'));
-const exporter_zipkin_1 = require('@opentelemetry/exporter-zipkin');
-const resources_1 = require('@opentelemetry/resources');
-const semantic_conventions_1 = require('@opentelemetry/semantic-conventions');
-const open_telemetry_options_builder_1 = require('./open-telemetry-options-builder');
-const { NodeTracerProvider } = require('@opentelemetry/node');
-const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
-const { registerInstrumentations } = require('@opentelemetry/instrumentation');
-const { AmqplibInstrumentation } = require('@opentelemetry/instrumentation-amqplib');
-const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
-const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
-let OpenTelemetryTracer = class OpenTelemetryTracer {
-  async createTracer(openTelemetryOptionsBuilder) {
-    const builder = new open_telemetry_options_builder_1.OpenTelemetryOptionsBuilder();
-    openTelemetryOptionsBuilder(builder);
-    const options = builder.build();
-    const provider = new NodeTracerProvider({
-      resource: new resources_1.Resource({
-        [semantic_conventions_1.SemanticResourceAttributes.SERVICE_NAME]:
-          options?.serviceName ?? config_1.default.serviceName
-      })
-    });
-    const jaegerExporter = new exporter_jaeger_1.JaegerExporter({
-      endpoint: options?.jaegerEndpoint ?? config_1.default.monitoring.jaegerEndpoint
-    });
-    const zipkinExporter = new exporter_zipkin_1.ZipkinExporter({
-      url: options?.zipkinEndpoint ?? config_1.default.monitoring.zipkinEndpoint,
-      serviceName: options?.serviceName ?? config_1.default.serviceName
-    });
-    provider.addSpanProcessor(new SimpleSpanProcessor(jaegerExporter));
-    provider.addSpanProcessor(new sdk_trace_node_1.BatchSpanProcessor(zipkinExporter));
-    provider.register();
-    registerInstrumentations({
-      instrumentations: [
-        new HttpInstrumentation(),
-        new ExpressInstrumentation(),
-        new AmqplibInstrumentation()
-      ]
-    });
-    const tracer = provider.getTracer(options?.serviceName ?? config_1.default.serviceName);
-    return tracer;
-  }
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-exports.OpenTelemetryTracer = OpenTelemetryTracer;
-exports.OpenTelemetryTracer = OpenTelemetryTracer = __decorate(
-  [(0, tsyringe_1.injectable)()],
-  OpenTelemetryTracer
-);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.OpenTelemetry = void 0;
+const sdk_node_1 = require("@opentelemetry/sdk-node");
+const exporter_trace_otlp_grpc_1 = require("@opentelemetry/exporter-trace-otlp-grpc");
+const exporter_metrics_otlp_grpc_1 = require("@opentelemetry/exporter-metrics-otlp-grpc");
+const exporter_logs_otlp_grpc_1 = require("@opentelemetry/exporter-logs-otlp-grpc");
+const semantic_conventions_1 = require("@opentelemetry/semantic-conventions");
+const resources_1 = require("@opentelemetry/resources");
+const core_1 = require("@opentelemetry/core");
+const auto_instrumentations_node_1 = require("@opentelemetry/auto-instrumentations-node");
+const sdk_logs_1 = require("@opentelemetry/sdk-logs");
+const config_1 = __importDefault(require("../config/config"));
+class OpenTelemetry {
+    static start() {
+        const otelSdk = new sdk_node_1.NodeSDK({
+            resource: (0, resources_1.defaultResource)().merge((0, resources_1.resourceFromAttributes)({
+                [semantic_conventions_1.ATTR_SERVICE_NAME]: config_1.default.opentelemetry?.serviceName || 'express-app',
+                [semantic_conventions_1.ATTR_SERVICE_VERSION]: config_1.default.opentelemetry?.serviceVersion || '1.0.0'
+            })),
+            instrumentations: [(0, auto_instrumentations_node_1.getNodeAutoInstrumentations)()],
+            traceExporter: new exporter_trace_otlp_grpc_1.OTLPTraceExporter({
+                url: config_1.default.opentelemetry?.collectorUrl || 'http://localhost:4317'
+            }),
+            metricReader: new sdk_node_1.metrics.PeriodicExportingMetricReader({
+                exporter: new exporter_metrics_otlp_grpc_1.OTLPMetricExporter({
+                    url: config_1.default.opentelemetry?.collectorUrl || 'http://localhost:4317'
+                })
+            }),
+            logRecordProcessors: [
+                new sdk_logs_1.SimpleLogRecordProcessor(new exporter_logs_otlp_grpc_1.OTLPLogExporter({
+                    url: config_1.default.opentelemetry?.collectorUrl || 'http://localhost:4317'
+                }))
+            ],
+            textMapPropagator: new core_1.CompositePropagator({
+                propagators: [new core_1.W3CTraceContextPropagator(), new core_1.W3CBaggagePropagator()]
+            })
+        });
+        process.on('SIGTERM', () => {
+            otelSdk
+                .shutdown()
+                .then(() => console.log('SDK shut down successfully'), (err) => console.log('Error shutting down SDK', err))
+                .finally(() => process.exit(0));
+        });
+        otelSdk.start();
+        console.log('OpenTelemetry SDK started');
+    }
+}
+exports.OpenTelemetry = OpenTelemetry;
 //# sourceMappingURL=open-telemetry.js.map

@@ -3,7 +3,6 @@ import { RabbitMQConnection } from './rabbitmq-connection';
 import { Consumer } from './rabbitmq-consumer';
 import { RabbitmqConnectionOptionsBuilder } from './rabbitmq-connection-options-builder';
 import { RabbitmqConsumerOptionsBuilder } from './rabbitmq-consumer-options-builder';
-import { IPublisher, Publisher } from './rabbitmq-publisher';
 
 export interface IRabbitmq {
   createConnection(

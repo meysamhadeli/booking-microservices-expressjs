@@ -1,67 +1,60 @@
-import { BatchSpanProcessor, Tracer } from '@opentelemetry/sdk-trace-node';
-import { injectable } from 'tsyringe';
-import { JaegerExporter } from '@opentelemetry/exporter-jaeger';
+import { NodeSDK, metrics } from '@opentelemetry/sdk-node';
+import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-grpc';
+import { OTLPMetricExporter as OTLGrpcMetricExporter } from '@opentelemetry/exporter-metrics-otlp-grpc';
+import { OTLPLogExporter as OTLPGrpcLogExporter } from '@opentelemetry/exporter-logs-otlp-grpc';
+import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions';
+import { defaultResource, resourceFromAttributes } from '@opentelemetry/resources';
+import {
+  CompositePropagator,
+  W3CBaggagePropagator,
+  W3CTraceContextPropagator
+} from '@opentelemetry/core';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { SimpleLogRecordProcessor } from '@opentelemetry/sdk-logs';
 import config from '../config/config';
-import { ZipkinExporter } from '@opentelemetry/exporter-zipkin';
-import { Resource } from '@opentelemetry/resources';
-import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
-import { OpenTelemetryOptionsBuilder } from './open-telemetry-options-builder';
 
-const { NodeTracerProvider } = require('@opentelemetry/node');
-const { SimpleSpanProcessor } = require('@opentelemetry/tracing');
-const { registerInstrumentations } = require('@opentelemetry/instrumentation');
-const { AmqplibInstrumentation } = require('@opentelemetry/instrumentation-amqplib');
-const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
-const { HttpInstrumentation } = require('@opentelemetry/instrumentation-http');
+export class OpenTelemetry {
+  static start() {
 
-export interface IOpenTelemetryTracer {
-  createTracer(
-    openTelemetryOptionsBuilder?: (
-      openTelemetryOptionsBuilder?: OpenTelemetryOptionsBuilder
-    ) => void
-  ): Promise<Tracer>;
-}
-
-@injectable()
-export class OpenTelemetryTracer implements IOpenTelemetryTracer {
-  async createTracer(
-    openTelemetryOptionsBuilder: (openTelemetryOptionsBuilder?: OpenTelemetryOptionsBuilder) => void
-  ): Promise<Tracer> {
-    const builder = new OpenTelemetryOptionsBuilder();
-    openTelemetryOptionsBuilder(builder);
-
-    const options = builder.build();
-
-    const provider = new NodeTracerProvider({
-      resource: new Resource({
-        [SemanticResourceAttributes.SERVICE_NAME]: options?.serviceName ?? config.serviceName
+    const otelSdk = new NodeSDK({
+      resource: defaultResource().merge(
+        resourceFromAttributes({
+          [ATTR_SERVICE_NAME]: config.opentelemetry?.serviceName || 'express-app',
+          [ATTR_SERVICE_VERSION]: config.opentelemetry?.serviceVersion || '1.0.0'
+        })
+      ),
+      instrumentations: [getNodeAutoInstrumentations()],
+      traceExporter: new OTLPTraceExporter({
+        url: config.opentelemetry?.collectorUrl || 'http://localhost:4317'
+      }),
+      metricReader: new metrics.PeriodicExportingMetricReader({
+        exporter: new OTLGrpcMetricExporter({
+          url: config.opentelemetry?.collectorUrl || 'http://localhost:4317'
+        })
+      }),
+      logRecordProcessors: [
+        new SimpleLogRecordProcessor(
+          new OTLPGrpcLogExporter({
+            url: config.opentelemetry?.collectorUrl || 'http://localhost:4317'
+          })
+        )
+      ],
+      textMapPropagator: new CompositePropagator({
+        propagators: [new W3CTraceContextPropagator(), new W3CBaggagePropagator()]
       })
     });
 
-    const jaegerExporter = new JaegerExporter({
-      endpoint: options?.jaegerEndpoint ?? config.monitoring.jaegerEndpoint
+    process.on('SIGTERM', () => {
+      otelSdk
+        .shutdown()
+        .then(
+          () => console.log('SDK shut down successfully'),
+          (err) => console.log('Error shutting down SDK', err)
+        )
+        .finally(() => process.exit(0));
     });
 
-    const zipkinExporter = new ZipkinExporter({
-      url: options?.zipkinEndpoint ?? config.monitoring.zipkinEndpoint,
-      serviceName: options?.serviceName ?? config.serviceName
-    });
-
-    provider.addSpanProcessor(new SimpleSpanProcessor(jaegerExporter));
-    provider.addSpanProcessor(new BatchSpanProcessor(zipkinExporter));
-
-    provider.register();
-
-    registerInstrumentations({
-      instrumentations: [
-        new HttpInstrumentation(),
-        new ExpressInstrumentation(),
-        new AmqplibInstrumentation()
-      ]
-    });
-
-    const tracer = provider.getTracer(options?.serviceName ?? config.serviceName);
-
-    return tracer;
+    otelSdk.start();
+    console.log('OpenTelemetry SDK started');
   }
 }

@@ -6,9 +6,9 @@ import { deserializeObject } from '../utils/serialization';
 import { snakeCase } from 'lodash';
 import { sleep } from '../utils/time';
 import { Logger } from '../logging/logger';
-import { OpenTelemetryTracer } from '../open-telemetry/open-telemetry';
 import { RabbitMQConnection } from './rabbitmq-connection';
 import { RabbitmqConsumerOptions } from './rabbitmq-consumer-options-builder';
+import { OtelDiagnosticsProvider } from '../open-telemetry/otel-diagnostics-provider';
 
 const consumedMessages: string[] = [];
 export type handlerFunc<T> = (queue: string, message: T) => void;
@@ -23,10 +23,8 @@ export interface IConsumer {
 export class Consumer implements IConsumer {
   async addConsumer<T>(consumerOptions: RabbitmqConsumerOptions): Promise<void> {
     const rabbitMQConnection = container.resolve(RabbitMQConnection);
-    const openTelemetryTracer = container.resolve(OpenTelemetryTracer);
-    const tracer = await openTelemetryTracer.createTracer((x) =>
-      x.serviceName('rabbitmq-consumer')
-    );
+    const otelDiagnosticsProvider = container.resolve(OtelDiagnosticsProvider);
+    const tracer = otelDiagnosticsProvider.getTracer();
 
     try {
       await asyncRetry(

@@ -12,7 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Publisher = void 0;
 const tsyringe_1 = require("tsyringe");
 const logger_1 = require("../logging/logger");
-const open_telemetry_1 = require("../open-telemetry/open-telemetry");
 const reflection_1 = require("../utils/reflection");
 const serialization_1 = require("../utils/serialization");
 const date_fns_1 = require("date-fns");
@@ -21,12 +20,13 @@ const rabbitmq_connection_1 = require("./rabbitmq-connection");
 const async_retry_1 = __importDefault(require("async-retry"));
 const StringUtils_1 = require("typeorm/util/StringUtils");
 const uuid_1 = require("uuid");
+const otel_diagnostics_provider_1 = require("../open-telemetry/otel-diagnostics-provider");
 const publishedMessages = [];
 let Publisher = class Publisher {
     async publishMessage(message) {
         const rabbitMQConnection = tsyringe_1.container.resolve(rabbitmq_connection_1.RabbitMQConnection);
-        const openTelemetryTracer = tsyringe_1.container.resolve(open_telemetry_1.OpenTelemetryTracer);
-        const tracer = await openTelemetryTracer.createTracer((x) => x.serviceName('rabbitmq-publisher'));
+        const otelDiagnosticsProvider = tsyringe_1.container.resolve(otel_diagnostics_provider_1.OtelDiagnosticsProvider);
+        const tracer = otelDiagnosticsProvider.getTracer();
         try {
             await (0, async_retry_1.default)(async () => {
                 const channel = await rabbitMQConnection.getChannel();
