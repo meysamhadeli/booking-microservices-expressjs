@@ -1,0 +1,184 @@
+x-common-env: &common-env
+  NODE_ENV: development
+  JWT_SECRET: thisisafakesecretchangeit
+  POSTGRES_HOST: localhost
+  POSTGRES_PORT: 5432
+  POSTGRES_USERNAME: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_SYNCHRONIZE: "false"
+  POSTGRES_ENTITIES: /../**/*.entity.{js,ts}
+  POSTGRES_MIGRATIONS: /../**/data/migrations/*.{js,ts}
+  RABBITMQ_Host: localhost
+  RABBITMQ_PORT: 5672
+  RABBITMQ_USERNAME: guest
+  RABBITMQ_PASSWORD: guest
+  OPEN_TELEMETRY_COLLECTOR_URL: http://localhost:4319
+
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    network_mode: host
+    restart: unless-stopped
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    volumes:
+      - ./deployments/docker-compose/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./deployments/docker-compose/postgres-init.sh:/docker-entrypoint-initdb.d/01-create-databases.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    network_mode: host
+    restart: unless-stopped
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    network_mode: host
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
+
+  identity:
+    container_name: identity
+    build:
+      context: ./src
+      dockerfile: identity/Dockerfile
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+      PORT: 3333
+      SERVICE_NAME: identity-service
+      POSTGRES_Database: identity
+      RABBITMQ_EXCHANGE: identity
+      OPEN_TELEMETRY_SERVICE_NAME: identity
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3333/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  flight:
+    container_name: flight
+    build:
+      context: ./src
+      dockerfile: flight/Dockerfile
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+      PORT: 3344
+      SERVICE_NAME: flight-service
+      POSTGRES_Database: flight
+      RABBITMQ_EXCHANGE: flight
+      OPEN_TELEMETRY_SERVICE_NAME: flight
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3344/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  passenger:
+    container_name: passenger
+    build:
+      context: ./src
+      dockerfile: passenger/Dockerfile
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+      PORT: 3355
+      SERVICE_NAME: passenger-service
+      POSTGRES_Database: passenger
+      RABBITMQ_EXCHANGE: passenger
+      OPEN_TELEMETRY_SERVICE_NAME: passenger
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3355/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  booking:
+    container_name: booking
+    build:
+      context: ./src
+      dockerfile: booking/Dockerfile
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      identity:
+        condition: service_healthy
+      flight:
+        condition: service_healthy
+      passenger:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+      PORT: 3366
+      SERVICE_NAME: booking-service
+      POSTGRES_Database: booking
+      RABBITMQ_EXCHANGE: booking
+      OPEN_TELEMETRY_SERVICE_NAME: booking
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3366/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  postgres-data:

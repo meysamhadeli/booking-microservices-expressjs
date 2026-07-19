@@ -1,0 +1,45 @@
+# Local install output — replaced in-image
+node_modules
+dist
+build
+coverage
+
+# Dev environment files (compose injects env at runtime)
+.env
+.env.*
+!.env.example
+
+# Tests are not run inside the image
+test
+**/*.spec.ts
+**/*.test.ts
+jest.config.*
+
+# Linting / formatting config not needed in image
+.eslintrc*
+eslint.config.*
+.prettierrc*
+.prettierignore
+
+# IDE / OS noise
+.idea
+.vscode
+.DS_Store
+*.log
+*.tsbuildinfo
+
+# VCS metadata
+.git
+.gitignore
+.gitattributes
+
+# Docs that don't need to ship
+*.md
+README.md
+CONTRIBUTING*
+LICENSE*
+
+# Compose / Docker artifacts we don't want baked in
+Dockerfile
+.dockerignore
+docker-compose*.yml
