@@ -1,0 +1,183 @@
+x-common-env: &common-env
+  NODE_ENV: ${NODE_ENV}
+  JWT_SECRET: ${JWT_SECRET}
+  POSTGRES_HOST: ${POSTGRES_HOST}
+  POSTGRES_PORT: ${POSTGRES_PORT}
+  POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_SYNCHRONIZE: ${POSTGRES_SYNCHRONIZE}
+  POSTGRES_ENTITIES: ${POSTGRES_ENTITIES}
+  POSTGRES_MIGRATIONS: ${POSTGRES_MIGRATIONS}
+  RABBITMQ_Host: ${RABBITMQ_HOST}
+  RABBITMQ_PORT: ${RABBITMQ_PORT}
+  RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+  RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+  OPEN_TELEMETRY_COLLECTOR_URL: ${OPEN_TELEMETRY_COLLECTOR_URL}
+
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector
+    network_mode: host
+    restart: unless-stopped
+    command: ["--config=/etc/otelcol-contrib/config.yaml"]
+    volumes:
+      - ./deployments/docker-compose/otel-collector-config.yaml:/etc/otelcol-contrib/config.yaml:ro
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    network_mode: host
+    restart: unless-stopped
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    network_mode: host
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 20s
+
+  identity:
+    container_name: identity
+    build:
+      context: ./src
+      dockerfile: identity/Dockerfile
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+      PORT: ${IDENTITY_PORT}
+      SERVICE_NAME: ${IDENTITY_SERVICE_NAME}
+      POSTGRES_Database: ${POSTGRES_DB}
+      RABBITMQ_EXCHANGE: ${IDENTITY_RABBITMQ_EXCHANGE}
+      OPEN_TELEMETRY_SERVICE_NAME: ${IDENTITY_OTEL_SERVICE_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3333/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  flight:
+    container_name: flight
+    build:
+      context: ./src
+      dockerfile: flight/Dockerfile
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+      PORT: ${FLIGHT_PORT}
+      SERVICE_NAME: ${FLIGHT_SERVICE_NAME}
+      POSTGRES_Database: ${POSTGRES_DB}
+      RABBITMQ_EXCHANGE: ${FLIGHT_RABBITMQ_EXCHANGE}
+      OPEN_TELEMETRY_SERVICE_NAME: ${FLIGHT_OTEL_SERVICE_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3344/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  passenger:
+    container_name: passenger
+    build:
+      context: ./src
+      dockerfile: passenger/Dockerfile
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+      PORT: ${PASSENGER_PORT}
+      SERVICE_NAME: ${PASSENGER_SERVICE_NAME}
+      POSTGRES_Database: ${POSTGRES_DB}
+      RABBITMQ_EXCHANGE: ${PASSENGER_RABBITMQ_EXCHANGE}
+      OPEN_TELEMETRY_SERVICE_NAME: ${PASSENGER_OTEL_SERVICE_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3355/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  booking:
+    container_name: booking
+    build:
+      context: ./src
+      dockerfile: booking/Dockerfile
+    network_mode: host
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      identity:
+        condition: service_healthy
+      flight:
+        condition: service_healthy
+      passenger:
+        condition: service_healthy
+    environment:
+      <<: *common-env
+      PORT: ${BOOKING_PORT}
+      SERVICE_NAME: ${BOOKING_SERVICE_NAME}
+      POSTGRES_Database: ${POSTGRES_DB}
+      RABBITMQ_EXCHANGE: ${BOOKING_RABBITMQ_EXCHANGE}
+      OPEN_TELEMETRY_SERVICE_NAME: ${BOOKING_OTEL_SERVICE_NAME}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3366/ >/dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+volumes:
+  postgres-data:
