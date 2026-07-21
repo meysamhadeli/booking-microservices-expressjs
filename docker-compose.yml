@@ -1,18 +1,18 @@
 x-common-env: &common-env
-  NODE_ENV: development
-  JWT_SECRET: thisisafakesecretchangeit
-  POSTGRES_HOST: localhost
-  POSTGRES_PORT: 5432
-  POSTGRES_USERNAME: postgres
-  POSTGRES_PASSWORD: postgres
-  POSTGRES_SYNCHRONIZE: "false"
-  POSTGRES_ENTITIES: /../**/*.entity.{js,ts}
-  POSTGRES_MIGRATIONS: /../**/data/migrations/*.{js,ts}
-  RABBITMQ_Host: localhost
-  RABBITMQ_PORT: 5672
-  RABBITMQ_USERNAME: guest
-  RABBITMQ_PASSWORD: guest
-  OPEN_TELEMETRY_COLLECTOR_URL: http://localhost:4319
+  NODE_ENV: ${NODE_ENV}
+  JWT_SECRET: ${JWT_SECRET}
+  POSTGRES_HOST: ${POSTGRES_HOST}
+  POSTGRES_PORT: ${POSTGRES_PORT}
+  POSTGRES_USERNAME: ${POSTGRES_USERNAME}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_SYNCHRONIZE: ${POSTGRES_SYNCHRONIZE}
+  POSTGRES_ENTITIES: ${POSTGRES_ENTITIES}
+  POSTGRES_MIGRATIONS: ${POSTGRES_MIGRATIONS}
+  RABBITMQ_Host: ${RABBITMQ_HOST}
+  RABBITMQ_PORT: ${RABBITMQ_PORT}
+  RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+  RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+  OPEN_TELEMETRY_COLLECTOR_URL: ${OPEN_TELEMETRY_COLLECTOR_URL}
 
 services:
   otel-collector:
@@ -30,14 +30,13 @@ services:
     network_mode: host
     restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres-data:/var/lib/postgresql/data
-      - ./deployments/docker-compose/postgres-init.sh:/docker-entrypoint-initdb.d/01-create-databases.sh:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -61,8 +60,8 @@ services:
     network_mode: host
     restart: unless-stopped
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
       interval: 5s
@@ -84,11 +83,11 @@ services:
         condition: service_healthy
     environment:
       <<: *common-env
-      PORT: 3333
-      SERVICE_NAME: identity-service
-      POSTGRES_Database: identity
-      RABBITMQ_EXCHANGE: identity
-      OPEN_TELEMETRY_SERVICE_NAME: identity
+      PORT: ${IDENTITY_PORT}
+      SERVICE_NAME: ${IDENTITY_SERVICE_NAME}
+      POSTGRES_Database: ${POSTGRES_DB}
+      RABBITMQ_EXCHANGE: ${IDENTITY_RABBITMQ_EXCHANGE}
+      OPEN_TELEMETRY_SERVICE_NAME: ${IDENTITY_OTEL_SERVICE_NAME}
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3333/ >/dev/null || exit 1"]
       interval: 10s
@@ -110,11 +109,11 @@ services:
         condition: service_healthy
     environment:
       <<: *common-env
-      PORT: 3344
-      SERVICE_NAME: flight-service
-      POSTGRES_Database: flight
-      RABBITMQ_EXCHANGE: flight
-      OPEN_TELEMETRY_SERVICE_NAME: flight
+      PORT: ${FLIGHT_PORT}
+      SERVICE_NAME: ${FLIGHT_SERVICE_NAME}
+      POSTGRES_Database: ${POSTGRES_DB}
+      RABBITMQ_EXCHANGE: ${FLIGHT_RABBITMQ_EXCHANGE}
+      OPEN_TELEMETRY_SERVICE_NAME: ${FLIGHT_OTEL_SERVICE_NAME}
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3344/ >/dev/null || exit 1"]
       interval: 10s
@@ -136,11 +135,11 @@ services:
         condition: service_healthy
     environment:
       <<: *common-env
-      PORT: 3355
-      SERVICE_NAME: passenger-service
-      POSTGRES_Database: passenger
-      RABBITMQ_EXCHANGE: passenger
-      OPEN_TELEMETRY_SERVICE_NAME: passenger
+      PORT: ${PASSENGER_PORT}
+      SERVICE_NAME: ${PASSENGER_SERVICE_NAME}
+      POSTGRES_Database: ${POSTGRES_DB}
+      RABBITMQ_EXCHANGE: ${PASSENGER_RABBITMQ_EXCHANGE}
+      OPEN_TELEMETRY_SERVICE_NAME: ${PASSENGER_OTEL_SERVICE_NAME}
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3355/ >/dev/null || exit 1"]
       interval: 10s
@@ -168,11 +167,11 @@ services:
         condition: service_healthy
     environment:
       <<: *common-env
-      PORT: 3366
-      SERVICE_NAME: booking-service
-      POSTGRES_Database: booking
-      RABBITMQ_EXCHANGE: booking
-      OPEN_TELEMETRY_SERVICE_NAME: booking
+      PORT: ${BOOKING_PORT}
+      SERVICE_NAME: ${BOOKING_SERVICE_NAME}
+      POSTGRES_Database: ${POSTGRES_DB}
+      RABBITMQ_EXCHANGE: ${BOOKING_RABBITMQ_EXCHANGE}
+      OPEN_TELEMETRY_SERVICE_NAME: ${BOOKING_OTEL_SERVICE_NAME}
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://localhost:3366/ >/dev/null || exit 1"]
       interval: 10s
