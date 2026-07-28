@@ -25,7 +25,8 @@
 - [Structure of Project](#structure-of-project)
 - [How to Use Migrations](#how-to-use-migrations)
 - [How to Run](#how-to-run)
-  - [Docker-Compose](#docker-compose)
+  - [Docker Compose](#docker-compose)
+  - [Kubernetes](#kubernetes)
   - [Build](#build)
   - [Run](#run)
   - [Test](#test)
@@ -168,13 +169,54 @@ npm run migration:run
 
 > ### Docker Compose
 
-Use the command below to run our `infrastructure` with `docker` using the [infrastructure.yaml](./deployments/docker-compose/infrastructure.yaml) file at the `root` of the app:
+Use Docker Compose to run the whole application stack locally:
 
 ```bash
-docker-compose -f ./deployments/docker-compose/infrastructure.yaml up -d
+cp .env.example .env
+docker compose up -d --build
 ```
-##### Todo
-I will add `docker-compsoe` for up and running whole app here in the next...
+
+To inspect the running stack:
+
+```bash
+docker compose ps
+docker compose logs -f
+```
+
+To stop everything:
+
+```bash
+docker compose down
+```
+
+> ### Kubernetes
+
+The Kubernetes manifests live in [deployments/kubernetes](./deployments/kubernetes).
+
+Build the service images first:
+
+```bash
+docker build -t booking-microservices-expressjs-identity:latest -f src/identity/Dockerfile src
+docker build -t booking-microservices-expressjs-flight:latest -f src/flight/Dockerfile src
+docker build -t booking-microservices-expressjs-passenger:latest -f src/passenger/Dockerfile src
+docker build -t booking-microservices-expressjs-booking:latest -f src/booking/Dockerfile src
+```
+
+Then apply the Kubernetes manifests:
+
+```bash
+kubectl apply -k deployments/kubernetes
+```
+
+Useful checks:
+
+```bash
+kubectl get pods -n booking
+kubectl get svc -n booking
+kubectl get ingress -n booking
+```
+
+If you are using `kind` or another local cluster, load the locally built images into the cluster before applying the manifests.
 
 > ### Build
 To `build` each microservice, run this command in the root directory of each microservice where the `package.json` file is located:
